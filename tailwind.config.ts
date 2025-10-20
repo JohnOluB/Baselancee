@@ -65,11 +65,27 @@ export default {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        'deep-blue': 'hsl(var(--deep-blue))',
+        'success-green': 'hsl(var(--success-green))',
+        'warning-orange': 'hsl(var(--warning-orange))',
+        'crypto-gold': 'hsl(var(--crypto-gold))',
+        'charcoal': 'hsl(var(--charcoal))',
+        'teal': 'hsl(var(--teal))',
       },
       borderRadius: {
+        xl: 'calc(var(--radius) + 4px)',
         lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        md: 'calc(var(--radius) - 4px)',
+        sm: 'calc(var(--radius) - 6px)',
+      },
+      boxShadow: {
+        sm: '0 1px 3px rgba(0,0,0,0.1)',
+        md: '0 4px 6px rgba(0,0,0,0.1)',
+        lg: '0 10px 25px rgba(0,0,0,0.15)',
+        glow: '0 0 20px rgba(0,82,255,0.3)',
+      },
+      letterSpacing: {
+        'button': '0.01em',
       },
       keyframes: {
         'accordion-down': {
