@@ -14,6 +14,8 @@ import { Chrome } from 'lucide-react';
 import Logo from '@/components/logo';
 import { useToast } from '@/hooks/use-toast';
 import { ConnectWalletModal } from '@/components/auth/connect-wallet-modal';
+import { signInWithGoogle } from '@/firebase/auth';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -22,6 +24,7 @@ const formSchema = z.object({
 
 export default function SignInPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,6 +41,24 @@ export default function SignInPage() {
       description: 'Form submission successful.',
     });
   }
+
+  const handleGoogleSignIn = async () => {
+    const user = await signInWithGoogle();
+    if (user) {
+      toast({
+        title: 'Signed In',
+        description: `Welcome back, ${user.displayName}!`,
+      });
+      // TODO: Redirect based on user type (freelancer/client)
+      router.push('/');
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Sign-in Failed',
+        description: 'Could not sign in with Google. Please try again.',
+      });
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
@@ -97,7 +118,7 @@ export default function SignInPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <ConnectWalletModal />
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleGoogleSignIn}>
               <Chrome className="mr-2 h-4 w-4" />
               Google
             </Button>
