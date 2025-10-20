@@ -2,12 +2,12 @@
 import { FirebaseOptions, initializeApp, getApp, getApps } from "firebase/app";
 
 const firebaseConfig: FirebaseOptions = {
-    apiKey: "your-api-key",
-    authDomain: "your-auth-domain",
-    projectId: "your-project-id",
-    storageBucket: "your-storage-bucket",
-    messagingSenderId: "your-messaging-sender-id",
-    appId: "your-app-id"
+  "projectId": "studio-27276494-d8631",
+  "appId": "1:95140804609:web:d9d886c175cee5f24ba800",
+  "apiKey": "AIzaSyBcHHWRoZrLgP-WXNoiIsIF9HO4XdjLXIo",
+  "authDomain": "studio-27276494-d8631.firebaseapp.com",
+  "measurementId": "",
+  "messagingSenderId": "95140804609"
 };
 
 function initializeFirebase() {
