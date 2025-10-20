@@ -10,9 +10,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Wallet, Chrome } from 'lucide-react';
+import { Chrome } from 'lucide-react';
 import Logo from '@/components/logo';
 import { useToast } from '@/hooks/use-toast';
+import { ConnectWalletModal } from '@/components/auth/connect-wallet-modal';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -95,10 +96,7 @@ export default function SignInPage() {
             <div className="flex-grow border-t border-muted" />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline">
-              <Wallet className="mr-2 h-4 w-4" />
-              Connect Wallet
-            </Button>
+            <ConnectWalletModal />
             <Button variant="outline">
               <Chrome className="mr-2 h-4 w-4" />
               Google
