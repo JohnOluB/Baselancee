@@ -34,7 +34,7 @@ export default function Header() {
   );
 
   const linkClasses = cn(
-    'transition-colors font-medium',
+    'transition-colors font-medium text-sm',
     isScrolled ? 'text-foreground hover:text-primary' : 'text-primary-foreground hover:opacity-80'
   );
 
@@ -44,7 +44,7 @@ export default function Header() {
         <Link href="/">
           <Logo className={cn(isScrolled ? "text-foreground" : "text-primary-foreground")} />
         </Link>
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-[30px] md:flex">
           {navLinks.map((link) => (
             <Link key={link.href} href={link.href} className={linkClasses}>
               {link.label}
@@ -52,7 +52,7 @@ export default function Header() {
           ))}
         </nav>
         <div className="hidden items-center gap-2 md:flex">
-          <Button variant="ghost" className={linkClasses}>Sign In</Button>
+          <Button variant="ghost" className={linkClasses}>sIGN IN</Button>
           <Button>Get Started</Button>
         </div>
         <div className="md:hidden">
