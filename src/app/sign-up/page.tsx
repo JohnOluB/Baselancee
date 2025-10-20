@@ -14,18 +14,27 @@ import { Wallet, Chrome } from 'lucide-react';
 import Logo from '@/components/logo';
 import { useToast } from '@/hooks/use-toast';
 
-const formSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address.' }),
-  password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
-});
+const formSchema = z
+  .object({
+    name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+    email: z.string().email({ message: 'Please enter a valid email address.' }),
+    password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
 
-export default function SignInPage() {
+export default function SignUpPage() {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: '',
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
@@ -33,13 +42,13 @@ export default function SignInPage() {
     // TODO: Handle form submission (e.g., Firebase auth)
     console.log(values);
     toast({
-      title: 'Signed in (mock)',
-      description: 'Form submission successful.',
+      title: 'Account created (mock)',
+      description: 'Sign-up successful.',
     });
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12">
       <div className="mb-8">
         <Link href="/">
           <Logo />
@@ -47,12 +56,25 @@ export default function SignInPage() {
       </div>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Sign In to BaseLance</CardTitle>
-          <CardDescription>Enter your credentials to access your account</CardDescription>
+          <CardTitle className="text-2xl">Create an Account</CardTitle>
+          <CardDescription>Join BaseLance to start your freelance journey</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="email"
@@ -71,12 +93,20 @@ export default function SignInPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="flex items-center">
-                      <FormLabel>Password</FormLabel>
-                      <Link href="#" className="ml-auto inline-block text-sm underline" prefetch={false}>
-                        Forgot your password?
-                      </Link>
-                    </div>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>
@@ -85,7 +115,7 @@ export default function SignInPage() {
                 )}
               />
               <Button type="submit" className="w-full">
-                Sign In
+                Create Account
               </Button>
             </form>
           </Form>
@@ -105,9 +135,9 @@ export default function SignInPage() {
             </Button>
           </div>
           <div className="mt-6 text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Link href="/sign-up" className="underline" prefetch={false}>
-              Sign up
+            Already have an account?{' '}
+            <Link href="/sign-in" className="underline" prefetch={false}>
+              Sign in
             </Link>
           </div>
         </CardContent>
