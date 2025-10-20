@@ -54,7 +54,9 @@ export default function Header() {
           </nav>
         </div>
         <div className="hidden items-center gap-2 md:flex">
-          <Button variant="ghost" className={linkClasses}>sIGN IN</Button>
+          <Link href="/sign-in">
+            <Button variant="ghost" className={linkClasses}>sIGN IN</Button>
+          </Link>
           <Button>Get Started</Button>
         </div>
         <div className="md:hidden">
@@ -72,7 +74,9 @@ export default function Header() {
                   </Link>
                 ))}
                 <div className="flex flex-col gap-4">
-                  <Button variant="outline">Sign In</Button>
+                   <Link href="/sign-in">
+                    <Button variant="outline" className="w-full">Sign In</Button>
+                  </Link>
                   <Button>Get Started</Button>
                 </div>
               </div>
