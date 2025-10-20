@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Github, Chrome } from 'lucide-react';
+import { Wallet, Chrome } from 'lucide-react';
 import Logo from '@/components/logo';
 import { useToast } from '@/hooks/use-toast';
 
@@ -96,8 +96,8 @@ export default function SignInPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <Button variant="outline">
-              <Github className="mr-2 h-4 w-4" />
-              GitHub
+              <Wallet className="mr-2 h-4 w-4" />
+              Connect Wallet
             </Button>
             <Button variant="outline">
               <Chrome className="mr-2 h-4 w-4" />
