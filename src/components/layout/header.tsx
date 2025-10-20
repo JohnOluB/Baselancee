@@ -41,16 +41,18 @@ export default function Header() {
   return (
     <header className={headerClasses}>
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
-        <Link href="/">
-          <Logo className={cn(isScrolled ? "text-foreground" : "text-primary-foreground")} />
-        </Link>
-        <nav className="hidden items-center gap-[30px] md:flex">
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className={linkClasses}>
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex items-center gap-10">
+          <Link href="/">
+            <Logo className={cn(isScrolled ? "text-foreground" : "text-primary-foreground")} />
+          </Link>
+          <nav className="hidden items-center gap-[30px] md:flex">
+            {navLinks.map((link) => (
+              <Link key={link.href} href={link.href} className={linkClasses}>
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
         <div className="hidden items-center gap-2 md:flex">
           <Button variant="ghost" className={linkClasses}>sIGN IN</Button>
           <Button>Get Started</Button>
