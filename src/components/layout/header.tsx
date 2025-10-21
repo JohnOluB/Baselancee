@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, Wallet } from 'lucide-react';
+import { Menu } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -10,10 +10,10 @@ import Logo from '@/components/logo';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const navLinks = [
-  { href: '#how-it-works', label: 'How It Works' },
-  { href: '#for-freelancers', label: 'Freelancers' },
-  { href: '#for-clients', label: 'Clients' },
-  { href: '#pricing', label: 'Pricing' },
+  { href: '#find-work', label: 'Find Work' },
+  { href: '#find-talent', label: 'Find Talent' },
+  { href: '#why-baselance', label: 'Why BaseLance?' },
+  { href: '#enterprise', label: 'Enterprise' },
 ];
 
 export default function Header() {
@@ -30,12 +30,12 @@ export default function Header() {
 
   const headerClasses = cn(
     'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-    isScrolled ? 'bg-background shadow-md' : 'bg-transparent'
+    isScrolled ? 'bg-background shadow-md' : 'bg-background'
   );
 
   const linkClasses = cn(
     'transition-colors font-medium text-sm',
-    isScrolled ? 'text-foreground hover:text-primary' : 'text-primary-foreground hover:opacity-80'
+    'text-foreground hover:text-primary'
   );
 
   return (
@@ -43,9 +43,9 @@ export default function Header() {
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <div className="flex items-center gap-10">
           <Link href="/">
-            <Logo className={cn(isScrolled ? "text-foreground" : "text-primary-foreground")} />
+            <Logo className="text-foreground" />
           </Link>
-          <nav className="hidden items-center gap-[30px] md:flex">
+          <nav className="hidden items-center gap-8 md:flex">
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href} className={linkClasses}>
                 {link.label}
@@ -55,14 +55,16 @@ export default function Header() {
         </div>
         <div className="hidden items-center gap-2 md:flex">
           <Link href="/sign-in">
-            <Button variant="ghost" className={linkClasses}>Sign In</Button>
+            <Button variant="ghost" className={linkClasses}>Log In</Button>
           </Link>
-          <Button>Get Started</Button>
+          <Link href="/sign-up">
+            <Button>Sign Up</Button>
+          </Link>
         </div>
         <div className="md:hidden">
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className={cn(isScrolled ? "text-foreground" : "text-primary-foreground", "hover:bg-black/10")}>
+              <Button variant="ghost" size="icon" className="text-foreground hover:bg-black/10">
                 <Menu />
               </Button>
             </SheetTrigger>
@@ -75,9 +77,11 @@ export default function Header() {
                 ))}
                 <div className="flex flex-col gap-4">
                    <Link href="/sign-in">
-                    <Button variant="outline" className="w-full">Sign In</Button>
+                    <Button variant="outline" className="w-full">Log In</Button>
                   </Link>
-                  <Button>Get Started</Button>
+                  <Link href="/sign-up">
+                    <Button className="w-full">Sign Up</Button>
+                  </Link>
                 </div>
               </div>
             </SheetContent>

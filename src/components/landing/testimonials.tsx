@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Star } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,37 +13,31 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 const testimonials = [
   {
-    name: "Sarah O.",
-    role: "Graphic Designer, Lagos",
-    quote: "I saved $200 on my first job alone. The instant payments are a game-changer for freelancers in Nigeria.",
-    stats: "32 jobs • $12,450 earned",
+    name: "Sophia Carter",
+    role: "Web Developer",
+    quote: "BaseLance has revolutionized my freelancing career. The lower fees and instant crypto payments have significantly increased my earnings, and the platform's transparency has built trust with my clients.",
     avatar_id: "avatar-sarah",
   },
   {
-    name: "James K.",
-    role: "Full-Stack Developer, Nairobi",
-    quote: "No more waiting for PayPal transfers. I get paid in USDC and cash out locally whenever I want.",
-    stats: "18 jobs • $45,000 earned",
+    name: "Ethan Lee",
+    role: "Project Manager",
+    quote: "Finding top talent has never been easier. BaseLance's streamlined search and vetting process helped me connect with skilled professionals who delivered exceptional results. The secure transaction system ensured a smooth and trustworthy experience.",
     avatar_id: "avatar-james",
   },
   {
-    name: "Maria S.",
-    role: "Content Writer, Remote",
-    quote: "My reputation is finally portable. I can prove my track record anywhere with my onchain profile.",
-    stats: "56 jobs • $23,100 earned",
+    name: "Olivia Ramirez",
+    role: "Graphic Designer",
+    quote: "BaseLance is a game-changer for freelancers. The platform's modern interface and focus on transparency have made it my go-to for finding projects and building lasting client relationships. The instant crypto payments are a huge plus!",
     avatar_id: "avatar-maria",
   },
 ];
 
 export default function Testimonials() {
   return (
-    <section id="for-freelancers" className="py-20 md:py-28 bg-background">
+    <section id="for-freelancers" className="py-20 md:py-28 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl md:text-4xl">Trusted by Freelancers Worldwide</h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Hear from freelancers who are building their careers on BaseLance.
-          </p>
+          <h2 className="text-3xl md:text-4xl">Testimonials</h2>
         </div>
         <Carousel
           opts={{
@@ -57,30 +50,20 @@ export default function Testimonials() {
               const avatar = PlaceHolderImages.find(p => p.id === testimonial.avatar_id);
               return (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                  <div className="p-1">
-                    <Card className="h-full shadow-md">
-                      <CardContent className="flex h-full flex-col justify-between p-6">
-                        <div>
-                          <div className="flex items-center gap-4">
-                            <Avatar>
-                              {avatar && <AvatarImage src={avatar.imageUrl} alt={testimonial.name} data-ai-hint={avatar.imageHint} />}
-                              <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="font-semibold">{testimonial.name}</p>
-                              <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                            </div>
-                          </div>
-                          <div className="mt-4 flex">
-                            {[...Array(5)].map((_, i) => (
-                              <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
-                          <blockquote className="mt-4 border-l-2 border-border pl-4 text-lg italic">
-                            {testimonial.quote}
-                          </blockquote>
+                  <div className="p-1 h-full">
+                    <Card className="h-full shadow-md bg-background flex flex-col items-center text-center">
+                      <CardContent className="flex h-full flex-col justify-center items-center p-6">
+                        <Avatar className="w-24 h-24 mb-4">
+                          {avatar && <AvatarImage src={avatar.imageUrl} alt={testimonial.name} data-ai-hint={avatar.imageHint} />}
+                          <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <blockquote className="text-base italic text-muted-foreground">
+                          "{testimonial.quote}"
+                        </blockquote>
+                        <div className="mt-6">
+                          <p className="font-semibold">{testimonial.name}</p>
+                          <p className="text-sm text-muted-foreground">{testimonial.role}</p>
                         </div>
-                        <p className="mt-6 text-sm font-medium text-muted-foreground">{testimonial.stats}</p>
                       </CardContent>
                     </Card>
                   </div>

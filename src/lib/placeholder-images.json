@@ -2,43 +2,37 @@
   "placeholderImages": [
     {
       "id": "hero-illustration",
-      "description": "3D illustration of platform interface with floating elements",
-      "imageUrl": "https://images.unsplash.com/photo-1557264337-e8a93017fe92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx0ZWNoJTIwYWJzdHJhY3R8ZW58MHx8fHwxNzYwODg1NDA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "tech abstract"
+      "description": "Two people working on laptops in a modern office setting.",
+      "imageUrl": "https://images.unsplash.com/photo-1560250056-07ba64664864?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZW9wbGUlMjB3b3JraW5nfGVufDB8fHx8MTc2MDk4NjczNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "people working"
     },
     {
-      "id": "profile-screenshot",
-      "description": "Screenshot of a freelancer profile page",
-      "imageUrl": "https://images.unsplash.com/photo-1728556564688-39e3d50bd60a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8aW50ZXJmYWNlJTIwcHJvZmlsZXxlbnwwfHx8fDE3NjA5NzYxODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "interface profile"
+      "id": "why-choose-freelancer",
+      "description": "A relaxed freelancer working on a laptop.",
+      "imageUrl": "https://images.unsplash.com/photo-1545184180-25d471fe75eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtYW4lMjBsYXB0b3B8ZW58MHx8fHwxNzYxMDM3NjcxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man laptop"
     },
     {
-      "id": "marketplace-screenshot",
-      "description": "Screenshot of the job marketplace",
-      "imageUrl": "https://images.unsplash.com/photo-1703170815991-4737f0d0c8fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxpbnRlcmZhY2UlMjBsaXN0fGVufDB8fHx8MTc2MDk3NjE4NHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "interface list"
-    },
-    {
-      "id": "payment-screenshot",
-      "description": "Screenshot of a successful payment notification",
-      "imageUrl": "https://images.unsplash.com/photo-1600960568458-7966d439289e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxub3RpZmljYXRpb24lMjBzdWNjZXNzfGVufDB8fHx8MTc2MDk3NjE4NHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "notification success"
+      "id": "why-choose-client",
+      "description": "A client reviewing project documents and charts.",
+      "imageUrl": "https://images.unsplash.com/photo-1760637626138-3c2ff9eca63f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxtYW4lMjBkb2N1bWVudHN8ZW58MHx8fHwxNzYxMDYzMjQ4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man documents"
     },
     {
       "id": "avatar-sarah",
-      "description": "Avatar for Sarah O.",
+      "description": "Portrait of Sophia Carter",
       "imageUrl": "https://images.unsplash.com/photo-1609505848912-b7c3b8b4beda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2MDk0MDg0N3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "woman portrait"
     },
     {
       "id": "avatar-james",
-      "description": "Avatar for James K.",
+      "description": "Portrait of Ethan Lee",
       "imageUrl": "https://images.unsplash.com/photo-1583195763986-0231686dcd43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjA5MjE0MDR8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "man portrait"
     },
     {
       "id": "avatar-maria",
-      "description": "Avatar for Maria S.",
+      "description": "Portrait of Olivia Ramirez",
       "imageUrl": "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3b21hbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzYwOTE3NDE1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "woman smiling"
     }
