@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu } from 'lucide-react';
+import { usePrivy } from '@privy-io/react-auth';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,7 @@ const navLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { ready, authenticated, login, logout } = usePrivy();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,13 +58,22 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Link href="/sign-in">
-            <Button variant="ghost" className={linkClasses}>Log In</Button>
-          </Link>
-          <Link href="/sign-up">
-            <Button>Sign Up</Button>
-          </Link>
+          {!authenticated ? (
+            <>
+              <Button variant="ghost" onClick={login} className={linkClasses} disabled={!ready}>
+                Log In
+              </Button>
+              <Button onClick={login} disabled={!ready}>
+                Sign Up
+              </Button>
+            </>
+          ) : (
+            <Button onClick={logout} disabled={!ready}>
+              Log Out
+            </Button>
+          )}
         </div>
+
         <div className="md:hidden">
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
@@ -73,17 +84,30 @@ export default function Header() {
             <SheetContent side="right" className="bg-background">
               <div className="flex flex-col gap-8 pt-12">
                 {navLinks.map((link) => (
-                  <Link key={link.href} href={link.href} className="text-xl font-medium text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="text-xl font-medium text-foreground hover:text-primary"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
                     {link.label}
                   </Link>
                 ))}
                 <div className="flex flex-col gap-4">
-                   <Link href="/sign-in">
-                    <Button variant="outline" className="w-full">Log In</Button>
-                  </Link>
-                  <Link href="/sign-up">
-                    <Button className="w-full">Sign Up</Button>
-                  </Link>
+                  {!authenticated ? (
+                    <>
+                      <Button variant="outline" className="w-full" onClick={login} disabled={!ready}>
+                        Log In
+                      </Button>
+                      <Button className="w-full" onClick={login} disabled={!ready}>
+                        Sign Up
+                      </Button>
+                    </>
+                  ) : (
+                    <Button className="w-full" onClick={logout} disabled={!ready}>
+                      Log Out
+                    </Button>
+                  )}
                 </div>
               </div>
             </SheetContent>
