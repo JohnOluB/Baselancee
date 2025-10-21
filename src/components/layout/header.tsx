@@ -55,7 +55,7 @@ export default function Header() {
         </div>
         <div className="hidden items-center gap-2 md:flex">
           <Link href="/sign-in">
-            <Button variant="ghost" className={linkClasses}>sIGN IN</Button>
+            <Button variant="ghost" className={linkClasses}>Sign In</Button>
           </Link>
           <Button>Get Started</Button>
         </div>
