@@ -45,14 +45,16 @@ export default function Header() {
           <Link href="/">
             <Logo className="text-foreground" />
           </Link>
-          <nav className="hidden items-center gap-8 md:flex">
-            {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className={linkClasses}>
-                {link.label}
-              </Link>
-            ))}
-          </nav>
         </div>
+
+        <nav className="hidden items-center gap-8 md:flex">
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href} className={linkClasses}>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
         <div className="hidden items-center gap-2 md:flex">
           <Link href="/sign-in">
             <Button variant="ghost" className={linkClasses}>Log In</Button>
