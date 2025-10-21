@@ -54,8 +54,8 @@ export default function Hero() {
               <Image
                 src={heroImage.imageUrl}
                 alt={heroImage.description}
-                width={600}
-                height={400}
+                width={450}
+                height={300}
                 className="rounded-xl shadow-lg"
                 data-ai-hint={heroImage.imageHint}
               />
