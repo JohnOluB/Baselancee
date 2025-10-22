@@ -18,12 +18,12 @@ export default function Hero() {
             BaseLance is a professional, modern, and trustworthy platform for freelancers and clients, aiming to replace platforms like Upwork with lower fees and instant crypto payments.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row md:justify-center">
-            <Link href="/sign-up">
+            <Link href="/signup">
                 <Button size="lg">
                     Get Started
                 </Button>
             </Link>
-            <Button size="lg" variant="outline">
+            <Button size="lg" variant="outline" className="bg-white">
               Learn More
             </Button>
           </div>
