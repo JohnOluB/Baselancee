@@ -41,7 +41,7 @@ export default function ChooseRolePage() {
                 </CardDescription>
             </div>
             <Button asChild size="lg" className="mt-8 w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-              <Link href="/signup/freelancer">Sign Up as Client</Link>
+              <Link href="/signup/client">Sign Up as Client</Link>
             </Button>
           </Card>
         </div>
