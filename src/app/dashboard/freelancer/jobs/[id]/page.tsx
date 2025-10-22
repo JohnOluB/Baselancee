@@ -1,0 +1,313 @@
+
+import {
+  ArrowLeft,
+  Briefcase,
+  Calendar,
+  CheckCircle,
+  Clock,
+  Download,
+  FileText,
+  Heart,
+  MapPin,
+  MessageSquare,
+  Star,
+  User,
+  Zap,
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { JobCard } from '@/components/dashboard/jobs/job-card';
+import { Textarea } from '@/components/ui/textarea';
+
+const job = {
+  isVerified: true,
+  isHot: true,
+  isFeatured: false,
+  title: 'Build a React Dashboard for Analytics Platform',
+  postedBy: 'TechCorp Inc.',
+  postedAt: '3 hours ago',
+  description:
+    "We're looking for an experienced React developer to build a performant and beautiful analytics dashboard. You will work with our team of designers and backend engineers to bring our vision to life. The ideal candidate has a strong background in data visualization and is comfortable working with REST APIs.<br/><br/><strong>Responsibilities:</strong><ul><li>Develop and maintain the frontend of our analytics platform.</li><li>Collaborate with UI/UX designers to implement modern design trends.</li><li>Integrate with backend services and APIs.</li><li>Write clean, maintainable, and well-tested code.</li><li>Optimize application for maximum speed and scalability.</li></ul>",
+  scope: {
+    deliverables: [
+      'A fully functional analytics dashboard with multiple chart types.',
+      'A set of reusable React components for data visualization.',
+      'Integration with our existing user authentication system.',
+    ],
+    milestones: [
+      'Week 1: Project setup and initial component library.',
+      'Week 2: Dashboard layout and API integration.',
+      'Week 3: Chart implementation and final polish.',
+    ],
+  },
+  budget: { from: 800, to: 1200, currency: 'USD' },
+  budgetType: 'Fixed Price',
+  duration: '2-3 weeks',
+  location: 'Remote',
+  experienceLevel: 'Expert',
+  skills: ['React', 'TypeScript', 'Chart.js', 'API', 'Data Visualization', 'Next.js'],
+  attachments: [
+    {
+      name: 'requirements.pdf',
+      size: '2.4 MB',
+      type: 'PDF',
+    },
+    {
+      name: 'design_mockups.zip',
+      size: '15.8 MB',
+      type: 'ZIP',
+    }
+  ],
+  client: {
+    name: 'TechCorp Inc.',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026706e',
+    rating: 4.9,
+    reviewCount: 24,
+    jobsPosted: 12,
+    spend: 45320,
+    isPaymentVerified: true,
+    location: 'United States',
+    memberSince: 'Jan 2024',
+  },
+  proposals: {
+    count: 8,
+    averageBid: 950,
+  },
+};
+
+const similarJobs = [
+    { isVerified: true, isHot: false, isFeatured: false, title: 'Frontend Developer for SaaS', postedBy: 'Innovate LLC', postedAt: '5 hours ago', description: 'Looking for a skilled frontend dev...', budget: { from: 70, to: 90, currency: 'USD', per: 'hr' }, budgetType: 'Hourly', duration: '1-2 months', location: 'Remote', experienceLevel: 'Intermediate', skills: ['React', 'Tailwind CSS'], client: { name: 'Innovate LLC', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026709f', rating: 4.8, reviewCount: 10, jobsPosted: 5, spend: 25000, isPaymentVerified: true, location: 'Canada', }, proposals: { count: 5 } },
+    { isVerified: true, isHot: true, isFeatured: false, title: 'Next.js Developer for E-commerce Site', postedBy: 'ShopFast', postedAt: '1 day ago', description: 'We need a Next.js expert to optimize our e-commerce platform.', budget: { amount: 2500, currency: 'USD' }, budgetType: 'Fixed Price', duration: '1 month', location: 'Remote', experienceLevel: 'Expert', skills: ['Next.js', 'Vercel', 'Stripe'], client: { name: 'ShopFast', avatar: 'https://i.pravatar.cc/150?u=a042581f4e2902670ac', rating: 4.9, reviewCount: 32, jobsPosted: 15, spend: 80000, isPaymentVerified: true, location: 'United Kingdom', }, proposals: { count: 15 } },
+    { isVerified: false, isHot: false, isFeatured: true, title: 'UI Designer for Crypto Wallet', postedBy: 'CoinVerse', postedAt: '2 days ago', description: 'Design a beautiful and intuitive UI for our new crypto wallet.', budget: { from: 40, to: 60, currency: 'USD', per: 'hr' }, budgetType: 'Hourly', duration: '3+ months', location: 'Remote', experienceLevel: 'Intermediate', skills: ['Figma', 'UI/UX Design', 'Crypto'], client: { name: 'CoinVerse', avatar: 'https://i.pravatar.cc/150?u=a042581f4e2902670df', rating: 4.7, reviewCount: 5, jobsPosted: 5, spend: 15000, isPaymentVerified: false, location: 'Global', }, proposals: { count: 18 } },
+]
+
+export default function JobDetailsPage() {
+  return (
+    <div className="space-y-6">
+       <div className="flex items-center gap-2">
+            <Button variant="outline" size="icon" asChild>
+                <Link href="/dashboard/freelancer/jobs"><ArrowLeft /></Link>
+            </Button>
+            <div className="text-sm text-muted-foreground">
+                <Link href="/dashboard/freelancer/jobs" className="hover:text-primary">Browse Jobs</Link>
+                <span className="mx-2">/</span>
+                <span>Job Details</span>
+            </div>
+       </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8 items-start">
+        <div className="lg:col-span-2 xl:col-span-3 space-y-8">
+            <Card>
+                <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                        <Avatar className="w-12 h-12 border">
+                            <AvatarImage src={job.client.avatar} alt={job.client.name} />
+                            <AvatarFallback>{job.client.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <h3 className="text-lg font-semibold">{job.client.name}</h3>
+                                {job.client.isPaymentVerified && <Badge variant="outline" className="text-green-600 border-green-600/50"><CheckCircle className="h-3 w-3 mr-1"/> Verified</Badge>}
+                            </div>
+                            <p className="text-sm text-muted-foreground">Posted {job.postedAt}</p>
+                        </div>
+                    </div>
+
+                    <h1 className="text-3xl font-bold mt-4">{job.title}</h1>
+
+                    <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm border rounded-lg p-4">
+                         <div className="flex items-start gap-2">
+                            <Briefcase className="h-5 w-5 text-muted-foreground mt-0.5" />
+                            <div>
+                                <p className="font-semibold">${job.budget.from} - ${job.budget.to}</p>
+                                <p className="text-muted-foreground">{job.budgetType}</p>
+                            </div>
+                        </div>
+                         <div className="flex items-start gap-2">
+                            <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
+                            <div>
+                                <p className="font-semibold">{job.duration}</p>
+                                <p className="text-muted-foreground">Duration</p>
+                            </div>
+                        </div>
+                        <div className="flex items-start gap-2">
+                            <Zap className="h-5 w-5 text-muted-foreground mt-0.5" />
+                            <div>
+                                <p className="font-semibold">{job.experienceLevel}</p>
+                                <p className="text-muted-foreground">Experience</p>
+                            </div>
+                        </div>
+                         <div className="flex items-start gap-2">
+                            <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                            <div>
+                                <p className="font-semibold">{job.location}</p>
+                                <p className="text-muted-foreground">Location</p>
+                            </div>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>About the Job</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground" dangerouslySetInnerHTML={{ __html: job.description }} />
+                </CardContent>
+            </Card>
+
+            <Card>
+                 <CardHeader>
+                    <CardTitle>Scope of Work</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div>
+                        <h4 className="font-semibold mb-2">Deliverables</h4>
+                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                            {job.scope.deliverables.map((item, i) => <li key={i}>{item}</li>)}
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="font-semibold mb-2">Milestones</h4>
+                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                            {job.scope.milestones.map((item, i) => <li key={i}>{item}</li>)}
+                        </ul>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Skills & Expertise</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                        {job.skills.map(skill => <Badge key={skill} variant="secondary" className="text-base py-1 px-3">{skill}</Badge>)}
+                    </div>
+                </CardContent>
+            </Card>
+
+             <Card>
+                <CardHeader>
+                    <CardTitle>Attachments</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {job.attachments.map(file => (
+                        <div key={file.name} className="border rounded-lg p-3 flex items-center gap-3">
+                            <FileText className="h-8 w-8 text-muted-foreground" />
+                            <div className="flex-1">
+                                <p className="font-medium text-sm truncate">{file.name}</p>
+                                <p className="text-xs text-muted-foreground">{file.size} &bull; {file.type}</p>
+                            </div>
+                            <Button variant="ghost" size="icon"><Download className="h-4 w-4"/></Button>
+                        </div>
+                    ))}
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>About the Client</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex items-start gap-4">
+                         <Avatar className="w-16 h-16 border">
+                            <AvatarImage src={job.client.avatar} alt={job.client.name} />
+                            <AvatarFallback>{job.client.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                             <h3 className="text-lg font-semibold">{job.client.name}</h3>
+                            <p className="text-sm text-muted-foreground">Member since {job.client.memberSince}</p>
+                            {job.client.isPaymentVerified && <div className="mt-2 flex items-center gap-1 text-sm text-green-600"><CheckCircle className="h-4 w-4"/><span>Payment method verified</span></div>}
+                             <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-4 text-sm">
+                                <div className="flex items-center gap-2">
+                                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                                    <div>
+                                        <span className="font-bold">{job.client.rating.toFixed(1)} out of 5</span>
+                                        <span className="text-muted-foreground"> ({job.client.reviewCount} reviews)</span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <Briefcase className="h-4 w-4" />
+                                    <span>{job.client.jobsPosted} jobs posted</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <MapPin className="h-4 w-4" />
+                                    <span>{job.client.location}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <MessageSquare className="h-4 w-4" />
+                                    <span>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact' }).format(job.client.spend)} total spent</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+
+        <aside className="lg:col-span-1 xl:col-span-1">
+          <div className="sticky top-[76px] space-y-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Submit a Proposal</CardTitle>
+                </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="proposal-rate" className="text-sm font-medium">Your rate</label>
+                    <p className="text-xs text-muted-foreground">Client's budget: ${job.budget.from} - ${job.budget.to}</p>
+                    <div className="relative mt-1">
+                        <input type="number" id="proposal-rate" className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-12" placeholder="e.g. 1000" />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">USDC</span>
+                    </div>
+                  </div>
+                   <div>
+                    <label htmlFor="proposal-cover-letter" className="text-sm font-medium">Cover Letter</label>
+                     <Textarea id="proposal-cover-letter" placeholder="Introduce yourself and explain why you're a great fit for this job..." className="mt-1" rows={6}/>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="flex-col items-stretch gap-2">
+                <Button size="lg">Submit Proposal</Button>
+                <Button variant="outline" size="lg"><Heart className="mr-2 h-4 w-4"/> Save Job</Button>
+              </CardFooter>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>AI Job Analyzer</CardTitle>
+                    <CardDescription>Get insights on this job description to craft the perfect proposal.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button className="w-full" variant="outline"><Zap className="mr-2 h-4 w-4"/>Analyze with AI</Button>
+                </CardContent>
+            </Card>
+          </div>
+        </aside>
+      </div>
+
+        <div className="mt-12">
+            <h2 className="text-2xl font-bold mb-4">Similar Jobs</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {(similarJobs as any[]).map((job, index) => (
+                    <JobCard key={index} job={job} />
+                ))}
+            </div>
+        </div>
+    </div>
+  );
+}
