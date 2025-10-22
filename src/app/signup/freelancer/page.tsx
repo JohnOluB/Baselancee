@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Check, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { Check, Eye, EyeOff, CheckCircle, Wallet } from 'lucide-react';
 
 import Logo from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
 
 const passwordSchema = z
   .string()
@@ -121,96 +122,107 @@ export default function FreelancerSignUpPage() {
           <CardDescription className="pt-2">Start your journey on BaseLance today.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input id="fullName" placeholder="John Doe" {...register('fullName')} aria-invalid={!!errors.fullName}/>
-              {errors.fullName && <p className="text-sm text-destructive">{errors.fullName.message}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input id="email" type="email" placeholder="your@email.com" {...register('email')} aria-invalid={!!errors.email}/>
-              {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Create a strong password"
-                  {...register('password')}
-                  aria-invalid={!!errors.password}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff /> : <Eye />}
-                </Button>
-              </div>
-              <PasswordStrength password={password} />
-              {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-               <div className="relative">
-                <Input
-                  id="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  placeholder="Confirm your password"
-                  {...register('confirmPassword')}
-                  aria-invalid={!!errors.confirmPassword}
-                />
-                 <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? <EyeOff /> : <Eye />}
-                </Button>
-              </div>
-              {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
-            </div>
-
-            <div className="flex items-start space-x-2 pt-2">
-              <Checkbox id="terms" {...register('terms')} className="mt-0.5" />
-              <div className="grid gap-1.5 leading-none">
-                <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  I agree to the{' '}
-                  <Link href="/terms" className="font-semibold text-primary hover:underline">
-                    Terms of Service
-                  </Link>{' '}
-                  and{' '}
-                  <Link href="/privacy" className="font-semibold text-primary hover:underline">
-                    Privacy Policy
-                  </Link>
-                  .
-                </label>
-                 {errors.terms && <p className="text-sm text-destructive">{errors.terms.message}</p>}
-              </div>
-            </div>
-
-            <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
-                {isSubmitting ? 'Creating Account...' : 'Create Account'}
+          <div className="space-y-4">
+             <Button className="w-full" size="lg">
+                <Wallet className="mr-2 h-5 w-5"/>
+                Connect Wallet
             </Button>
-          </form>
+            <div className="flex items-center gap-4">
+                <Separator className="flex-1" />
+                <span className="text-xs text-muted-foreground">OR</span>
+                <Separator className="flex-1" />
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="fullName">Full Name</Label>
+                <Input id="fullName" placeholder="John Doe" {...register('fullName')} aria-invalid={!!errors.fullName}/>
+                {errors.fullName && <p className="text-sm text-destructive">{errors.fullName.message}</p>}
+              </div>
 
-          <div className="mt-6 text-center text-sm">
-            <p className="text-muted-foreground">
-              Already have an account?{' '}
-              <Link href="/login" className="font-medium text-primary hover:underline underline-offset-4">
-                Sign In
-              </Link>
-            </p>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input id="email" type="email" placeholder="your@email.com" {...register('email')} aria-invalid={!!errors.email}/>
+                {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Create a strong password"
+                    {...register('password')}
+                    aria-invalid={!!errors.password}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff /> : <Eye />}
+                  </Button>
+                </div>
+                <PasswordStrength password={password} />
+                {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                 <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    placeholder="Confirm your password"
+                    {...register('confirmPassword')}
+                    aria-invalid={!!errors.confirmPassword}
+                  />
+                   <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? <EyeOff /> : <Eye />}
+                  </Button>
+                </div>
+                {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
+              </div>
+
+              <div className="flex items-start space-x-2 pt-2">
+                <Checkbox id="terms" {...register('terms')} className="mt-0.5" />
+                <div className="grid gap-1.5 leading-none">
+                  <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    I agree to the{' '}
+                    <Link href="/terms" className="font-semibold text-primary hover:underline">
+                      Terms of Service
+                    </Link>{' '}
+                    and{' '}
+                    <Link href="/privacy" className="font-semibold text-primary hover:underline">
+                      Privacy Policy
+                    </Link>
+                    .
+                  </label>
+                   {errors.terms && <p className="text-sm text-destructive">{errors.terms.message}</p>}
+                </div>
+              </div>
+
+              <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+                  {isSubmitting ? 'Creating Account...' : 'Create Account'}
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center text-sm">
+              <p className="text-muted-foreground">
+                Already have an account?{' '}
+                <Link href="/login" className="font-medium text-primary hover:underline underline-offset-4">
+                  Sign In
+                </Link>
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
