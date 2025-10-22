@@ -9,7 +9,9 @@ export default function ChooseRolePage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-6 md:p-8">
       <div className="absolute top-4 left-4 md:top-6 md:left-6">
-        <Logo />
+        <Link href="/">
+          <Logo />
+        </Link>
       </div>
       <div className="w-full max-w-4xl text-center">
         <h1 className="text-4xl font-bold tracking-tight md:text-5xl">Welcome to BaseLance</h1>

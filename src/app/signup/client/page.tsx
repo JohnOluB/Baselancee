@@ -7,6 +7,7 @@ import { useForm, type SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Check, Eye, EyeOff, CheckCircle, Wallet } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import Logo from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -68,6 +69,7 @@ export default function ClientSignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -90,13 +92,17 @@ export default function ClientSignUpPage() {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     console.log(data);
     setFormSubmitted(true);
+    // Redirect to client dashboard on successful submission
+    router.push('/dashboard/client');
   };
 
   if (formSubmitted) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 p-4">
          <div className="absolute top-4 left-4 md:top-6 md:left-6">
-            <Logo />
+            <Link href="/">
+              <Logo />
+            </Link>
         </div>
         <Card className="w-full max-w-md text-center">
             <CardContent className="p-8">
@@ -118,7 +124,9 @@ export default function ClientSignUpPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4 sm:p-6 md:p-8">
       <div className="absolute top-4 left-4 md:top-6 md:left-6">
-        <Logo />
+        <Link href="/">
+          <Logo />
+        </Link>
       </div>
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="text-center">

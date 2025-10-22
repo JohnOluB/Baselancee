@@ -97,7 +97,9 @@ export default function FreelancerSignUpPage() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 p-4">
          <div className="absolute top-4 left-4 md:top-6 md:left-6">
-            <Logo />
+            <Link href="/">
+              <Logo />
+            </Link>
         </div>
         <Card className="w-full max-w-md text-center">
             <CardContent className="p-8">
@@ -119,7 +121,9 @@ export default function FreelancerSignUpPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4 sm:p-6 md:p-8">
       <div className="absolute top-4 left-4 md:top-6 md:left-6">
-        <Logo />
+        <Link href="/">
+          <Logo />
+        </Link>
       </div>
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="text-center">

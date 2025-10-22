@@ -1,3 +1,4 @@
+
 'use client';
 import {useRouter} from 'next/navigation';
 import Logo from '@/components/logo';
@@ -11,7 +12,6 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleLogin = () => {
-    // TODO: Implement actual login logic
     // For now, just redirect to the client dashboard
     router.push('/dashboard/client');
   }
@@ -19,7 +19,9 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
       <div className="absolute top-4 left-4">
-        <Logo />
+        <Link href="/">
+          <Logo />
+        </Link>
       </div>
       <Card className="mx-auto max-w-sm w-full">
         <CardHeader>
