@@ -66,7 +66,7 @@ export default function DashboardSidebar() {
                 <DropdownMenuContent align="start" className="w-56">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>View Profile</DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link href="/dashboard/freelancer/profile">View Profile</Link></DropdownMenuItem>
                     <DropdownMenuItem>Settings</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Sign Out</DropdownMenuItem>
@@ -78,7 +78,7 @@ export default function DashboardSidebar() {
             <SidebarMenuItem key={link.href}>
               <Link href={link.href} passHref>
                 <SidebarMenuButton
-                  isActive={pathname === link.href}
+                  isActive={pathname.startsWith(link.href) && (link.href !== '/dashboard/freelancer' || pathname === '/dashboard/freelancer')}
                   tooltip={link.label}
                 >
                   <link.icon />
@@ -111,3 +111,5 @@ export default function DashboardSidebar() {
     </Sidebar>
   );
 }
+
+    
