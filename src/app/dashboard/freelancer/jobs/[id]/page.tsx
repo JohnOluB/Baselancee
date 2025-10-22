@@ -57,6 +57,7 @@ import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const job = {
   isVerified: true,
@@ -277,7 +278,7 @@ function ApplicationSidebar() {
         <div className="space-y-6">
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button size="lg" className="w-full">Apply for this Job</Button>
+                    <Button size="lg" className="w-full">Submit a Proposal</Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-3xl">
                     <DialogHeader>
@@ -581,3 +582,4 @@ export default function JobDetailsPage() {
   );
 }
 
+    
