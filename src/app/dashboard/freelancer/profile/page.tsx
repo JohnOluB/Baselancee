@@ -172,16 +172,15 @@ export default function FreelancerProfilePage() {
                         {skills.map(skill => (
                             <div key={skill.name}>
                                 <div className="flex justify-between items-center">
-                                    <span className="font-medium">{skill.name}</span>
-                                    <span className="text-sm text-muted-foreground">{skill.endorsements} endorsements</span>
-                                </div>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <SkillRating rating={skill.rating} />
-                                    <span className="text-sm text-muted-foreground">{skill.level}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-medium">{skill.name}</span>
+                                        <SkillRating rating={skill.rating} />
+                                    </div>
+                                    <span className="text-sm text-muted-foreground">{skill.level} - {skill.endorsements} endorsements</span>
                                 </div>
                             </div>
                         ))}
-                        <Button variant="link" className="p-0 h-auto">Show all 12 skills</Button>
+                        <Button variant="link" className="p-0 h-auto">+ Show all 12 skills</Button>
                     </CardContent>
                   </Card>
                   <Card>
@@ -228,26 +227,6 @@ export default function FreelancerProfilePage() {
                         <CardContent className="text-sm space-y-2">
                             <p><span className="font-medium text-foreground">Can start:</span> <span className="text-muted-foreground">{freelancer.availability.canStart}</span></p>
                             <p><span className="font-medium text-foreground">Availability:</span> <span className="text-muted-foreground">{freelancer.availability.hoursPerWeek}</span></p>
-                             <Separator className="my-4" />
-                            <div className="space-y-1">
-                                <p><span className="font-medium text-foreground">Hourly Rate:</span> <span className="text-muted-foreground">${freelancer.hourlyRate}/hour</span></p>
-                                <p><span className="font-medium text-foreground">Response Time:</span> <span className="text-muted-foreground">{freelancer.responseTime}</span></p>
-                                <p><span className="font-medium text-foreground">Member Since:</span> <span className="text-muted-foreground">{freelancer.memberSince}</span></p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                     <Card>
-                        <CardHeader>
-                            <CardTitle>Profile Strength</CardTitle>
-                            <CardDescription>95%</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <Progress value={95} />
-                             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                                <li className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Complete profile</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Verified payment method</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Portfolio uploaded</li>
-                            </ul>
                         </CardContent>
                     </Card>
                      <Card>
@@ -269,16 +248,6 @@ export default function FreelancerProfilePage() {
                             {freelancer.verifications.email && <p className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Email Verified</p>}
                             {freelancer.verifications.phone && <p className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Phone Verified</p>}
                             {freelancer.verifications.onchainReputation && <p className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Onchain Reputation #{freelancer.verifications.onchainReputation}</p>}
-                        </CardContent>
-                    </Card>
-                     <Card>
-                        <CardHeader>
-                            <CardTitle className="text-base">Share this profile</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex items-center gap-2">
-                           <Button variant="outline" size="icon"><Twitter className="h-4 w-4" /></Button>
-                           <Button variant="outline" size="icon"><Linkedin className="h-4 w-4" /></Button>
-                           <Button variant="outline" size="icon"><Copy className="h-4 w-4" /></Button>
                         </CardContent>
                     </Card>
                 </div>
