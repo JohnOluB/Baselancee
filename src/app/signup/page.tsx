@@ -27,7 +27,7 @@ export default function ChooseRolePage() {
                 </CardDescription>
             </div>
             <Button asChild size="lg" className="mt-8 w-full">
-              <Link href="/signup/freelancer">Sign Up as Freelancer</Link>
+              <Link href="/signup">Sign Up as Freelancer</Link>
             </Button>
           </Card>
           <Card className="group flex flex-col text-center p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_hsl(var(--accent))] focus-within:shadow-[0_0_20px_hsl(var(--accent))]">
