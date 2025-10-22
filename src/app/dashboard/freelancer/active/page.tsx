@@ -72,8 +72,8 @@ const activeJobs = [
 
 function JobCard({ job }: { job: any }) {
   const getBorderClass = () => {
-    if (job.urgent) return 'border-l-4 border-destructive';
-    if (job.actionNeeded) return 'border-l-4 border-orange-500';
+    if (job.urgent) return '';
+    if (job.actionNeeded) return '';
     return '';
   };
 
