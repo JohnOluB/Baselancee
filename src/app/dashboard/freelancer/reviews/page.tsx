@@ -22,8 +22,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 
-const reviews = [
+const reviewsData = [
   {
+    id: 1,
     client: {
       name: 'TechCorp Inc.',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026706e',
@@ -40,6 +41,7 @@ const reviews = [
     response: null,
   },
   {
+    id: 2,
     client: {
       name: 'Creative Solutions',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026708d',
@@ -66,7 +68,7 @@ const ratingDistribution = [
   { rating: 1, count: 0, percentage: 0 },
 ];
 
-function ReviewCard({ review }: { review: any }) {
+function ReviewCard({ review, publicView = false }: { review: any, publicView?: boolean }) {
   const [showResponse, setShowResponse] = useState(false);
 
   return (
@@ -116,7 +118,7 @@ function ReviewCard({ review }: { review: any }) {
           </div>
         )}
 
-        {!review.response && showResponse && (
+        {!review.response && showResponse && !publicView && (
           <div className="mt-4 space-y-2">
             <Textarea placeholder="Write your public response..." />
             <div className="flex justify-end gap-2">
@@ -128,19 +130,29 @@ function ReviewCard({ review }: { review: any }) {
           </div>
         )}
       </CardContent>
-      <CardFooter className="justify-end gap-2">
-        {!review.response && !showResponse && (
-          <Button onClick={() => setShowResponse(true)}>Respond</Button>
-        )}
-        <Button variant="outline">
-          <Share2 className="h-4 w-4 mr-2" /> Share
-        </Button>
-      </CardFooter>
+      {!publicView && (
+        <CardFooter className="justify-end gap-2">
+          {!review.response && !showResponse && (
+            <Button onClick={() => setShowResponse(true)}>Respond</Button>
+          )}
+          <Button variant="outline">
+            <Share2 className="h-4 w-4 mr-2" /> Share
+          </Button>
+        </CardFooter>
+      )}
+       {publicView && review.response && (
+         <CardFooter className="justify-end gap-2">
+            <Button variant="ghost" size="sm"><ThumbsUp className="h-4 w-4 mr-2" /> Helpful (3)</Button>
+        </CardFooter>
+       )}
     </Card>
   );
 }
 
 export default function ReviewsPage() {
+    const [reviews, setReviews] = useState(reviewsData);
+    const pendingReviews = reviews.filter(r => r.response === null);
+
   return (
     <div className="space-y-8">
       <div>
@@ -158,17 +170,12 @@ export default function ReviewsPage() {
           <div className="text-center">
             <p className="text-7xl font-bold">4.8</p>
             <div className="flex items-center justify-center gap-1 mt-2">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-8 w-8 ${
-                    i < 4 ? 'text-yellow-400 fill-yellow-400' : 'text-muted'
-                  }`}
-                />
-              ))}
-               <Star className="h-8 w-8 text-yellow-400 fill-yellow-400" style={{clipPath: 'inset(0 20% 0 0)'}}/>
+                {[...Array(4)].map((_, i) => (
+                    <Star key={i} className="h-8 w-8 text-yellow-400 fill-yellow-400" />
+                ))}
+                <Star className="h-8 w-8 text-yellow-400 fill-yellow-400" style={{clipPath: 'inset(0 20% 0 0)'}}/>
             </div>
-            <p className="text-muted-foreground mt-2">Based on 28 reviews</p>
+            <p className="text-muted-foreground mt-2">Based on {reviews.length} reviews</p>
           </div>
           <div className="space-y-2">
             {ratingDistribution.map((item) => (
@@ -187,15 +194,38 @@ export default function ReviewsPage() {
       <Tabs defaultValue="all">
         <TabsList>
           <TabsTrigger value="all">All Reviews ({reviews.length})</TabsTrigger>
-          <TabsTrigger value="pending">Pending Response (1)</TabsTrigger>
+          <TabsTrigger value="pending">Pending Response ({pendingReviews.length})</TabsTrigger>
+          <TabsTrigger value="public">Public View</TabsTrigger>
         </TabsList>
         <TabsContent value="all" className="mt-6 space-y-6">
-          {reviews.map((review, index) => (
-            <ReviewCard key={index} review={review} />
+          {reviews.map((review) => (
+            <ReviewCard key={review.id} review={review} />
           ))}
         </TabsContent>
-        <TabsContent value="pending" className="mt-6">
-          <ReviewCard review={reviews[0]} />
+        <TabsContent value="pending" className="mt-6 space-y-6">
+            {pendingReviews.length > 0 ? (
+                pendingReviews.map((review) => (
+                    <ReviewCard key={review.id} review={review} />
+                ))
+            ) : (
+                <Card className="text-center py-12">
+                    <CardContent>
+                        <CheckCircle className="mx-auto h-12 w-12 text-green-500" />
+                        <h3 className="mt-4 text-lg font-medium">You're all caught up!</h3>
+                        <p className="mt-2 text-sm text-muted-foreground">You have responded to all your reviews.</p>
+                    </CardContent>
+                </Card>
+            )}
+        </TabsContent>
+        <TabsContent value="public" className="mt-6 space-y-6">
+            <Card className="bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-700/50">
+                <CardContent className="p-4 text-sm text-blue-800 dark:text-blue-200">
+                    This is a preview of how clients see your reviews on your public profile.
+                </CardContent>
+            </Card>
+          {reviews.map((review) => (
+            <ReviewCard key={review.id} review={review} publicView={true} />
+          ))}
         </TabsContent>
       </Tabs>
     </div>
