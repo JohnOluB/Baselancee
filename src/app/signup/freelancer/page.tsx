@@ -3,11 +3,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Check, Eye, EyeOff, CheckCircle, Wallet } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import Logo from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -69,6 +70,7 @@ export default function FreelancerSignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -93,6 +95,12 @@ export default function FreelancerSignUpPage() {
     setFormSubmitted(true);
   };
 
+  useEffect(() => {
+    if (formSubmitted) {
+      router.push('/dashboard/freelancer');
+    }
+  }, [formSubmitted, router]);
+
   if (formSubmitted) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 p-4">
@@ -106,11 +114,8 @@ export default function FreelancerSignUpPage() {
                 <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
                 <CardTitle className="mt-4 text-2xl">Account Created!</CardTitle>
                 <CardDescription className="mt-2 text-muted-foreground">
-                    Welcome to BaseLance. You will be redirected to your dashboard shortly.
+                    Welcome to BaseLance. You are being redirected to your dashboard...
                 </CardDescription>
-                <Button asChild className="mt-6 w-full">
-                    <Link href="/dashboard/freelancer">Go to Dashboard</Link>
-                </Button>
             </CardContent>
         </Card>
       </div>
