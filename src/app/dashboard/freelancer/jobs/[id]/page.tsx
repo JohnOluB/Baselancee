@@ -6,17 +6,27 @@ import {
   Calendar,
   CheckCircle,
   Clock,
+  Copy,
   Download,
   FileText,
   Heart,
+  Linkedin,
   MapPin,
   MessageSquare,
+  Shield,
   Star,
+  Twitter,
   User,
   Zap,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -39,6 +49,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogTrigger,
 } from '@/components/ui/dialog';
 import { useState } from 'react';
 import { analyzeJobDescription, AnalyzeJobDescriptionOutput } from '@/ai/flows/job-description-analyzer';
@@ -194,7 +205,7 @@ function AIJobAnalyzer() {
             <Card>
                 <CardHeader>
                     <CardTitle>AI Job Analyzer</CardTitle>
-                    <CardDescription>Get insights on this job description to craft the perfect proposal.</CardDescription>
+                    <CardDescription>Get insights on this job to craft the perfect proposal.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Button className="w-full" variant="outline" onClick={handleAnalyze} disabled={isLoading}>
@@ -263,55 +274,124 @@ function ApplicationSidebar() {
     const { fee: platformFee, earnings } = calculateEarnings(bidAmountNumber);
 
     return (
-         <Card>
-            <CardHeader>
-                <CardTitle>Submit a Proposal</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div>
-                    <h4 className="text-sm font-semibold mb-2">Budget Breakdown</h4>
-                    <div className="p-3 rounded-md border bg-muted/50 text-sm space-y-2">
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">Client's Budget</span>
-                            <span>{clientBudget}</span>
+        <div className="space-y-6">
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button size="lg" className="w-full">Apply for this Job</Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-3xl">
+                    <DialogHeader>
+                        <DialogTitle>Submit Your Proposal</DialogTitle>
+                        <DialogDescription>
+                            For: {job.title}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-6 max-h-[70vh] overflow-y-auto pr-4 space-y-6">
+                        <div>
+                            <Label htmlFor="cover-letter" className="font-semibold">Cover Letter *</Label>
+                            <Textarea id="cover-letter" rows={6} className="mt-2" placeholder="Explain why you're the best fit for this job. Highlight relevant experience and how you'll approach the project..." />
+                            <p className="text-xs text-muted-foreground mt-2 text-right">0/5000</p>
                         </div>
-                         <div className="flex justify-between items-center">
-                            <label htmlFor="your-bid" className="text-muted-foreground">Your Bid</label>
-                            <div className="relative w-28">
-                                <Input 
-                                    id="your-bid" 
-                                    type="number" 
-                                    placeholder="e.g. 1000" 
-                                    className="pr-12"
-                                    value={bid}
-                                    onChange={(e) => setBid(e.target.value)}
-                                />
-                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">USDC</span>
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="bid-amount" className="font-semibold">Your Bid Amount *</Label>
+                                <div className="relative">
+                                    <Input id="bid-amount" type="number" placeholder="1000" className="pl-12" />
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">USDC</span>
+                                </div>
+                                <p className="text-xs text-muted-foreground">Client's budget: {clientBudget}</p>
+                            </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="delivery-timeline" className="font-semibold">When can you deliver? *</Label>
+                                <div className="flex gap-2">
+                                    <Input id="delivery-timeline" type="number" placeholder="14" className="w-1/2" />
+                                    <Input defaultValue="Days" className="w-1/2" />
+                                </div>
+                                <p className="text-xs text-muted-foreground">Client expects: {job.duration}</p>
                             </div>
                         </div>
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">Platform Fee (2%)</span>
-                            <span>-${platformFee}</span>
-                        </div>
-                        <Separator />
-                        <div className="flex justify-between font-semibold">
-                            <span>You'll Receive</span>
-                            <span>${earnings} USDC</span>
+                         <div className="p-4 rounded-md border bg-muted/50 text-sm space-y-2">
+                            <div className="flex justify-between">
+                                <span>Your Bid:</span>
+                                <span>1000 USDC</span>
+                            </div>
+                             <div className="flex justify-between">
+                                <span>Platform Fee (2%):</span>
+                                <span>-20 USDC</span>
+                            </div>
+                             <Separator />
+                            <div className="flex justify-between font-semibold">
+                                <span>You'll Receive:</span>
+                                <span>980 USDC</span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <DialogFooter>
+                        <Button variant="ghost">Cancel</Button>
+                         <Button variant="outline">Save Draft</Button>
+                        <Button>Review Proposal</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
-                <div>
-                    <label htmlFor="proposal-cover-letter" className="text-sm font-medium">Cover Letter</label>
-                    <Textarea id="proposal-cover-letter" placeholder="Introduce yourself and explain why you're a great fit for this job..." className="mt-1" rows={6}/>
+            <Button variant="outline" className="w-full"><Heart className="mr-2 h-4 w-4"/> Save Job</Button>
+            <p className="text-xs text-muted-foreground text-center">{job.proposals.count} other freelancers have applied</p>
+            <Button variant="link" size="sm" className="w-full text-destructive hover:text-destructive">Withdraw Application</Button>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base">Budget Breakdown</CardTitle>
+                </CardHeader>
+                 <CardContent className="text-sm">
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Client's Budget:</span>
+                        <span>{clientBudget}</span>
+                    </div>
+                    <div className="flex justify-between mt-2">
+                         <span className="text-muted-foreground">Platform Fee (2%):</span>
+                        <span>-${'from' in job.budget ? `${(job.budget.from * 0.02).toFixed(2)}-${(job.budget.to * 0.02).toFixed(2)}` : `${(job.budget.amount * 0.02).toFixed(2)}`}</span>
+                    </div>
+                     <Separator className="my-2"/>
+                     <div className="flex justify-between font-semibold">
+                        <span>You'll Receive:</span>
+                        <span>${'from' in job.budget ? `${(job.budget.from * 0.98).toFixed(2)}-${(job.budget.to * 0.98).toFixed(2)}` : `${(job.budget.amount * 0.98).toFixed(2)}`}</span>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <Card className="bg-orange-500/10 border-orange-500/20">
+                <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2 text-orange-600">
+                        <Shield /> Stay Safe
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                     <Accordion type="single" collapsible className="w-full">
+                        <AccordionItem value="item-1" className="border-b-0">
+                            <AccordionTrigger className="text-sm py-0">View Safety Tips</AccordionTrigger>
+                            <AccordionContent className="pt-4 text-sm space-y-2 text-muted-foreground">
+                                <p className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-green-500 shrink-0"/> Keep all communication on BaseLance</p>
+                                <p className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-green-500 shrink-0"/> Use escrow for all payments</p>
+                                <p className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-green-500 shrink-0"/> Don't share personal contact info</p>
+                                <p className="flex items-start gap-2"><CheckCircle className="h-4 w-4 mt-0.5 text-green-500 shrink-0"/> Report suspicious behavior</p>
+                                <Button variant="link" size="sm" className="p-0 h-auto">Learn more about safety</Button>
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                </CardContent>
+            </Card>
+
+            <div>
+                <p className="text-sm text-center text-muted-foreground">Share this job</p>
+                <div className="flex justify-center gap-2 mt-2">
+                    <Button variant="outline" size="icon"><Twitter className="h-4 w-4"/></Button>
+                    <Button variant="outline" size="icon"><Linkedin className="h-4 w-4"/></Button>
+                    <Button variant="outline" size="icon"><Copy className="h-4 w-4"/></Button>
                 </div>
-            </CardContent>
-            <CardFooter className="flex-col items-stretch gap-2">
-                <Button size="lg">Submit Proposal</Button>
-                <p className="text-xs text-muted-foreground text-center">{job.proposals.count} other freelancers have applied</p>
-                <Button variant="outline" size="lg"><Heart className="mr-2 h-4 w-4"/> Save Job</Button>
-            </CardFooter>
-        </Card>
+            </div>
+
+            <Button variant="link" size="sm" className="w-full text-muted-foreground hover:text-destructive">🚩 Report this job</Button>
+        </div>
     )
 }
 
@@ -500,3 +580,4 @@ export default function JobDetailsPage() {
     </div>
   );
 }
+
