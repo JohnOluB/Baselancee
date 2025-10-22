@@ -14,10 +14,8 @@ export default function DashboardLayout({
         <DashboardSidebar />
         <main className="flex-1 flex flex-col bg-muted/30">
           <DashboardHeader />
-          <div className="flex-1 py-4 sm:py-6 md:py-8 ml-3">
-            <div className="container mx-auto">
-              {children}
-            </div>
+          <div className="flex-1 p-4 sm:p-6 md:p-8">
+            {children}
           </div>
         </main>
       </div>
