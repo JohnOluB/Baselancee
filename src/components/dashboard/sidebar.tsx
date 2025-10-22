@@ -46,9 +46,7 @@ export default function DashboardSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <Link href="/">
-          <Logo />
-        </Link>
+        
       </SidebarHeader>
       <SidebarContent className="p-2">
         <div className='mb-4 p-2'>
