@@ -35,7 +35,7 @@ export default function Header() {
 
   const linkClasses = cn(
     'transition-colors font-medium text-sm',
-    'text-foreground hover:text-primary'
+    'text-foreground'
   );
 
   return (
@@ -49,7 +49,7 @@ export default function Header() {
 
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className={linkClasses}>
+            <Link key={link.href} href={link.href} className={cn(linkClasses, 'hover:text-primary')}>
               {link.label}
             </Link>
           ))}
