@@ -65,7 +65,7 @@ export default function DashboardSidebar() {
         <div className='mb-4 p-2'>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-3 w-full text-left p-2 rounded-lg hover:bg-muted transition-colors">
+                    <Button variant="ghost" className="flex items-center gap-3 w-full text-left p-2 rounded-lg h-auto justify-start">
                         <Avatar className="h-9 w-9">
                             <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User" />
                             <AvatarFallback>JD</AvatarFallback>
@@ -74,7 +74,7 @@ export default function DashboardSidebar() {
                             <span className="text-sm font-medium">John Doe</span>
                             <span className="text-xs text-muted-foreground truncate">0x123...456</span>
                         </div>
-                    </button>
+                    </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-56">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -126,5 +126,3 @@ export default function DashboardSidebar() {
     </Sidebar>
   );
 }
-
-    
