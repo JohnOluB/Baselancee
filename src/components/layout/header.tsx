@@ -57,12 +57,16 @@ export default function Header() {
 
         <div className="hidden items-center gap-2 md:flex">
             <>
-              <Button variant="ghost" className={linkClasses}>
-                Log In
-              </Button>
-              <Button>
-                Sign Up
-              </Button>
+              <Link href="/login" passHref>
+                <Button variant="ghost" className={linkClasses}>
+                  Log In
+                </Button>
+              </Link>
+              <Link href="/signup" passHref>
+                <Button>
+                  Sign Up
+                </Button>
+              </Link>
             </>
         </div>
 
@@ -87,12 +91,16 @@ export default function Header() {
                 ))}
                 <div className="flex flex-col gap-4">
                     <>
-                      <Button variant="outline" className="w-full">
-                        Log In
-                      </Button>
-                      <Button className="w-full">
-                        Sign Up
-                      </Button>
+                      <Link href="/login" passHref>
+                        <Button variant="outline" className="w-full">
+                          Log In
+                        </Button>
+                      </Link>
+                      <Link href="/signup" passHref>
+                        <Button className="w-full">
+                          Sign Up
+                        </Button>
+                      </Link>
                     </>
                 </div>
               </div>
