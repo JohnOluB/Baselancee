@@ -2,20 +2,27 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Briefcase,
   CheckCircle,
   Clock,
+  Copy,
   DollarSign,
+  Globe,
+  Linkedin,
   MapPin,
   MessageSquare,
   Save,
+  Share2,
   Star,
+  Twitter,
 } from 'lucide-react';
 import Image from 'next/image';
+import { Progress } from '@/components/ui/progress';
+
 
 const freelancer = {
   name: 'John Doe',
@@ -43,6 +50,18 @@ const freelancer = {
     canStart: 'Immediately',
     hoursPerWeek: '40 hrs/week',
   },
+  languages: [
+    { name: 'English', level: 'Native/Fluent' },
+    { name: 'Yoruba', level: 'Native' },
+    { name: 'French', level: 'Basic' },
+  ],
+  verifications: {
+      identity: true,
+      payment: true,
+      email: true,
+      phone: true,
+      onchainReputation: '1234'
+  }
 };
 
 const skills = [
@@ -217,6 +236,51 @@ export default function FreelancerProfilePage() {
                             </div>
                         </CardContent>
                     </Card>
+                     <Card>
+                        <CardHeader>
+                            <CardTitle>Profile Strength</CardTitle>
+                            <CardDescription>95%</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Progress value={95} />
+                             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+                                <li className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Complete profile</li>
+                                <li className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Verified payment method</li>
+                                <li className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Portfolio uploaded</li>
+                            </ul>
+                        </CardContent>
+                    </Card>
+                     <Card>
+                        <CardHeader><CardTitle>Languages</CardTitle></CardHeader>
+                        <CardContent className="space-y-2 text-sm">
+                            {freelancer.languages.map(lang => (
+                                <div key={lang.name}>
+                                    <span className="font-medium text-foreground">{lang.name} - </span>
+                                    <span className="text-muted-foreground">{lang.level}</span>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader><CardTitle>Verifications</CardTitle></CardHeader>
+                        <CardContent className="space-y-2 text-sm text-muted-foreground">
+                            {freelancer.verifications.identity && <p className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Identity Verified</p>}
+                            {freelancer.verifications.payment && <p className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Payment Method Verified</p>}
+                            {freelancer.verifications.email && <p className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Email Verified</p>}
+                            {freelancer.verifications.phone && <p className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Phone Verified</p>}
+                            {freelancer.verifications.onchainReputation && <p className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" /> Onchain Reputation #{freelancer.verifications.onchainReputation}</p>}
+                        </CardContent>
+                    </Card>
+                     <Card>
+                        <CardHeader>
+                            <CardTitle className="text-base">Share this profile</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex items-center gap-2">
+                           <Button variant="outline" size="icon"><Twitter className="h-4 w-4" /></Button>
+                           <Button variant="outline" size="icon"><Linkedin className="h-4 w-4" /></Button>
+                           <Button variant="outline" size="icon"><Copy className="h-4 w-4" /></Button>
+                        </CardContent>
+                    </Card>
                 </div>
               </div>
             </TabsContent>
@@ -230,5 +294,3 @@ export default function FreelancerProfilePage() {
     </div>
   );
 }
-
-    
