@@ -81,15 +81,15 @@
     @apply text-4xl font-bold tracking-[-0.01em];
   }
   h3 {
-    @apply text-[28px] font-semibold;
-  }
-  h4 {
     @apply text-2xl font-semibold;
   }
+  h4 {
+    @apply text-xl font-semibold;
+  }
   h5 {
-    @apply text-xl font-medium;
+    @apply text-lg font-medium;
   }
   h6 {
-    @apply text-lg font-medium;
+    @apply text-base font-medium;
   }
 }

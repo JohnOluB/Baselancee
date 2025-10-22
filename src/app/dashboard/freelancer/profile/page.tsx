@@ -97,7 +97,7 @@ function SkillRating({ rating, max = 5 }: { rating: number, max?: number }) {
 export default function FreelancerProfilePage() {
   return (
     <div className="w-full">
-      <header className="relative h-48 bg-gradient-to-r from-primary to-teal rounded-lg">
+      <header className="relative h-48 bg-gradient-to-r from-primary to-teal-500 rounded-lg">
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)]">
           <Card className="shadow-lg">
             <CardContent className="p-6">
