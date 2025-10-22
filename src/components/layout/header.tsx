@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu } from 'lucide-react';
-import { usePrivy } from '@privy-io/react-auth';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -20,7 +19,6 @@ const navLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { ready, authenticated, login, logout } = usePrivy();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,20 +56,14 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          {!authenticated ? (
             <>
-              <Button variant="ghost" onClick={login} className={linkClasses} disabled={!ready}>
+              <Button variant="ghost" className={linkClasses}>
                 Log In
               </Button>
-              <Button onClick={login} disabled={!ready}>
+              <Button>
                 Sign Up
               </Button>
             </>
-          ) : (
-            <Button onClick={logout} disabled={!ready}>
-              Log Out
-            </Button>
-          )}
         </div>
 
         <div className="md:hidden">
@@ -94,20 +86,14 @@ export default function Header() {
                   </Link>
                 ))}
                 <div className="flex flex-col gap-4">
-                  {!authenticated ? (
                     <>
-                      <Button variant="outline" className="w-full" onClick={login} disabled={!ready}>
+                      <Button variant="outline" className="w-full">
                         Log In
                       </Button>
-                      <Button className="w-full" onClick={login} disabled={!ready}>
+                      <Button className="w-full">
                         Sign Up
                       </Button>
                     </>
-                  ) : (
-                    <Button className="w-full" onClick={logout} disabled={!ready}>
-                      Log Out
-                    </Button>
-                  )}
                 </div>
               </div>
             </SheetContent>
