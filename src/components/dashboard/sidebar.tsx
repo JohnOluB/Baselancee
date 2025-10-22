@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -79,7 +80,7 @@ export default function DashboardSidebar() {
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild><Link href="/dashboard/freelancer/profile">View Profile</Link></DropdownMenuItem>
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link href="/dashboard/settings">Settings</Link></DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild><Link href="/">Sign Out</Link></DropdownMenuItem>
                 </DropdownMenuContent>
@@ -90,7 +91,7 @@ export default function DashboardSidebar() {
             <SidebarMenuItem key={link.href}>
               <Link href={link.href} passHref>
                 <SidebarMenuButton
-                  isActive={pathname.startsWith(link.href) && (link.href.split('/').length === pathname.split('/').length || link.href.endsWith(pathname.split('/').pop()!))}
+                  isActive={pathname.startsWith(link.href) && (link.href.split('/').length === pathname.split('/').length || pathname.startsWith(link.href + '/'))}
                   tooltip={link.label}
                 >
                   <link.icon />
@@ -112,7 +113,9 @@ export default function DashboardSidebar() {
             </CardHeader>
             <CardContent className="p-4 pt-0">
                 <div className="text-xl font-bold">1,234.56 USDC</div>
-                <Button size="sm" className="w-full mt-2">Withdraw</Button>
+                <Button size="sm" className="w-full mt-2" asChild>
+                  <Link href="/dashboard/freelancer/earnings">Withdraw</Link>
+                </Button>
             </CardContent>
         </Card>
         <Button variant="ghost" className="w-full justify-start gap-2">
@@ -123,3 +126,5 @@ export default function DashboardSidebar() {
     </Sidebar>
   );
 }
+
+    
