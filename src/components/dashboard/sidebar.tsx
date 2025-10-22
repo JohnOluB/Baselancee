@@ -69,7 +69,7 @@ export default function DashboardSidebar() {
                     <DropdownMenuItem asChild><Link href="/dashboard/freelancer/profile">View Profile</Link></DropdownMenuItem>
                     <DropdownMenuItem>Settings</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Sign Out</DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link href="/signup">Sign Out</Link></DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>
