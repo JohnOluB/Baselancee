@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -92,9 +92,14 @@ export default function ClientSignUpPage() {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     console.log(data);
     setFormSubmitted(true);
-    // Redirect to client dashboard on successful submission
-    router.push('/dashboard/client');
   };
+
+  useEffect(() => {
+    if (formSubmitted) {
+      router.push('/dashboard/client');
+    }
+  }, [formSubmitted, router]);
+
 
   if (formSubmitted) {
     return (
@@ -109,11 +114,8 @@ export default function ClientSignUpPage() {
                 <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
                 <CardTitle className="mt-4 text-2xl">Account Created!</CardTitle>
                 <CardDescription className="mt-2 text-muted-foreground">
-                    Welcome to BaseLance. You will be redirected to your dashboard shortly.
+                    Welcome to BaseLance. You are being redirected to your dashboard...
                 </CardDescription>
-                <Button asChild className="mt-6 w-full">
-                    <Link href="/dashboard/client">Go to Dashboard</Link>
-                </Button>
             </CardContent>
         </Card>
       </div>
