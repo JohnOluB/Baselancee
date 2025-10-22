@@ -56,12 +56,12 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Button variant="ghost" asChild>
+          <Button variant="outline" asChild className="w-[105px] justify-center">
             <Link href="/login" className="transition-colors font-medium text-sm text-foreground hover:bg-white hover:border hover:border-border">
               Log In
             </Link>
           </Button>
-          <Button asChild>
+          <Button asChild className="w-[105px]">
             <Link href="/signup">
               Sign Up
             </Link>
