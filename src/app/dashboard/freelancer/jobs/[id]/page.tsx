@@ -1,4 +1,5 @@
 
+'use client';
 import {
   ArrowLeft,
   Briefcase,
@@ -31,6 +32,19 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { JobCard } from '@/components/dashboard/jobs/job-card';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { useState } from 'react';
+import { analyzeJobDescription, AnalyzeJobDescriptionOutput } from '@/ai/flows/job-description-analyzer';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Terminal } from 'lucide-react';
 
 const job = {
   isVerified: true,
@@ -93,6 +107,141 @@ const similarJobs = [
     { isVerified: true, isHot: true, isFeatured: false, title: 'Next.js Developer for E-commerce Site', postedBy: 'ShopFast', postedAt: '1 day ago', description: 'We need a Next.js expert to optimize our e-commerce platform.', budget: { amount: 2500, currency: 'USD' }, budgetType: 'Fixed Price', duration: '1 month', location: 'Remote', experienceLevel: 'Expert', skills: ['Next.js', 'Vercel', 'Stripe'], client: { name: 'ShopFast', avatar: 'https://i.pravatar.cc/150?u=a042581f4e2902670ac', rating: 4.9, reviewCount: 32, jobsPosted: 15, spend: 80000, isPaymentVerified: true, location: 'United Kingdom', }, proposals: { count: 15 } },
     { isVerified: false, isHot: false, isFeatured: true, title: 'UI Designer for Crypto Wallet', postedBy: 'CoinVerse', postedAt: '2 days ago', description: 'Design a beautiful and intuitive UI for our new crypto wallet.', budget: { from: 40, to: 60, currency: 'USD', per: 'hr' }, budgetType: 'Hourly', duration: '3+ months', location: 'Remote', experienceLevel: 'Intermediate', skills: ['Figma', 'UI/UX Design', 'Crypto'], client: { name: 'CoinVerse', avatar: 'https://i.pravatar.cc/150?u=a042581f4e2902670df', rating: 4.7, reviewCount: 5, jobsPosted: 5, spend: 15000, isPaymentVerified: false, location: 'Global', }, proposals: { count: 18 } },
 ]
+
+function AIAnalysisResults({ results }: { results: AnalyzeJobDescriptionOutput }) {
+    return (
+        <div className="space-y-6">
+            <Alert>
+                <Terminal className="h-4 w-4" />
+                <AlertTitle>AI Analysis Complete</AlertTitle>
+                <AlertDescription>
+                    Here are the key insights from the job description to help you craft a winning proposal.
+                </AlertDescription>
+            </Alert>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-base">Suitability Score</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col items-center justify-center">
+                        <div className="relative h-24 w-24">
+                            <svg className="h-full w-full" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-muted" strokeWidth="2"></circle>
+                                <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-primary" strokeWidth="2" strokeDasharray={`${results.suitabilityScore}, 100`} strokeLinecap="round" transform="rotate(-90 18 18)"></circle>
+                            </svg>
+                             <span className="absolute text-2xl font-bold top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{results.suitabilityScore}</span>
+                        </div>
+                        <p className="text-center text-sm text-muted-foreground mt-2">How well this job matches your profile.</p>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className="text-base">Time Commitment</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex items-center justify-center h-full">
+                        <p className="text-2xl font-bold text-center">{results.estimatedTimeCommitment}</p>
+                    </CardContent>
+                </Card>
+            </div>
+             <Card>
+                <CardHeader>
+                    <CardTitle className="text-base">Required Skills</CardTitle>
+                </CardHeader>
+                <CardContent>
+                     <div className="flex flex-wrap gap-2">
+                        {results.requiredSkills.map(skill => <Badge key={skill} variant="secondary" className="text-base py-1 px-3">{skill}</Badge>)}
+                    </div>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base">Suggested Rate</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-3xl font-bold">{results.suggestedRate}</p>
+                    <p className="text-sm text-muted-foreground mt-1">Based on the skills required and market rates.</p>
+                </CardContent>
+            </Card>
+        </div>
+    )
+}
+
+function AIJobAnalyzer() {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [analysis, setAnalysis] = useState<AnalyzeJobDescriptionOutput | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleAnalyze = async () => {
+        setIsOpen(true);
+        setIsLoading(true);
+        setError(null);
+        setAnalysis(null);
+        try {
+            const result = await analyzeJobDescription({ jobDescription: job.description });
+            setAnalysis(result);
+        } catch(e) {
+            setError("Sorry, the AI analyzer failed to process this job description. Please try again later.");
+            console.error(e);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return (
+        <>
+            <Card>
+                <CardHeader>
+                    <CardTitle>AI Job Analyzer</CardTitle>
+                    <CardDescription>Get insights on this job description to craft the perfect proposal.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button className="w-full" variant="outline" onClick={handleAnalyze} disabled={isLoading}>
+                        {isLoading ? (
+                            <>
+                                <Zap className="mr-2 h-4 w-4 animate-spin" />
+                                <span>Analyzing...</span>
+                            </>
+                        ) : (
+                             <>
+                                <Zap className="mr-2 h-4 w-4" />
+                                <span>Analyze with AI</span>
+                            </>
+                        )}
+                    </Button>
+                </CardContent>
+            </Card>
+
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                        <DialogTitle>AI Job Analysis</DialogTitle>
+                        <DialogDescription>
+                            Here are some AI-powered insights to help you write a stronger proposal.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-6 max-h-[70vh] overflow-y-auto pr-4">
+                        {isLoading && (
+                            <div className="space-y-4 text-center">
+                                <div className="flex justify-center">
+                                    <Zap className="h-8 w-8 animate-pulse text-primary" />
+                                </div>
+                                <p className="font-medium">Analyzing job description...</p>
+                                <p className="text-sm text-muted-foreground">This may take a few moments. The AI is identifying key skills, estimating the project scope, and suggesting a competitive rate.</p>
+                                <Progress value={50} className="w-full animate-pulse" />
+                            </div>
+                        )}
+                        {error && <p className="text-red-500">{error}</p>}
+                        {analysis && <AIAnalysisResults results={analysis} />}
+                    </div>
+                     <DialogFooter>
+                        <Button onClick={() => setIsOpen(false)}>Close</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </>
+    )
+}
 
 export default function JobDetailsPage() {
   return (
@@ -287,15 +436,7 @@ export default function JobDetailsPage() {
                 <Button variant="outline" size="lg"><Heart className="mr-2 h-4 w-4"/> Save Job</Button>
               </CardFooter>
             </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>AI Job Analyzer</CardTitle>
-                    <CardDescription>Get insights on this job description to craft the perfect proposal.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Button className="w-full" variant="outline"><Zap className="mr-2 h-4 w-4"/>Analyze with AI</Button>
-                </CardContent>
-            </Card>
+            <AIJobAnalyzer />
           </div>
         </aside>
       </div>
@@ -311,3 +452,5 @@ export default function JobDetailsPage() {
     </div>
   );
 }
+
+    
