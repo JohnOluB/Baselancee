@@ -12,8 +12,8 @@ export default function LoginPage() {
 
   const handleLogin = () => {
     // TODO: Implement actual login logic
-    // For now, just redirect to the freelancer dashboard
-    router.push('/dashboard/freelancer');
+    // For now, just redirect to the client dashboard
+    router.push('/dashboard/client');
   }
 
   return (
