@@ -80,10 +80,12 @@ export function FreelancerCard({ freelancer }: { freelancer: Freelancer }) {
         </div>
 
         <div className="mt-6 flex flex-col sm:flex-row gap-2">
-          <Button variant="outline" className="w-full">
-            <MessageSquare className="mr-2 h-4 w-4" /> Message
+          <Button variant="outline" className="flex-1" asChild>
+            <Link href="/dashboard/freelancer/profile">
+                <MessageSquare className="mr-2 h-4 w-4" /> Message
+            </Link>
           </Button>
-          <Button className="w-full" asChild>
+          <Button className="flex-1" asChild>
             <Link href="/dashboard/freelancer/profile">View Profile</Link>
           </Button>
         </div>
