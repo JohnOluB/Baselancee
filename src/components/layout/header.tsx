@@ -2,12 +2,22 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu } from 'lucide-react';
+import { Menu, LogOut, Wallet, UserCircle } from 'lucide-react';
+import { usePrivy } from '@privy-io/react-auth';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/logo';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 const navLinks = [
   { href: '#find-work', label: 'Find Work' },
@@ -19,6 +29,7 @@ const navLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { ready, authenticated, user, login, logout } = usePrivy();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,6 +49,10 @@ export default function Header() {
     'text-foreground hover:text-primary'
   );
 
+  const wallet = user?.wallet;
+  const shortAddress = wallet?.address ? `${wallet.address.slice(0, 6)}...${wallet.address.slice(-4)}` : '';
+
+
   return (
     <header className={headerClasses}>
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
@@ -56,18 +71,47 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-            <>
-              <Link href="/login" passHref>
-                <Button variant="ghost" className={linkClasses}>
-                  Log In
-                </Button>
-              </Link>
-              <Link href="/signup" passHref>
-                <Button>
-                  Sign Up
-                </Button>
-              </Link>
-            </>
+            {ready && (
+              authenticated ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="flex items-center gap-2">
+                       <Avatar className="h-6 w-6">
+                        <AvatarImage src={user?.wallet?.walletClientType === 'privy' ? '/privy-logo.png' : user?.wallet?.walletClientType==='metamask' ? '/metamask-logo.svg' : '/coinbase-wallet-logo.png'} />
+                        <AvatarFallback><UserCircle className="h-5 w-5"/></AvatarFallback>
+                      </Avatar>
+                      <span>{shortAddress}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <UserCircle className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Wallet className="mr-2 h-4 w-4" />
+                      <span>Wallet</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={logout}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Log out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <>
+                  <Button variant="ghost" className={linkClasses} onClick={login}>
+                    Log In
+                  </Button>
+                  <Button onClick={login}>
+                    Sign Up
+                  </Button>
+                </>
+              )
+            )}
         </div>
 
         <div className="md:hidden">
@@ -90,18 +134,20 @@ export default function Header() {
                   </Link>
                 ))}
                 <div className="flex flex-col gap-4">
-                    <>
-                      <Link href="/login" passHref>
-                        <Button variant="outline" className="w-full">
+                  {ready && (
+                    authenticated ? (
+                      <Button variant="outline" className="w-full" onClick={logout}>Log Out</Button>
+                    ) : (
+                      <>
+                        <Button variant="outline" className="w-full" onClick={login}>
                           Log In
                         </Button>
-                      </Link>
-                      <Link href="/signup" passHref>
-                        <Button className="w-full">
+                        <Button className="w-full" onClick={login}>
                           Sign Up
                         </Button>
-                      </Link>
-                    </>
+                      </>
+                    )
+                  )}
                 </div>
               </div>
             </SheetContent>
