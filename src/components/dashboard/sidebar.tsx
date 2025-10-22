@@ -2,7 +2,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, FileText, Briefcase, BarChart2, Star, MessageSquare, Settings, Wallet, LifeBuoy } from 'lucide-react';
+import { Home, Search, FileText, Briefcase, BarChart2, Star, MessageSquare, Settings, Wallet, LifeBuoy, Users } from 'lucide-react';
 
 import {
   Sidebar,
@@ -25,8 +25,9 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import Logo from '../logo';
+import { Separator } from '../ui/separator';
 
-const navLinks = [
+const freelanceLinks = [
   { href: '/dashboard/freelancer', label: 'Dashboard', icon: Home },
   { href: '/dashboard/freelancer/jobs', label: 'Browse Jobs', icon: Search },
   { href: '/dashboard/freelancer/proposals', label: 'My Proposals', icon: FileText },
@@ -36,12 +37,25 @@ const navLinks = [
   { href: '/dashboard/freelancer/messages', label: 'Messages', icon: MessageSquare, badge: '3' },
 ];
 
+const clientLinks = [
+    { href: '/dashboard/client', label: 'Dashboard', icon: Home },
+    { href: '/dashboard/client/freelancers', label: 'Browse Freelancers', icon: Users },
+    { href: '/dashboard/client/jobs', label: 'My Jobs', icon: Briefcase },
+    { href: '/dashboard/client/messages', label: 'Messages', icon: MessageSquare, badge: '1' },
+]
+
 const bottomLinks = [
-    { href: '/dashboard/freelancer/settings', label: 'Settings', icon: Settings },
+    { href: '/dashboard/settings', label: 'Settings', icon: Settings },
 ]
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
+  const isFreelancer = pathname.includes('/freelancer');
+  const isClient = pathname.includes('/client');
+
+  // Determine navLinks based on role
+  const navLinks = isClient ? clientLinks : freelanceLinks;
+
 
   return (
     <Sidebar>
@@ -78,7 +92,7 @@ export default function DashboardSidebar() {
             <SidebarMenuItem key={link.href}>
               <Link href={link.href} passHref>
                 <SidebarMenuButton
-                  isActive={pathname.startsWith(link.href) && (link.href !== '/dashboard/freelancer' || pathname === '/dashboard/freelancer')}
+                  isActive={pathname.startsWith(link.href) && (link.href.split('/').length === pathname.split('/').length || link.href.endsWith(pathname.split('/').pop()!))}
                   tooltip={link.label}
                 >
                   <link.icon />
@@ -111,5 +125,3 @@ export default function DashboardSidebar() {
     </Sidebar>
   );
 }
-
-    
