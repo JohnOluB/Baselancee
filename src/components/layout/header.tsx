@@ -57,7 +57,7 @@ export default function Header() {
 
         <div className="hidden items-center gap-2 md:flex">
           <Button variant="ghost" asChild>
-            <Link href="/login" className="transition-colors font-medium text-sm text-foreground">
+            <Link href="/login" className="transition-colors font-medium text-sm text-foreground hover:bg-white">
               Log In
             </Link>
           </Button>
