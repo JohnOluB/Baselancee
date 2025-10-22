@@ -1,12 +1,6 @@
 'use client';
 import {PrivyProvider} from '@privy-io/react-auth';
-import {
-  base,
-  arbitrum,
-  mainnet,
-  optimism,
-  polygon,
-} from '@privy-io/chains';
+import { base, arbitrum, mainnet, optimism, polygon } from '@privy-io/react-auth/chains';
 
 export default function PrivyProviderWrapper({
   children,
@@ -27,7 +21,7 @@ export default function PrivyProviderWrapper({
           logo: '/logo.svg',
         },
         supportedChains: [mainnet, polygon, arbitrum, optimism, base],
-        defaultChain: mainnet,
+        defaultChain: base,
       }}
     >
       {children}
