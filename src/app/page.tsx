@@ -4,7 +4,6 @@ import Footer from "@/components/layout/footer";
 import Hero from "@/components/landing/hero";
 import HowItWorks from "@/components/landing/how-it-works";
 import Testimonials from "@/components/landing/testimonials";
-import Cta from "@/components/landing/cta";
 import WhyChoose from "@/components/landing/why-choose";
 
 export default function Home() {
@@ -16,7 +15,6 @@ export default function Home() {
         <HowItWorks />
         <WhyChoose />
         <Testimonials />
-        <Cta />
       </main>
       <Footer />
     </div>
