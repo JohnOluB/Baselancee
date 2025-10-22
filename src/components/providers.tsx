@@ -1,7 +1,7 @@
 'use client';
 
 import {PrivyProvider} from '@privy-io/react-auth';
-import {base} from '@privy-io/react-auth/chains';
+import {base} from '@privy-io/react-auth';
 
 export function Providers({children}: {children: React.ReactNode}) {
   return (
