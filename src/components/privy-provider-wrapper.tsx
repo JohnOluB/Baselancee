@@ -6,7 +6,7 @@ import {
   mainnet,
   optimism,
   polygon,
-} from '@privy-io/react-auth';
+} from '@privy-io/chains';
 
 export default function PrivyProviderWrapper({
   children,
