@@ -5,51 +5,39 @@ import Logo from "../logo";
 
 const footerSections = [
   {
-    title: "For Clients",
+    title: "Platform",
     links: [
-      { href: "#", label: "How to Hire" },
-      { href: "#", label: "Talent Marketplace" },
-      { href: "#", label: "Project Catalog" },
-      { href: "#", label: "Hire an Agency" },
-      { href: "#", label: "Enterprise" },
-      { href: "#", label: "Any Hire" },
-      { href: "#", label: "Contract-to-Hire" },
-      { href: "#", label: "Direct Contracts" },
-      { href: "#", label: "Hire Worldwide" },
-    ],
-  },
-  {
-    title: "For Talent",
-    links: [
-      { href: "#", label: "How to Find Work" },
-      { href: "#", label: "Direct Contracts" },
-      { href: "#", label: "Find Freelance Jobs Worldwide" },
-      { href: "#", label: "Find Freelance Jobs in the USA" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { href: "#", label: "Help & Support" },
-      { href: "#", label: "Success Stories" },
-      { href: "#", label: "Reviews" },
-      { href: "#", label: "Blog" },
-      { href: "#", label: "Affiliate Program" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
+      { href: "#", label: "Find Work" },
+      { href: "#", label: "Find Talent" },
+      { href: "#", label: "Categories" },
       { href: "#", label: "About Us" },
-      { href: "#", label: "Leadership" },
-      { href: "#", label: "Careers" },
-      { href: "#", label: "Our Impact" },
-      { href: "#", label: "Press" },
+    ],
+  },
+  {
+    title: "Categories",
+    links: [
+      { href: "#", label: "Data Science" },
+      { href: "#", label: "IT & Networking" },
+      { href: "#", label: "Web & Mobile" },
+    ],
+  },
+  {
+    title: "Help",
+    links: [
+      { href: "#", label: "FAQ's" },
       { href: "#", label: "Contact Us" },
-      { href: "#", label: "Trust, Safety & Security" },
+    ],
+  },
+  {
+    title: "Get in touch",
+    links: [
+      { href: "#", label: "Instagram" },
+      { href: "#", label: "LinkedIn" },
+      { href: "#", label: "Twitter" },
     ],
   },
 ];
+
 
 const socialLinks = [
   { href: "#", icon: Facebook },
@@ -57,21 +45,22 @@ const socialLinks = [
   { href: "#", icon: Twitter },
   { href: "#", icon: Youtube },
   { href: "#", icon: Instagram },
-  { href: "#", icon: DiscordIcon },
 ];
 
 const legalLinks = [
     { href: "#", label: "Terms of Service" },
     { href: "#", label: "Privacy Policy" },
-    { href: "#", label: "CA Notice at Collection" },
-    { href: "#", label: "Accessibility" },
 ]
 
 export default function Footer() {
   return (
-    <footer className="bg-charcoal text-white">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+    <footer className="bg-charcoal text-white pt-20">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+            <div className="lg:col-span-2">
+                <Logo />
+                <p className="mt-4 text-muted-foreground max-w-xs">Join our community to stay up-to-date with the latest news.</p>
+            </div>
             {footerSections.map((section) => (
                 <div key={section.title}>
                     <h3 className="font-semibold mb-4">{section.title}</h3>
@@ -88,8 +77,8 @@ export default function Footer() {
             ))}
         </div>
       </div>
-      <div className="container mx-auto px-4 border-t border-muted/20">
-         <div className="flex flex-col md:flex-row items-center justify-between gap-6 py-6 text-sm text-muted-foreground">
+      <div className="container mx-auto px-4 mt-16">
+         <div className="flex flex-col md:flex-row items-center justify-between gap-6 py-6 text-sm text-muted-foreground border-t border-muted/20">
             <div className="flex items-center gap-4">
                  <p>&copy; {new Date().getFullYear()} BaseLance. All rights reserved.</p>
             </div>
@@ -101,7 +90,6 @@ export default function Footer() {
                 ))}
             </div>
             <div className="flex items-center gap-4">
-                 <p>Follow Us</p>
                 {socialLinks.map(({ href, icon: Icon }, index) => (
                 <Link key={index} href={href} className="text-muted-foreground hover:text-white">
                     <Icon className="h-5 w-5" />
