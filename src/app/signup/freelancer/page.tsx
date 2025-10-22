@@ -4,7 +4,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useForm, type SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Check, Eye, EyeOff, CheckCircle, Wallet } from 'lucide-react';
@@ -74,10 +74,14 @@ export default function FreelancerSignUpPage() {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     mode: 'onBlur',
+    defaultValues: {
+      terms: false,
+    }
   });
 
   const password = watch('password');
@@ -185,7 +189,19 @@ export default function FreelancerSignUpPage() {
               </div>
 
               <div className="flex items-start space-x-2 pt-2">
-                <Checkbox id="terms" {...register('terms')} className="mt-0.5" />
+                <Controller
+                    control={control}
+                    name="terms"
+                    render={({ field }) => (
+                        <Checkbox 
+                            id="terms"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            className="mt-0.5"
+                         />
+                    )}
+                />
+
                 <div className="grid gap-1.5 leading-none">
                   <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     I agree to the{' '}
@@ -207,13 +223,13 @@ export default function FreelancerSignUpPage() {
               </Button>
             </form>
 
-            <div className="flex items-center gap-4">
-                <Separator className="flex-1" />
-                <span className="text-xs text-muted-foreground">OR</span>
-                <Separator className="flex-1" />
+            <div className="relative flex py-2 items-center">
+                <div className="flex-grow border-t border-muted"></div>
+                <span className="flex-shrink mx-4 text-xs text-muted-foreground">OR</span>
+                <div className="flex-grow border-t border-muted"></div>
             </div>
 
-            <Button className="w-full" size="lg">
+            <Button className="w-full" size="lg" variant="outline">
                 <Wallet className="mr-2 h-5 w-5"/>
                 Connect Wallet
             </Button>
