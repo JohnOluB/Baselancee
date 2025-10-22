@@ -91,7 +91,7 @@ export default function DashboardSidebar() {
             <SidebarMenuItem key={link.href}>
               <Link href={link.href} passHref>
                 <SidebarMenuButton
-                  isActive={pathname.startsWith(link.href) && (link.href.split('/').length === pathname.split('/').length || pathname.startsWith(link.href + '/'))}
+                  isActive={pathname === link.href || (link.href !== '/dashboard/freelancer' && pathname.startsWith(link.href))}
                   tooltip={link.label}
                 >
                   <link.icon />
