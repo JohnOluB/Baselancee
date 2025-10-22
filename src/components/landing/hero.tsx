@@ -23,9 +23,6 @@ export default function Hero() {
                     Get Started
                 </Button>
             </Link>
-            <Button size="lg" variant="outline" className="bg-white hover:bg-white">
-              Learn More
-            </Button>
           </div>
         </div>
 
