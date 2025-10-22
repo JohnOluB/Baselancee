@@ -56,8 +56,8 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Button variant="ghost" className={linkClasses} asChild>
-            <Link href="/login">
+          <Button variant="ghost" asChild>
+            <Link href="/login" className="transition-colors font-medium text-sm text-foreground hover:text-white">
               Log In
             </Link>
           </Button>
