@@ -45,6 +45,7 @@ import { analyzeJobDescription, AnalyzeJobDescriptionOutput } from '@/ai/flows/j
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
 const job = {
   isVerified: true,
@@ -67,7 +68,7 @@ const job = {
       'Week 3: Chart implementation and final polish.',
     ],
   },
-  budget: { from: 800, to: 1200, currency: 'USD' },
+  budget: { from: 800, to: 1200, currency: 'USDC' },
   budgetType: 'Fixed Price',
   duration: '2-3 weeks',
   location: 'Remote',
@@ -243,6 +244,77 @@ function AIJobAnalyzer() {
     )
 }
 
+function ApplicationSidebar() {
+    const [bid, setBid] = useState<number | string>('');
+    const fee = 0.02; // 2%
+    const clientBudget = 'from' in job.budget ? `$${job.budget.from} - $${job.budget.to}` : `$${job.budget.amount}`;
+
+    const calculateEarnings = (bidAmount: number) => {
+        if (!bidAmount || bidAmount <= 0) return { fee: '0.00', earnings: '0.00' };
+        const platformFee = bidAmount * fee;
+        const yourEarnings = bidAmount - platformFee;
+        return {
+            fee: platformFee.toFixed(2),
+            earnings: yourEarnings.toFixed(2)
+        };
+    };
+    
+    const bidAmountNumber = typeof bid === 'string' ? parseFloat(bid) : bid;
+    const { fee: platformFee, earnings } = calculateEarnings(bidAmountNumber);
+
+    return (
+         <Card>
+            <CardHeader>
+                <CardTitle>Submit a Proposal</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div>
+                    <h4 className="text-sm font-semibold mb-2">Budget Breakdown</h4>
+                    <div className="p-3 rounded-md border bg-muted/50 text-sm space-y-2">
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">Client's Budget</span>
+                            <span>{clientBudget}</span>
+                        </div>
+                         <div className="flex justify-between items-center">
+                            <label htmlFor="your-bid" className="text-muted-foreground">Your Bid</label>
+                            <div className="relative w-28">
+                                <Input 
+                                    id="your-bid" 
+                                    type="number" 
+                                    placeholder="e.g. 1000" 
+                                    className="pr-12"
+                                    value={bid}
+                                    onChange={(e) => setBid(e.target.value)}
+                                />
+                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">USDC</span>
+                            </div>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">Platform Fee (2%)</span>
+                            <span>-${platformFee}</span>
+                        </div>
+                        <Separator />
+                        <div className="flex justify-between font-semibold">
+                            <span>You'll Receive</span>
+                            <span>${earnings} USDC</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label htmlFor="proposal-cover-letter" className="text-sm font-medium">Cover Letter</label>
+                    <Textarea id="proposal-cover-letter" placeholder="Introduce yourself and explain why you're a great fit for this job..." className="mt-1" rows={6}/>
+                </div>
+            </CardContent>
+            <CardFooter className="flex-col items-stretch gap-2">
+                <Button size="lg">Submit Proposal</Button>
+                <p className="text-xs text-muted-foreground text-center">{job.proposals.count} other freelancers have applied</p>
+                <Button variant="outline" size="lg"><Heart className="mr-2 h-4 w-4"/> Save Job</Button>
+            </CardFooter>
+        </Card>
+    )
+}
+
 export default function JobDetailsPage() {
   return (
     <div className="space-y-6">
@@ -411,31 +483,7 @@ export default function JobDetailsPage() {
 
         <aside className="lg:col-span-1 xl:col-span-1">
           <div className="sticky top-[76px] space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Submit a Proposal</CardTitle>
-                </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="proposal-rate" className="text-sm font-medium">Your rate</label>
-                    <p className="text-xs text-muted-foreground">Client's budget: ${job.budget.from} - ${job.budget.to}</p>
-                    <div className="relative mt-1">
-                        <input type="number" id="proposal-rate" className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-12" placeholder="e.g. 1000" />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">USDC</span>
-                    </div>
-                  </div>
-                   <div>
-                    <label htmlFor="proposal-cover-letter" className="text-sm font-medium">Cover Letter</label>
-                     <Textarea id="proposal-cover-letter" placeholder="Introduce yourself and explain why you're a great fit for this job..." className="mt-1" rows={6}/>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex-col items-stretch gap-2">
-                <Button size="lg">Submit Proposal</Button>
-                <Button variant="outline" size="lg"><Heart className="mr-2 h-4 w-4"/> Save Job</Button>
-              </CardFooter>
-            </Card>
+            <ApplicationSidebar />
             <AIJobAnalyzer />
           </div>
         </aside>
@@ -452,5 +500,3 @@ export default function JobDetailsPage() {
     </div>
   );
 }
-
-    
