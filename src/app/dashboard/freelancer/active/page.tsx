@@ -61,20 +61,19 @@ const activeJobs = [
       name: 'SaaSify',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
     },
-    status: 'Urgent',
+    status: 'On Track',
     progress: 85,
     dueDate: 'in 2 days',
     budget: '$2,000',
     type: 'Fixed Price',
-    urgent: true,
+    urgent: false,
     actionNeeded: false,
   },
 ];
 
 function JobCard({ job }: { job: any }) {
   const getBorderClass = () => {
-    if (job.urgent) return 'border-l-4 border-destructive';
-    if (job.actionNeeded) return 'border-l-4 border-orange-500';
+    if (job.actionNeeded) return 'border-orange-500';
     return '';
   };
 
