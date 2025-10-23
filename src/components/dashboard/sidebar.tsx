@@ -32,7 +32,6 @@ const freelanceLinks = [
   { href: '/dashboard/freelancer/proposals', label: 'My Proposals', icon: FileText },
   { href: '/dashboard/freelancer/active', label: 'Active Jobs', icon: Briefcase },
   { href: '/dashboard/freelancer/earnings', label: 'Earnings', icon: BarChart2 },
-  { href: '/dashboard/freelancer/reviews', label: 'Reviews', icon: Star },
   { href: '/dashboard/freelancer/achievements', label: 'Achievements', icon: Trophy },
   { href: '/dashboard/freelancer/messages', label: 'Messages', icon: MessageSquare, badge: '3' },
 ];
