@@ -278,7 +278,7 @@ function ApplicationSidebar() {
         <div className="space-y-6">
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button size="lg" className="w-full">Submit a Proposal</Button>
+                    <Button size="lg" className="w-full">Submit Proposal</Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-3xl">
                     <DialogHeader>
@@ -314,14 +314,14 @@ function ApplicationSidebar() {
                          <div className="p-4 rounded-md border bg-muted/50 text-sm space-y-2">
                             <div className="flex justify-between">
                                 <span>Your Bid:</span>
-                                <span>{isNaN(bidAmountNumber) ? '0.00' : bidAmountNumber.toFixed(2)} USDC</span>
+                                <span>{isNaN(bidAmountNumber) || bidAmountNumber <= 0 ? '0.00' : bidAmountNumber.toFixed(2)} USDC</span>
                             </div>
                              <div className="flex justify-between">
                                 <span>Platform Fee (2%):</span>
                                 <span>-{platformFee.toFixed(2)} USDC</span>
                             </div>
                              <Separator className="my-2"/>
-                            <div className="flex justify-between font-semibold">
+                             <div className="flex justify-between font-semibold">
                                 <span>You'll Receive:</span>
                                 <span>{earnings.toFixed(2)} USDC</span>
                             </div>
@@ -581,5 +581,3 @@ export default function JobDetailsPage() {
     </div>
   );
 }
-
-    
