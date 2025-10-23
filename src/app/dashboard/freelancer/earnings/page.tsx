@@ -1,14 +1,15 @@
 
 'use client';
-import { useState } from 'react';
+import { useState }from 'react';
 import {
   Wallet,
-  Lock,
-  Trophy,
-  Clock,
-  Banknote,
+  Info,
+  ChevronRight,
   Copy,
   CheckCircle,
+  Clock,
+  XCircle,
+  ExternalLink,
 } from 'lucide-react';
 import {
   Card,
@@ -16,404 +17,197 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Checkbox } from '@/components/ui/checkbox';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
-
-const chartData = [
-  { name: 'Jan', earnings: 4000 },
-  { name: 'Feb', earnings: 3000 },
-  { name: 'Mar', earnings: 5000 },
-  { name: 'Apr', earnings: 4500 },
-  { name: 'May', earnings: 6000 },
-  { name: 'Jun', earnings: 5500 },
+const recentWithdrawals = [
+  {
+    date: '2024-10-26 14:30',
+    amount: '1,200.00 USDC',
+    address: '0x1234...5678',
+    status: 'Completed',
+    txHash: '0xabc...def',
+  },
+  {
+    date: '2024-10-24 09:15',
+    amount: '500.00 USDC',
+    address: '0xabcd...efgh',
+    status: 'Pending',
+    txHash: '0xghi...jkl',
+  },
+  {
+    date: '2024-10-22 18:45',
+    amount: '750.00 USDC',
+    address: '0x1234...5678',
+    status: 'Failed',
+    txHash: '0x mno...pqr',
+  },
 ];
 
-function BankWithdrawalForm() {
-  const [amount, setAmount] = useState('1000');
-  const [accountNumber, setAccountNumber] = useState('');
-  const [isVerified, setIsVerified] = useState(false);
 
-  const handleVerifyAccount = () => {
-    // Simulate API call to verify account
-    if (accountNumber.length === 10) {
-      setIsVerified(true);
-    } else {
-      setIsVerified(false);
+const getStatusBadge = (status: string) => {
+    switch(status) {
+        case 'Completed':
+            return <Badge className="bg-success-green/10 text-success-green hover:bg-success-green/20"><CheckCircle className="mr-1 h-3 w-3"/>{status}</Badge>
+        case 'Pending':
+            return <Badge className="bg-warning-orange/10 text-warning-orange hover:bg-warning-orange/20"><Clock className="mr-1 h-3 w-3"/>{status}</Badge>
+        case 'Failed':
+            return <Badge className="bg-destructive/10 text-destructive hover:bg-destructive/20"><XCircle className="mr-1 h-3 w-3"/>{status}</Badge>
+        default:
+            return <Badge>{status}</Badge>
     }
-  };
+}
 
-  const fee = 0.005;
-  const exchangeRate = 1580;
+export default function WithdrawPage() {
+  const [address, setAddress] = useState('');
+  const [amount, setAmount] = useState('');
+  const [isAddressInvalid, setIsAddressInvalid] = useState(false);
+
+  const availableBalance = 1234.56;
+
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newAddress = e.target.value;
+    setAddress(newAddress);
+    const isValid = /^0x[a-fA-F0-9]{40}$/.test(newAddress);
+    setIsAddressInvalid(newAddress.length > 0 && !isValid);
+  };
+  
   const amountNumber = parseFloat(amount) || 0;
-  const withdrawalFee = amountNumber * exchangeRate * fee;
-  const total = amountNumber * exchangeRate - withdrawalFee;
+  const networkFee = 2.50;
+  const finalAmount = amountNumber > networkFee ? amountNumber - networkFee : 0;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <Label htmlFor="bank-amount">Amount to Withdraw</Label>
-        <div className="relative mt-1">
-          <Input
-            id="bank-amount"
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="1000"
-            className="pr-24"
-          />
-          <div className="absolute inset-y-0 right-0 flex items-center">
-            <span className="pr-3 text-muted-foreground">USDC</span>
-            <Button
-              variant="ghost"
-              className="h-full rounded-l-none border-l"
-              onClick={() => setAmount('1234.56')}
-            >
-              Max
-            </Button>
-          </div>
-        </div>
-      </div>
-      <div className="p-4 rounded-md border bg-muted/50 text-sm space-y-2">
-        <div className="flex justify-between">
-          <span>Amount:</span>
-          <span>{amountNumber.toFixed(2)} USDC</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Exchange Rate:</span>
-          <span>1 USDC = {exchangeRate} NGN</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Subtotal:</span>
-          <span>{(amountNumber * exchangeRate).toLocaleString()} NGN</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Withdrawal Fee (0.5%):</span>
-          <span className="text-destructive">
-            -{withdrawalFee.toLocaleString()} NGN
-          </span>
-        </div>
-        <Separator />
-        <div className="flex justify-between font-bold">
-          <span>You'll Receive:</span>
-          <span>{total.toLocaleString()} NGN</span>
-        </div>
-      </div>
-      <div>
-        <Label htmlFor="bank-name">Bank Name</Label>
-        <Select>
-          <SelectTrigger id="bank-name">
-            <SelectValue placeholder="Select a bank" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="gtbank">Guaranty Trust Bank</SelectItem>
-            <SelectItem value="zenith">Zenith Bank</SelectItem>
-            <SelectItem value="firstbank">First Bank</SelectItem>
-            <SelectItem value="access">Access Bank</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div>
-        <Label htmlFor="account-number">Account Number</Label>
-        <div className="flex gap-2">
-          <Input
-            id="account-number"
-            value={accountNumber}
-            onChange={(e) => {
-              setAccountNumber(e.target.value);
-              setIsVerified(false);
-            }}
-            placeholder="Enter your 10-digit account number"
-          />
-          <Button variant="outline" onClick={handleVerifyAccount}>
-            Verify
-          </Button>
-        </div>
-      </div>
-      {isVerified && (
-        <div className="text-sm font-medium text-green-600 flex items-center gap-2">
-          <CheckCircle className="h-4 w-4" />
-          <span>Verified: JOHN DOE</span>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function CryptoWithdrawalForm() {
-    const [amount, setAmount] = useState('1000');
-    const networkFee = 0.01;
-    const amountNumber = parseFloat(amount) || 0;
-    const total = amountNumber - networkFee;
-
-  return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto space-y-8">
        <div>
-        <Label htmlFor="crypto-amount">Amount to Withdraw</Label>
-        <div className="relative mt-1">
-          <Input
-            id="crypto-amount"
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="1000"
-            className="pr-24"
-          />
-          <div className="absolute inset-y-0 right-0 flex items-center">
-            <span className="pr-3 text-muted-foreground">USDC</span>
-            <Button
-              variant="ghost"
-              className="h-full rounded-l-none border-l"
-              onClick={() => setAmount('1234.56')}
-            >
-              Max
-            </Button>
-          </div>
-        </div>
-      </div>
-       <div>
-        <Label htmlFor="destination-address">Destination Address</Label>
-        <Input id="destination-address" placeholder="0x..." />
-        <p className='text-xs text-orange-500 mt-2'>⚠️ Ensure this is a Base network address.</p>
-      </div>
-        <div className="p-4 rounded-md border bg-muted/50 text-sm space-y-2">
-            <div className="flex justify-between">
-                <span>Amount:</span>
-                <span>{amountNumber.toFixed(2)} USDC</span>
+            <div className="text-sm text-muted-foreground flex items-center gap-2">
+                <Link href="/dashboard/freelancer" className="hover:text-primary">Dashboard</Link>
+                <ChevronRight className="h-4 w-4" />
+                <Link href="/dashboard/freelancer/earnings" className="hover:text-primary">Wallet</Link>
+                <ChevronRight className="h-4 w-4" />
+                <span className="font-medium text-foreground">Withdraw</span>
             </div>
-            <div className="flex justify-between">
-                <span>Network Fee:</span>
-                <span className="text-destructive">~{networkFee.toFixed(2)} USDC</span>
-            </div>
-            <Separator />
-            <div className="flex justify-between font-bold">
-                <span>You'll Receive:</span>
-                <span>{total.toFixed(2)} USDC</span>
-            </div>
-      </div>
-    </div>
-  );
-}
-
-function WithdrawModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleWithdraw = async () => {
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // simulate API call
-    setIsLoading(false);
-    setIsSuccess(true);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-    // Reset state after a delay to allow for animations
-    setTimeout(() => {
-        setIsSuccess(false);
-        setIsLoading(false);
-    }, 300);
-  }
-
-  if(isSuccess) {
-      return (
-        <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent>
-                <div className="text-center py-8">
-                    <div className="flex justify-center mb-4">
-                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                            <CheckCircle className="h-8 w-8 text-green-600" />
-                        </div>
+            <h1 className="text-3xl font-bold mt-2">Withdraw Funds</h1>
+       </div>
+       
+       <Card className="bg-deep-blue text-white">
+            <CardContent className="p-6">
+                <div className="flex justify-between items-center">
+                    <div>
+                        <p className="text-sm text-muted-foreground flex items-center gap-1">Available Balance <Info className="h-4 w-4"/></p>
+                        <p className="text-3xl font-bold">{availableBalance.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} USDC</p>
                     </div>
-                    <DialogTitle className="text-2xl">Withdrawal Successful!</DialogTitle>
-                    <DialogDescription className="mt-2">
-                        1,572,100 NGN is on its way to your bank account.
-                    </DialogDescription>
-                     <p className="text-sm text-muted-foreground mt-4">Transaction ID: TXN-123456789</p>
-                    <p className="text-sm text-muted-foreground">Expected arrival: 5-10 minutes</p>
-                    <div className="mt-6 flex flex-col gap-2">
-                        <Button variant="outline">View Transaction Details</Button>
-                        <Button onClick={handleClose}>Done</Button>
-                    </div>
+                     <Badge className="bg-crypto-gold text-black hover:bg-crypto-gold/90 text-sm">Base Network</Badge>
                 </div>
-            </DialogContent>
-        </Dialog>
-      )
-  }
+            </CardContent>
+       </Card>
 
-  return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button>Withdraw</Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Withdraw Funds</DialogTitle>
-          <DialogDescription>
-            Select a method to withdraw your available balance.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="py-6">
-          <Tabs defaultValue="bank">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="bank">Bank Account</TabsTrigger>
-              <TabsTrigger value="crypto">Crypto Wallet</TabsTrigger>
-            </TabsList>
-            <div className="pt-6">
-              <TabsContent value="bank">
-                <BankWithdrawalForm />
-              </TabsContent>
-              <TabsContent value="crypto">
-                <CryptoWithdrawalForm />
-              </TabsContent>
-            </div>
-          </Tabs>
-        </div>
-        <div className="space-y-4 pt-6 border-t">
-          <div className="space-y-2">
-            <Label htmlFor="password">Security Verification</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter your account password"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox id="save-method" />
-            <Label htmlFor="save-method" className="font-normal">
-              Save this withdrawal method for future use
-            </Label>
-          </div>
-        </div>
-        <DialogFooter className="pt-6">
-          <Button variant="ghost" onClick={() => setIsOpen(false)}>
-            Cancel
-          </Button>
-          <Button onClick={handleWithdraw} disabled={isLoading}>
-            {isLoading ? 'Processing...' : 'Withdraw Funds'}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-export default function EarningsPage() {
-  return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-bold">Earnings</h1>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Available Balance
-            </CardTitle>
-            <Wallet className="h-5 w-5 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1,234.56 USDC</div>
-            <p className="text-xs text-muted-foreground">$1,234.56 USD</p>
-            <div className="mt-4">
-              <WithdrawModal />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">In Escrow</CardTitle>
-            <Lock className="h-5 w-5 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">600.00 USDC</div>
-            <p className="text-xs text-muted-foreground">From 3 active jobs</p>
-            <Button variant="link" size="sm" className="p-0 h-auto text-xs mt-4">
-              View Details
-            </Button>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Lifetime Earnings
-            </CardTitle>
-            <Trophy className="h-5 w-5 text-yellow-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">4,560.12 USDC</div>
-            <p className="text-xs text-muted-foreground">
-              Across 28 completed jobs
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Pending Clearance
-            </CardTitle>
-            <Clock className="h-5 w-5 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">150.00 USDC</div>
-            <p className="text-xs text-muted-foreground">
-              Available in 2 days
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
+      <Card className="max-w-[600px] mx-auto shadow-lg">
         <CardHeader>
-          <CardTitle>Earnings Over Time</CardTitle>
-          <CardDescription>
-            Your earnings for the last 6 months.
-          </CardDescription>
+          <CardTitle className="text-2xl">Create Withdrawal Request</CardTitle>
         </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="earnings" fill="hsl(var(--primary))" />
-            </BarChart>
-          </ResponsiveContainer>
+        <CardContent className="space-y-6">
+           <div>
+            <Label htmlFor="wallet-address">Base Network Wallet Address</Label>
+            <Input 
+                id="wallet-address" 
+                placeholder="0x..." 
+                value={address}
+                onChange={handleAddressChange}
+                className={isAddressInvalid ? 'border-destructive focus-visible:ring-destructive' : ''}
+             />
+             {isAddressInvalid ? (
+                <p className="text-sm text-destructive mt-1">Invalid Ethereum address format.</p>
+             ) : (
+                <p className="text-sm text-muted-foreground mt-1">Only Base network addresses supported.</p>
+             )}
+          </div>
+          <div>
+            <Label htmlFor="amount">Withdrawal Amount (USDC)</Label>
+            <div className="relative">
+                <Input id="amount" type="number" placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
+                     <span className="text-sm text-muted-foreground mr-2">USDC</span>
+                     <Button variant="ghost" size="sm" onClick={() => setAmount(String(availableBalance))}>Max</Button>
+                </div>
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">Available: {availableBalance.toLocaleString()} USDC. Minimum withdrawal: $10.00 USDC.</p>
+          </div>
+
+           <div className="p-4 rounded-lg bg-muted/50 space-y-2">
+                <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Withdrawal Amount</span>
+                    <span>{amountNumber.toFixed(2)} USDC</span>
+                </div>
+                 <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Network Fee</span>
+                    <span>- {networkFee.toFixed(2)} USDC</span>
+                </div>
+                 <div className="flex justify-between font-bold text-base pt-2 border-t">
+                    <span>You'll receive</span>
+                    <span>{finalAmount.toFixed(2)} USDC</span>
+                </div>
+          </div>
         </CardContent>
+        <CardFooter className="flex-col items-stretch gap-4">
+          <Button size="lg" className="w-full shadow-[0_0_20px_hsl(var(--primary)/50%)]">
+            <Wallet className="mr-2 h-5 w-5"/>
+            Withdraw Funds
+          </Button>
+           <p className="text-xs text-muted-foreground text-center">Withdrawals are irreversible. Please double-check the address. Estimated arrival: 2-5 minutes.</p>
+        </CardFooter>
       </Card>
+      
+       <div className="pt-8">
+         <h2 className="text-2xl font-semibold mb-4">Recent Withdrawals</h2>
+         <Card>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Date & Time</TableHead>
+                        <TableHead>Amount</TableHead>
+                        <TableHead>Address</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="text-right">Transaction</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                     {recentWithdrawals.map((tx, i) => (
+                        <TableRow key={i}>
+                            <TableCell>{tx.date}</TableCell>
+                            <TableCell>{tx.amount}</TableCell>
+                            <TableCell className="flex items-center gap-2">
+                                {tx.address}
+                                <Button variant="ghost" size="icon" className="h-6 w-6"><Copy className="h-3 w-3"/></Button>
+                            </TableCell>
+                            <TableCell>{getStatusBadge(tx.status)}</TableCell>
+                            <TableCell className="text-right">
+                                <Button variant="outline" size="sm" asChild>
+                                    <a href="#" target="_blank" rel="noopener noreferrer">
+                                        View on Basescan
+                                        <ExternalLink className="ml-2 h-3 w-3" />
+                                    </a>
+                                </Button>
+                            </TableCell>
+                        </TableRow>
+                     ))}
+                </TableBody>
+            </Table>
+         </Card>
+       </div>
+
     </div>
   );
 }
