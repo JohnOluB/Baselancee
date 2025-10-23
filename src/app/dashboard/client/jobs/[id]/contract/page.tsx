@@ -128,9 +128,11 @@ export default function HirePage() {
               </div>
         </CardContent>
         <CardFooter className="flex-col items-start gap-4">
-             <Button size="lg" className="w-full md:w-auto">
-                <Shield className="mr-2 h-5 w-5" />
-                Hire {freelancer.name} & Deposit Funds
+             <Button size="lg" className="w-full md:w-auto" asChild>
+                <Link href={`/dashboard/client/jobs/${job.id}/contract/confirmation`}>
+                    <Shield className="mr-2 h-5 w-5" />
+                    Hire {freelancer.name} & Deposit Funds
+                </Link>
             </Button>
             <p className="text-xs text-muted-foreground">By clicking this button, you're authorizing BaseLance to charge your payment method and fund the escrow account. The freelancer will be notified and the contract will begin.</p>
         </CardFooter>
