@@ -177,7 +177,7 @@ export default function FreelancerProfilePage() {
                       <Pencil className="h-4 w-4" />
                     </Button>
                   </Card>
-                  <Card>
+                  <Card className="relative">
                     <CardHeader><CardTitle>Skills & Expertise</CardTitle></CardHeader>
                     <CardContent className="space-y-4">
                         {skills.map(skill => (
@@ -193,8 +193,15 @@ export default function FreelancerProfilePage() {
                         ))}
                         <Button variant="link" className="p-0 h-auto">+ Show all 12 skills</Button>
                     </CardContent>
+                     <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-4 right-4 text-muted-foreground"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
                   </Card>
-                  <Card>
+                  <Card className="relative">
                     <CardHeader><CardTitle>Featured Work</CardTitle></CardHeader>
                     <CardContent>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -207,8 +214,15 @@ export default function FreelancerProfilePage() {
                         </div>
                         <Button variant="link" className="p-0 h-auto mt-4">View Full Portfolio &rarr;</Button>
                     </CardContent>
+                     <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-4 right-4 text-muted-foreground"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
                   </Card>
-                   <Card>
+                   <Card className="relative">
                     <CardHeader><CardTitle>Client Reviews</CardTitle></CardHeader>
                     <CardContent className="space-y-6">
                         {reviews.map(review => (
@@ -222,6 +236,13 @@ export default function FreelancerProfilePage() {
                         ))}
                         <Button variant="link" className="p-0 h-auto">View All 28 Reviews &rarr;</Button>
                     </CardContent>
+                     <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-4 right-4 text-muted-foreground"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
                   </Card>
                 </div>
                 <div className="lg:col-span-1 sticky top-[120px] space-y-6">
