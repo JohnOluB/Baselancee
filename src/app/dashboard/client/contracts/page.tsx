@@ -146,10 +146,10 @@ const ContractCard = ({ contract }: { contract: any }) => (
             </div>
 
             <div className="border-t mt-4 pt-4 flex items-center justify-end gap-2">
-                 {contract.status === 'In Progress' && <Button variant="outline">Manage Contract</Button>}
+                 {contract.status === 'In Progress' && <Button variant="outline" asChild><Link href={`/dashboard/client/contracts/${contract.id}/manage`}>Manage Contract</Link></Button>}
                  {contract.status === 'Completed' && <Button variant="outline">Leave Review</Button>}
                  {contract.status === 'Paused' && <Button>Resume Contract</Button>}
-                 <Button asChild><Link href="#">View Details</Link></Button>
+                 <Button asChild><Link href={`/dashboard/client/contracts/${contract.id}`}>View Details</Link></Button>
             </div>
         </CardContent>
     </Card>

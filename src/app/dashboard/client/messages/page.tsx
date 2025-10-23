@@ -150,7 +150,7 @@ export default function MessagesPage() {
                 <div className='flex-1'>
                     <p className="font-semibold">{selectedConversation.name}</p>
                     <p className="text-sm text-muted-foreground">
-                        <Link href="#" className="hover:underline">{selectedConversation.jobTitle}</Link>
+                        <Link href={`/dashboard/client/jobs/${selectedConversation.id}`} className="hover:underline">{selectedConversation.jobTitle}</Link>
                     </p>
                 </div>
                 <DropdownMenu>
@@ -158,8 +158,8 @@ export default function MessagesPage() {
                         <Button variant="ghost" size="icon"><MoreVertical /></Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuItem>View Job Details</DropdownMenuItem>
-                        <DropdownMenuItem>View Contract</DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href={`/dashboard/client/jobs/${selectedConversation.id}`}>View Job Details</Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href={`/dashboard/client/contracts/${selectedConversation.id}`}>View Contract</Link></DropdownMenuItem>
                         <DropdownMenuItem>Archive Conversation</DropdownMenuItem>
                         <DropdownMenuItem className="text-destructive">Block User</DropdownMenuItem>
                     </DropdownMenuContent>
