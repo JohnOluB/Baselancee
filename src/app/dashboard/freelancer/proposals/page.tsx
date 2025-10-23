@@ -178,13 +178,7 @@ const getStatusIcon = (status: string) => {
 
 function ProposalCard({ proposal }: { proposal: any }) {
   return (
-    <Card
-      className={
-        proposal.status === 'Interview Requested'
-          ? ''
-          : ''
-      }
-    >
+    <Card>
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
@@ -316,7 +310,9 @@ function ProposalCard({ proposal }: { proposal: any }) {
           </>
         ) : proposal.status === 'Interview Requested' ? (
           <>
-            <Button variant="outline">Message Client</Button>
+            <Button variant="outline" asChild>
+                <Link href="/dashboard/freelancer/messages">Message Client</Link>
+            </Button>
             <Button>Schedule Call</Button>
           </>
         ) : proposal.status !== 'Declined' &&
@@ -326,7 +322,9 @@ function ProposalCard({ proposal }: { proposal: any }) {
               Withdraw
             </Button>
             <Button variant="outline">Edit Proposal</Button>
-            <Button>Message Client</Button>
+            <Button asChild>
+                <Link href="/dashboard/freelancer/messages">Message Client</Link>
+            </Button>
           </>
         ) : (
           <Button variant="outline">View Similar Jobs</Button>
