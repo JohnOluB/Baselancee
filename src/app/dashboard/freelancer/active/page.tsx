@@ -1,6 +1,7 @@
 
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 import {
   Briefcase,
   Clock,
@@ -72,8 +73,8 @@ const activeJobs = [
 
 function JobCard({ job }: { job: any }) {
   const getBorderClass = () => {
-    if (job.urgent) return '';
-    if (job.actionNeeded) return '';
+    if (job.urgent) return 'border-l-4 border-destructive';
+    if (job.actionNeeded) return 'border-l-4 border-orange-500';
     return '';
   };
 
@@ -141,7 +142,9 @@ function JobCard({ job }: { job: any }) {
 
         <div className="border-t mt-4 pt-4 flex items-center justify-end gap-2">
           <Button variant="outline">View Contract</Button>
-          <Button>Message Client</Button>
+          <Button asChild>
+            <Link href="/dashboard/freelancer/messages">Message Client</Link>
+          </Button>
           <Button variant="default">Submit Work</Button>
         </div>
       </CardContent>
