@@ -32,6 +32,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
 
 const badges = [
     {
@@ -146,6 +147,35 @@ function BadgeCard({ badge }: { badge: any }) {
 }
 
 export default function AchievementsPage() {
+    const [searchQuery, setSearchQuery] = useState('');
+    const [activeTab, setActiveTab] = useState('all');
+
+    const filteredBadges = badges.filter(badge => {
+        const matchesTab = activeTab === 'all' || badge.status === activeTab;
+        const matchesSearch = badge.name.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesTab && matchesSearch;
+    });
+
+    const getTabContent = () => {
+        const badgesToDisplay = activeTab === 'all' ? filteredBadges : badges.filter(b => b.status === activeTab && b.name.toLowerCase().includes(searchQuery.toLowerCase()));
+        
+        if (badgesToDisplay.length === 0) {
+            return (
+                 <Card className="text-center py-12 col-span-full">
+                    <CardContent>
+                        <Gem className="mx-auto h-12 w-12 text-muted-foreground" />
+                        <h3 className="mt-4 text-lg font-medium">No Badges Found</h3>
+                        <p className="mt-2 text-sm text-muted-foreground">
+                            No badges match your current filters. Try adjusting your search or filter settings.
+                        </p>
+                    </CardContent>
+                </Card>
+            )
+        }
+
+        return badgesToDisplay.map((badge, index) => <BadgeCard key={index} badge={badge} />)
+    }
+
     return (
         <div className="space-y-8">
              <div>
@@ -193,7 +223,7 @@ export default function AchievementsPage() {
             </div>
 
             <div>
-                <Tabs defaultValue="all">
+                <Tabs defaultValue="all" onValueChange={setActiveTab}>
                     <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4">
                         <TabsList>
                             <TabsTrigger value="all">All</TabsTrigger>
@@ -205,7 +235,12 @@ export default function AchievementsPage() {
                         <div className="flex items-center gap-2">
                             <div className="relative w-full max-w-sm">
                                 <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input placeholder="Search badges..." className="pl-8" />
+                                <Input 
+                                    placeholder="Search badges..." 
+                                    className="pl-8" 
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
                             </div>
                              <Button variant="outline">
                                 Sort by: Rarity <ChevronDown className="ml-2 h-4 w-4" />
@@ -214,27 +249,27 @@ export default function AchievementsPage() {
                     </div>
                      <TabsContent value="all">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {badges.map((badge, index) => <BadgeCard key={index} badge={badge} />)}
+                            {getTabContent()}
                         </div>
                      </TabsContent>
                      <TabsContent value="earned">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {badges.filter(b => b.status === 'earned').map((badge, index) => <BadgeCard key={index} badge={badge} />)}
+                           {getTabContent()}
                         </div>
                      </TabsContent>
                      <TabsContent value="minted">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {badges.filter(b => b.status === 'minted').map((badge, index) => <BadgeCard key={index} badge={badge} />)}
+                            {getTabContent()}
                         </div>
                      </TabsContent>
                      <TabsContent value="in-progress">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {badges.filter(b => b.status === 'in-progress').map((badge, index) => <BadgeCard key={index} badge={badge} />)}
+                            {getTabContent()}
                         </div>
                      </TabsContent>
                       <TabsContent value="locked">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {badges.filter(b => b.status === 'locked').map((badge, index) => <BadgeCard key={index} badge={badge} />)}
+                            {getTabContent()}
                         </div>
                      </TabsContent>
                 </Tabs>
