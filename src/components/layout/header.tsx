@@ -57,7 +57,7 @@ export default function Header() {
 
         <div className="hidden items-center gap-2 md:flex">
           <Button variant="outline" asChild className="w-[105px] justify-center">
-            <Link href="/login" className="transition-colors font-medium text-sm text-foreground hover:bg-white hover:border hover:border-border">
+            <Link href="/login" className="transition-colors font-medium text-sm text-foreground hover:bg-white hover:border hover:border-border hover:text-black">
               Log In
             </Link>
           </Button>
