@@ -1,4 +1,5 @@
 
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ import {
   Linkedin,
   MapPin,
   MessageSquare,
+  Pencil,
   Save,
   Share2,
   Star,
@@ -152,17 +154,28 @@ export default function FreelancerProfilePage() {
             <TabsContent value="overview">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                 <div className="lg:col-span-2 space-y-8">
-                  <Card>
-                    <CardHeader><CardTitle>About Me</CardTitle></CardHeader>
+                  <Card className="relative">
+                    <CardHeader>
+                      <CardTitle>About Me</CardTitle>
+                    </CardHeader>
                     <CardContent className="space-y-4">
                       <p className="text-muted-foreground">{freelancer.bio}</p>
                       <div>
                         <h4 className="font-semibold mb-2">What I offer:</h4>
                         <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                          {freelancer.whatIOffer.map(item => <li key={item}>{item}</li>)}
+                          {freelancer.whatIOffer.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
                         </ul>
                       </div>
                     </CardContent>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-4 right-4 text-muted-foreground"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
                   </Card>
                   <Card>
                     <CardHeader><CardTitle>Skills & Expertise</CardTitle></CardHeader>
