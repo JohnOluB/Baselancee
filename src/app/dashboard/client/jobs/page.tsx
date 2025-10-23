@@ -152,10 +152,10 @@ const JobCard = ({ job }: { job: any }) => (
             <div className="border-t mt-4 pt-4 flex items-center justify-between">
                 <div className="text-sm font-semibold">{job.budget}</div>
                 <div className="flex items-center gap-2">
-                     {job.status === 'Accepting Proposals' && <Button variant="outline" asChild><Link href="#">Review Proposals</Link></Button>}
+                     {job.status === 'Accepting Proposals' && <Button variant="outline" asChild><Link href={`/dashboard/client/jobs/${job.id}/proposals`}>Review Proposals</Link></Button>}
                      {job.status === 'In Progress' && <Button variant="outline" asChild><Link href="#">View Contract</Link></Button>}
                      {job.status === 'Completed' && <Button variant="outline">Leave Review</Button>}
-                     <Button variant="default" asChild><Link href={`/dashboard/freelancer/jobs/${job.id}`}>View Job</Link></Button>
+                     <Button variant="default" asChild><Link href={`/dashboard/client/jobs/${job.id}`}>View Job</Link></Button>
                 </div>
             </div>
         </CardContent>
