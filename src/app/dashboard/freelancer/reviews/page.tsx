@@ -23,6 +23,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -32,6 +33,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import Link from 'next/link';
+import { Input } from '@/components/ui/input';
 
 const overallStats = {
   rating: 4.8,
@@ -290,7 +292,7 @@ export default function ReviewsPage() {
             <div className="flex items-center gap-2">
                  <div className="relative w-full max-w-sm">
                     <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search by client or job..." className="pl-8" />
+                    <Input placeholder="Search reviews by client or job title..." className="pl-8" />
                 </div>
                  <Button variant="outline">
                     Sort by: Recent <ChevronDown className="ml-2 h-4 w-4" />
@@ -298,9 +300,9 @@ export default function ReviewsPage() {
             </div>
         </div>
 
-        <div className="mt-6 space-y-6">
-          {filteredReviews.length > 0 ? (
-            filteredReviews.map((review) => (
+        <TabsContent value="all" className="mt-6 space-y-6">
+          {reviews.length > 0 ? (
+            reviews.map((review) => (
               <ReviewCard key={review.id} review={review} />
             ))
           ) : (
@@ -311,7 +313,38 @@ export default function ReviewsPage() {
               </CardContent>
             </Card>
           )}
-        </div>
+        </TabsContent>
+
+         <TabsContent value="pending" className="mt-6 space-y-6">
+          {filteredReviews.length > 0 ? (
+            filteredReviews.map((review) => (
+              <ReviewCard key={review.id} review={review} />
+            ))
+          ) : (
+            <Card className="text-center py-12">
+              <CardContent>
+                <Star className="mx-auto h-12 w-12 text-muted-foreground" />
+                <h3 className="mt-4 text-lg font-medium">No reviews are pending a response.</h3>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="public" className="mt-6 space-y-6">
+          <p className="text-sm text-muted-foreground text-center">This is a preview of how clients will see your reviews.</p>
+          {reviews.filter(r => r.response).length > 0 ? (
+            reviews.filter(r => r.response).map((review) => (
+              <ReviewCard key={review.id} review={review} />
+            ))
+          ) : (
+            <Card className="text-center py-12">
+              <CardContent>
+                <Star className="mx-auto h-12 w-12 text-muted-foreground" />
+                <h3 className="mt-4 text-lg font-medium">No public reviews to display yet.</h3>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
       </Tabs>
     </div>
   );
