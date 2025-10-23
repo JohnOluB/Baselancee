@@ -127,8 +127,6 @@ export default function FreelancerProfilePage() {
                    </div>
                 </div>
                 <div className="flex items-center gap-2 mt-4 md:mt-0">
-                    <Button variant="outline"><MessageSquare /> <span className="hidden sm:inline ml-2">Message</span></Button>
-                    <Button>Hire Me</Button>
                     <Button variant="ghost" size="icon"><Save /></Button>
                 </div>
               </div>
