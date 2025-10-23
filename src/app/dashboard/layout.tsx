@@ -16,7 +16,7 @@ export default function DashboardLayout({
         <main className="flex-1 flex flex-col bg-muted/30">
           <DashboardHeader />
           <MotionDiv>
-            <div className="flex-1 p-4 sm:p-6 md:p-8 ml-3">
+            <div className="flex-1 p-4 sm:p-6 md:p-8">
               {children}
             </div>
           </MotionDiv>
