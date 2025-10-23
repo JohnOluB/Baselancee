@@ -1,4 +1,3 @@
-
 'use client';
 import {
   ArrowLeft,
@@ -581,5 +580,3 @@ export default function JobDetailsPage() {
     </div>
   );
 }
-
-    

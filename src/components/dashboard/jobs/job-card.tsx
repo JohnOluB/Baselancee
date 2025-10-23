@@ -75,18 +75,18 @@ export function JobCard({ job }: { job: Job }) {
                     {job.isHot && <Badge variant="destructive">HOT</Badge>}
                     {job.isFeatured && <Badge className="bg-yellow-400 text-black hover:bg-yellow-500">Featured</Badge>}
                 </div>
-                <Link href="#"><h3 className="text-xl font-bold group-hover:text-primary transition-colors">{job.title}</h3></Link>
+                <Link href="/dashboard/freelancer/jobs/1"><h3 className="text-xl font-bold group-hover:text-primary transition-colors">{job.title}</h3></Link>
                 <p className="text-sm text-muted-foreground mt-1">Posted {job.postedAt} by {job.postedBy}</p>
             </div>
             <div className="flex items-start gap-2">
                 <Button variant="outline" size="icon"><Heart className="h-4 w-4" /></Button>
-                <Button>Apply Now</Button>
+                <Button asChild><Link href="/dashboard/freelancer/jobs/1">Apply Now</Link></Button>
             </div>
         </div>
 
         <Separator className="my-4" />
 
-        <p className="text-sm text-muted-foreground line-clamp-2">{job.description} <Link href="#" className="text-primary font-medium">Read More</Link></p>
+        <p className="text-sm text-muted-foreground line-clamp-2">{job.description} <Link href="/dashboard/freelancer/jobs/1" className="text-primary font-medium">Read More</Link></p>
         
         <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3 text-sm">
             <div className="flex items-center gap-2"><DollarSign className="h-4 w-4 text-muted-foreground" /> <span>{formatBudget(job.budget)} &bull; {job.budgetType}</span></div>
