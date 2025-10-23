@@ -278,7 +278,7 @@ function WithdrawModal() {
       <DialogTrigger asChild>
         <Button>Withdraw</Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Withdraw Funds</DialogTitle>
           <DialogDescription>
