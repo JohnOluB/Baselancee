@@ -50,6 +50,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogTrigger,
+  DialogClose,
 } from '@/components/ui/dialog';
 import { useState } from 'react';
 import { analyzeJobDescription, AnalyzeJobDescriptionOutput } from '@/ai/flows/job-description-analyzer';
@@ -328,9 +329,9 @@ function ApplicationSidebar() {
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant="ghost" asChild>
-                            <Link href="/dashboard/freelancer/jobs">Cancel</Link>
-                        </Button>
+                        <DialogClose asChild>
+                            <Button variant="ghost">Cancel</Button>
+                        </DialogClose>
                          <Button variant="outline">Save Draft</Button>
                         <Button>Submit Proposal</Button>
                     </DialogFooter>
@@ -584,3 +585,4 @@ export default function JobDetailsPage() {
   );
 }
 
+    
