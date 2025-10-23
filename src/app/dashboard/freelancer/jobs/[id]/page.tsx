@@ -261,8 +261,10 @@ function AIJobAnalyzer() {
 }
 
 const proposalSchema = z.object({
-  coverLetter: z.string().min(1, "Cover letter is required."),
+  coverLetter: z.string().min(100, "Cover letter must be at least 100 characters."),
   bidAmount: z.number().positive("Bid amount must be a positive number."),
+  deliveryNumber: z.number().positive("Delivery time is required."),
+  deliveryUnit: z.string().min(1, "Delivery unit is required."),
 });
 
 type ProposalFormValues = z.infer<typeof proposalSchema>;
@@ -271,6 +273,9 @@ function ApplicationSidebar() {
     const { register, handleSubmit, watch, formState: { errors, isValid } } = useForm<ProposalFormValues>({
         resolver: zodResolver(proposalSchema),
         mode: 'onChange',
+        defaultValues: {
+          deliveryUnit: 'Days'
+        }
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -291,7 +296,7 @@ function ApplicationSidebar() {
     const fee = 0.02; // 2%
     const clientBudget = 'from' in job.budget ? `$${job.budget.from} - $${job.budget.to}` : `$${job.budget.amount}`;
 
-    const bidAmountNumber = bid;
+    const bidAmountNumber = bid || 0;
     let platformFee = 0;
     let earnings = 0;
 
@@ -346,9 +351,20 @@ function ApplicationSidebar() {
                                 <div className="space-y-2">
                                     <Label htmlFor="delivery-timeline" className="font-semibold">When can you deliver? *</Label>
                                     <div className="flex gap-2">
-                                        <Input id="delivery-timeline" type="number" placeholder="14" className="w-1/2" />
-                                        <Input defaultValue="Days" className="w-1/2" />
+                                        <Input 
+                                            id="delivery-timeline" 
+                                            type="number" 
+                                            placeholder="14" 
+                                            className="w-1/2" 
+                                            {...register('deliveryNumber', { valueAsNumber: true })}
+                                        />
+                                        <Input 
+                                            defaultValue="Days" 
+                                            className="w-1/2" 
+                                            {...register('deliveryUnit')}
+                                        />
                                     </div>
+                                    {(errors.deliveryNumber || errors.deliveryUnit) && <p className="text-sm text-destructive mt-1">Delivery timeline is required.</p>}
                                     <p className="text-xs text-muted-foreground">Client expects: {job.duration}</p>
                                 </div>
                             </div>
@@ -653,3 +669,5 @@ export default function JobDetailsPage() {
     </div>
   );
 }
+
+    
