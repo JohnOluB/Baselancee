@@ -169,9 +169,11 @@ export default function FreelancerDashboard() {
                                 <Button variant="outline" className="w-full" asChild>
                                   <Link href={`/dashboard/freelancer/jobs/${job.id}`}>View Details</Link>
                                 </Button>
-                                <Button className="w-full" asChild>
-                                  <Link href={`/dashboard/freelancer/jobs/${job.id}`}>Apply Now</Link>
-                                </Button>
+                                <Link href={`/dashboard/freelancer/jobs/${job.id}`} passHref className="w-full">
+                                  <Button asChild className="w-full">
+                                    <span>Apply Now</span>
+                                  </Button>
+                                </Link>
                             </div>
                         </div>
 
