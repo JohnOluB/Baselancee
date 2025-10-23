@@ -29,7 +29,10 @@ export default function HowItWorks() {
     <section id="how-it-works" className="py-20 md:py-28 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl">Three Simple Steps</h2>
+          <h2 className="text-3xl md:text-4xl">How It Works</h2>
+          <p className="mt-4 text-lg text-muted-foreground">
+            A simplified, transparent, and secure freelance experience.
+          </p>
         </div>
         <div className="mt-12 grid gap-8 md:grid-cols-3">
           {steps.map((step) => (
