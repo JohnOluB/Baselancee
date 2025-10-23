@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
+import Link from 'next/link';
 
 const stats = [
   {
@@ -50,6 +51,7 @@ const stats = [
 
 const recommendedJobs = [
   {
+    id: '1',
     title: 'Senior Frontend Developer for E-commerce Platform',
     client: 'Shopify',
     posted: '2h ago',
@@ -61,6 +63,7 @@ const recommendedJobs = [
     location: 'Remote (US)',
   },
   {
+    id: '1',
     title: 'UI/UX Designer for Mobile App',
     client: 'Airtable',
     posted: '5h ago',
@@ -72,6 +75,7 @@ const recommendedJobs = [
     location: 'Remote',
   },
   {
+    id: '1',
     title: 'Blockchain Developer for DeFi Protocol',
     client: 'Coinbase',
     posted: '1d ago',
@@ -162,8 +166,12 @@ export default function FreelancerDashboard() {
                                 <span>{job.duration}</span>
                             </div>
                             <div className="mt-4 flex gap-2">
-                                <Button variant="outline" className="w-full">View Details</Button>
-                                <Button className="w-full">Apply Now</Button>
+                                <Button variant="outline" className="w-full" asChild>
+                                  <Link href={`/dashboard/freelancer/jobs/${job.id}`}>View Details</Link>
+                                </Button>
+                                <Button className="w-full" asChild>
+                                  <Link href={`/dashboard/freelancer/jobs/${job.id}`}>Apply Now</Link>
+                                </Button>
                             </div>
                         </div>
 
