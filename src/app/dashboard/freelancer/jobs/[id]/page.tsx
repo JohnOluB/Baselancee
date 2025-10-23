@@ -27,6 +27,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -257,28 +260,38 @@ function AIJobAnalyzer() {
     )
 }
 
+const proposalSchema = z.object({
+  coverLetter: z.string().min(1, "Cover letter is required."),
+  bidAmount: z.number().positive("Bid amount must be a positive number."),
+});
+
+type ProposalFormValues = z.infer<typeof proposalSchema>;
+
 function ApplicationSidebar() {
-    const [bid, setBid] = useState('');
+    const { register, handleSubmit, watch, formState: { errors, isValid } } = useForm<ProposalFormValues>({
+        resolver: zodResolver(proposalSchema),
+        mode: 'onChange',
+    });
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isProposalDialogOpen, setIsProposalDialogOpen] = useState(false);
 
-    const fee = 0.02; // 2%
-    const clientBudget = 'from' in job.budget ? `$${job.budget.from} - $${job.budget.to}` : `$${job.budget.amount}`;
+    const bid = watch('bidAmount');
 
-    const handleBidChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setBid(event.target.value);
-    };
-
-    const handleProposalSubmit = async () => {
+    const handleProposalSubmit: SubmitHandler<ProposalFormValues> = async (data) => {
         setIsSubmitting(true);
+        console.log("Submitting data:", data);
         await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
         setIsSubmitting(false);
         setIsProposalDialogOpen(false); // Close proposal dialog
         setIsSubmitted(true); // Open success dialog
     }
 
-    const bidAmountNumber = parseFloat(bid);
+    const fee = 0.02; // 2%
+    const clientBudget = 'from' in job.budget ? `$${job.budget.from} - $${job.budget.to}` : `$${job.budget.amount}`;
+
+    const bidAmountNumber = bid;
     let platformFee = 0;
     let earnings = 0;
 
@@ -294,61 +307,77 @@ function ApplicationSidebar() {
                     <Button size="lg" className="w-full">Submit Proposal</Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-3xl">
-                    <DialogHeader>
-                        <DialogTitle>Submit Your Proposal</DialogTitle>
-                        <DialogDescription>
-                            For: {job.title}
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="py-6 max-h-[70vh] overflow-y-auto pr-4 space-y-6">
-                        <div>
-                            <Label htmlFor="cover-letter" className="font-semibold">Cover Letter *</Label>
-                            <Textarea id="cover-letter" rows={6} className="mt-2" placeholder="Explain why you're the best fit for this job. Highlight relevant experience and how you'll approach the project..." />
-                            <p className="text-xs text-muted-foreground mt-2 text-right">0/5000</p>
-                        </div>
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <Label htmlFor="bid-amount" className="font-semibold">Your Bid Amount *</Label>
-                                <div className="relative">
-                                    <Input id="bid-amount" type="number" className="pl-12" value={bid} onChange={handleBidChange} placeholder="Enter your bid..."/>
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">USDC</span>
+                    <form onSubmit={handleSubmit(handleProposalSubmit)}>
+                        <DialogHeader>
+                            <DialogTitle>Submit Your Proposal</DialogTitle>
+                            <DialogDescription>
+                                For: {job.title}
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="py-6 max-h-[70vh] overflow-y-auto pr-4 space-y-6">
+                            <div>
+                                <Label htmlFor="cover-letter" className="font-semibold">Cover Letter *</Label>
+                                <Textarea 
+                                    id="cover-letter" 
+                                    rows={6} 
+                                    className="mt-2" 
+                                    placeholder="Explain why you're the best fit for this job. Highlight relevant experience and how you'll approach the project..." 
+                                    {...register('coverLetter')}
+                                />
+                                {errors.coverLetter && <p className="text-sm text-destructive mt-1">{errors.coverLetter.message}</p>}
+                                <p className="text-xs text-muted-foreground mt-2 text-right">0/5000</p>
+                            </div>
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="bid-amount" className="font-semibold">Your Bid Amount *</Label>
+                                    <div className="relative">
+                                        <Input 
+                                            id="bid-amount" 
+                                            type="number" 
+                                            className="pl-12"
+                                            placeholder="Enter your bid..."
+                                            {...register('bidAmount', { valueAsNumber: true })}
+                                        />
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">USDC</span>
+                                    </div>
+                                    {errors.bidAmount && <p className="text-sm text-destructive mt-1">{errors.bidAmount.message}</p>}
+                                    <p className="text-xs text-muted-foreground">Client's budget: {clientBudget}</p>
                                 </div>
-                                <p className="text-xs text-muted-foreground">Client's budget: {clientBudget}</p>
-                            </div>
-                             <div className="space-y-2">
-                                <Label htmlFor="delivery-timeline" className="font-semibold">When can you deliver? *</Label>
-                                <div className="flex gap-2">
-                                    <Input id="delivery-timeline" type="number" placeholder="14" className="w-1/2" />
-                                    <Input defaultValue="Days" className="w-1/2" />
+                                <div className="space-y-2">
+                                    <Label htmlFor="delivery-timeline" className="font-semibold">When can you deliver? *</Label>
+                                    <div className="flex gap-2">
+                                        <Input id="delivery-timeline" type="number" placeholder="14" className="w-1/2" />
+                                        <Input defaultValue="Days" className="w-1/2" />
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">Client expects: {job.duration}</p>
                                 </div>
-                                <p className="text-xs text-muted-foreground">Client expects: {job.duration}</p>
+                            </div>
+                            <div className="p-4 rounded-md border bg-muted/50 text-sm space-y-2">
+                                <div className="flex justify-between">
+                                    <span>Your Bid:</span>
+                                    <span>{isNaN(bidAmountNumber) || bidAmountNumber <= 0 ? '0.00' : bidAmountNumber.toFixed(2)} USDC</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Platform Fee (2%):</span>
+                                    <span>-{platformFee.toFixed(2)} USDC</span>
+                                </div>
+                                <Separator className="my-2"/>
+                                <div className="flex justify-between font-semibold">
+                                    <span>You'll Receive:</span>
+                                    <span>{earnings.toFixed(2)} USDC</span>
+                                </div>
                             </div>
                         </div>
-                         <div className="p-4 rounded-md border bg-muted/50 text-sm space-y-2">
-                            <div className="flex justify-between">
-                                <span>Your Bid:</span>
-                                <span>{isNaN(bidAmountNumber) || bidAmountNumber <= 0 ? '0.00' : bidAmountNumber.toFixed(2)} USDC</span>
-                            </div>
-                             <div className="flex justify-between">
-                                <span>Platform Fee (2%):</span>
-                                <span>-{platformFee.toFixed(2)} USDC</span>
-                            </div>
-                             <Separator className="my-2"/>
-                             <div className="flex justify-between font-semibold">
-                                <span>You'll Receive:</span>
-                                <span>{earnings.toFixed(2)} USDC</span>
-                            </div>
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <DialogClose asChild>
-                           <Button variant="ghost">Cancel</Button>
-                        </DialogClose>
-                         <Button variant="outline">Save Draft</Button>
-                        <Button onClick={handleProposalSubmit} disabled={isSubmitting}>
-                            {isSubmitting ? 'Submitting...' : 'Submit Proposal'}
-                        </Button>
-                    </DialogFooter>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                               <Button variant="ghost">Cancel</Button>
+                            </DialogClose>
+                            <Button variant="outline">Save Draft</Button>
+                            <Button type="submit" disabled={isSubmitting || !isValid}>
+                                {isSubmitting ? 'Submitting...' : 'Submit Proposal'}
+                            </Button>
+                        </DialogFooter>
+                    </form>
                 </DialogContent>
             </Dialog>
 
