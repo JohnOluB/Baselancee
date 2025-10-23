@@ -181,7 +181,7 @@ function ProposalCard({ proposal }: { proposal: any }) {
     <Card
       className={
         proposal.status === 'Interview Requested'
-          ? 'border-l-4 border-primary'
+          ? ''
           : ''
       }
     >
