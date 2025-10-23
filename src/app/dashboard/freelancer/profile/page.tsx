@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
+import Link from 'next/link';
 
 
 const freelancer = {
@@ -173,8 +174,9 @@ export default function FreelancerProfilePage() {
                       variant="ghost"
                       size="icon"
                       className="absolute top-4 right-4 text-muted-foreground"
+                      asChild
                     >
-                      <Pencil className="h-4 w-4" />
+                      <Link href="/dashboard/settings"><Pencil className="h-4 w-4" /></Link>
                     </Button>
                   </Card>
                   <Card className="relative">
@@ -197,8 +199,9 @@ export default function FreelancerProfilePage() {
                       variant="ghost"
                       size="icon"
                       className="absolute top-4 right-4 text-muted-foreground"
+                      asChild
                     >
-                      <Pencil className="h-4 w-4" />
+                      <Link href="/dashboard/settings"><Pencil className="h-4 w-4" /></Link>
                     </Button>
                   </Card>
                   <Card className="relative">
@@ -218,8 +221,9 @@ export default function FreelancerProfilePage() {
                       variant="ghost"
                       size="icon"
                       className="absolute top-4 right-4 text-muted-foreground"
+                      asChild
                     >
-                      <Pencil className="h-4 w-4" />
+                      <Link href="/dashboard/settings"><Pencil className="h-4 w-4" /></Link>
                     </Button>
                   </Card>
                    <Card className="relative">
@@ -240,8 +244,9 @@ export default function FreelancerProfilePage() {
                       variant="ghost"
                       size="icon"
                       className="absolute top-4 right-4 text-muted-foreground"
+                      asChild
                     >
-                      <Pencil className="h-4 w-4" />
+                      <Link href="/dashboard/settings"><Pencil className="h-4 w-4" /></Link>
                     </Button>
                   </Card>
                 </div>
