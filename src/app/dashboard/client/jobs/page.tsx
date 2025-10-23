@@ -19,6 +19,7 @@ import Link from 'next/link';
 
 const jobs = [
   {
+    id: '1',
     title: 'Build React Dashboard for Analytics Platform',
     status: 'Accepting Proposals',
     proposals: 24,
@@ -29,6 +30,7 @@ const jobs = [
     budget: '$800 - $1200',
   },
   {
+    id: '2',
     title: 'Senior Blockchain Engineer (DeFi)',
     status: 'In Progress',
     freelancer: {
@@ -40,6 +42,7 @@ const jobs = [
     budget: '$120 - $180 / hr',
   },
   {
+    id: '3',
     title: 'UI/UX Designer for Mobile App',
     status: 'Completed',
     freelancer: {
@@ -51,6 +54,7 @@ const jobs = [
     budget: '$3000',
   },
     {
+    id: '4',
     title: 'API Integration for SaaS',
     status: 'In Progress',
     freelancer: {
@@ -62,6 +66,7 @@ const jobs = [
     budget: '$1500',
   },
   {
+    id: '5',
     title: 'Content Writer for Crypto Blog',
     status: 'Archived',
     reason: 'Filled externally',
@@ -150,7 +155,7 @@ const JobCard = ({ job }: { job: any }) => (
                      {job.status === 'Accepting Proposals' && <Button variant="outline" asChild><Link href="#">Review Proposals</Link></Button>}
                      {job.status === 'In Progress' && <Button variant="outline" asChild><Link href="#">View Contract</Link></Button>}
                      {job.status === 'Completed' && <Button variant="outline">Leave Review</Button>}
-                     <Button variant="default">View Job</Button>
+                     <Button variant="default" asChild><Link href={`/dashboard/freelancer/jobs/${job.id}`}>View Job</Link></Button>
                 </div>
             </div>
         </CardContent>
