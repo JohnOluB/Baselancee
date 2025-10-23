@@ -2,7 +2,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, FileText, Briefcase, BarChart2, Star, MessageSquare, Settings, Wallet, LifeBuoy, Users } from 'lucide-react';
+import { Home, Search, FileText, Briefcase, BarChart2, Star, MessageSquare, Settings, Wallet, LifeBuoy, Users, Trophy } from 'lucide-react';
 
 import {
   Sidebar,
@@ -33,6 +33,7 @@ const freelanceLinks = [
   { href: '/dashboard/freelancer/active', label: 'Active Jobs', icon: Briefcase },
   { href: '/dashboard/freelancer/earnings', label: 'Earnings', icon: BarChart2 },
   { href: '/dashboard/freelancer/reviews', label: 'Reviews', icon: Star },
+  { href: '/dashboard/freelancer/achievements', label: 'Achievements', icon: Trophy },
   { href: '/dashboard/freelancer/messages', label: 'Messages', icon: MessageSquare, badge: '3' },
 ];
 
