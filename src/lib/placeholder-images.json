@@ -1,9 +1,10 @@
 {
   "placeholderImages": [
     {
-      "description": "Two people working on laptops in a modern office setting.",
-      "imageUrl": "https://images.unsplash.com/photo-1560250056-07ba64664864?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZW9wbGUlMjB3b3JraW5nfGVufDB8fHx8MTc2MDk4NjczNHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "people working"
+      "id": "hero-illustration",
+      "description": "A successful businessman in a modern office, looking out over a city skyline.",
+      "imageUrl": "https://images.unsplash.com/photo-1599292258488-c782a5144b62?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxidXNpbmVzc21hbnxlbnwwfHx8fDE3NjEwNjM5NDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "rich business man"
     },
     {
       "id": "why-choose-freelancer",

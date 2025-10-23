@@ -11,15 +11,15 @@ export default function Hero() {
   return (
     <section className="relative bg-background pt-24 md:pt-32">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col items-center">
-          <div className="text-center">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="text-center md:text-left">
             <h1 className="text-5xl md:text-7xl font-bold">
               The future of work is here
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground md:text-xl max-w-2xl mx-auto">
+            <p className="mt-6 text-lg text-muted-foreground md:text-xl">
               BaseLance is a professional, modern, and trustworthy platform for freelancers and clients, aiming to replace platforms like Upwork with lower fees and instant crypto payments.
             </p>
-            <div className="mt-8 flex justify-center">
+            <div className="mt-8 flex justify-center md:justify-start">
               <Link href="/signup">
                   <Button size="lg">
                       Get Started
@@ -28,7 +28,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="relative mt-12 w-full max-w-4xl">
+          <div className="relative w-full">
             {heroImage && (
               <Image
                 src={heroImage.imageUrl}
