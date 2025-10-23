@@ -298,7 +298,7 @@ function ApplicationSidebar() {
                             <div className="space-y-2">
                                 <Label htmlFor="bid-amount" className="font-semibold">Your Bid Amount *</Label>
                                 <div className="relative">
-                                    <Input id="bid-amount" type="number" placeholder="1000" className="pl-12" value={bid} onChange={handleBidChange}/>
+                                    <Input id="bid-amount" type="number" className="pl-12" value={bid} onChange={handleBidChange}/>
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">USDC</span>
                                 </div>
                                 <p className="text-xs text-muted-foreground">Client's budget: {clientBudget}</p>
@@ -584,5 +584,3 @@ export default function JobDetailsPage() {
     </div>
   );
 }
-
-    
