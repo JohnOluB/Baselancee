@@ -258,7 +258,11 @@ function AIJobAnalyzer() {
 }
 
 function ApplicationSidebar() {
-    const [bid, setBid] = useState<number | string>('');
+    const [bid, setBid] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isProposalDialogOpen, setIsProposalDialogOpen] = useState(false);
+
     const fee = 0.02; // 2%
     const clientBudget = 'from' in job.budget ? `$${job.budget.from} - $${job.budget.to}` : `$${job.budget.amount}`;
 
@@ -266,7 +270,15 @@ function ApplicationSidebar() {
         setBid(event.target.value);
     };
 
-    const bidAmountNumber = typeof bid === 'string' ? parseFloat(bid) : bid;
+    const handleProposalSubmit = async () => {
+        setIsSubmitting(true);
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+        setIsSubmitting(false);
+        setIsProposalDialogOpen(false); // Close proposal dialog
+        setIsSubmitted(true); // Open success dialog
+    }
+
+    const bidAmountNumber = parseFloat(bid);
     let platformFee = 0;
     let earnings = 0;
 
@@ -277,7 +289,7 @@ function ApplicationSidebar() {
 
     return (
         <div className="space-y-6">
-            <Dialog>
+            <Dialog open={isProposalDialogOpen} onOpenChange={setIsProposalDialogOpen}>
                 <DialogTrigger asChild>
                     <Button size="lg" className="w-full">Submit Proposal</Button>
                 </DialogTrigger>
@@ -298,7 +310,7 @@ function ApplicationSidebar() {
                             <div className="space-y-2">
                                 <Label htmlFor="bid-amount" className="font-semibold">Your Bid Amount *</Label>
                                 <div className="relative">
-                                    <Input id="bid-amount" type="number" className="pl-12" value={bid} onChange={handleBidChange}/>
+                                    <Input id="bid-amount" type="number" className="pl-12" value={bid} onChange={handleBidChange} placeholder="Enter your bid..."/>
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">USDC</span>
                                 </div>
                                 <p className="text-xs text-muted-foreground">Client's budget: {clientBudget}</p>
@@ -330,10 +342,38 @@ function ApplicationSidebar() {
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="ghost">Cancel</Button>
+                           <Button variant="ghost">Cancel</Button>
                         </DialogClose>
                          <Button variant="outline">Save Draft</Button>
-                        <Button>Submit Proposal</Button>
+                        <Button onClick={handleProposalSubmit} disabled={isSubmitting}>
+                            {isSubmitting ? 'Submitting...' : 'Submit Proposal'}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+             <Dialog open={isSubmitted} onOpenChange={setIsSubmitted}>
+                <DialogContent>
+                    <DialogHeader className="items-center text-center">
+                         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100 mb-4">
+                            <CheckCircle className="h-6 w-6 text-green-600" />
+                        </div>
+                        <DialogTitle className="text-2xl">Proposal Submitted Successfully!</DialogTitle>
+                        <DialogDescription>
+                           Your proposal for "{job.title}" has been sent to {job.client.name}.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4 text-center text-sm text-muted-foreground">
+                        <p>You will be notified when the client views your proposal or sends a message.</p>
+                        <p className="font-semibold mt-2">Estimated response time: 24-48 hours</p>
+                    </div>
+                    <DialogFooter className="sm:justify-center flex-col-reverse sm:flex-row gap-2">
+                        <Button variant="outline" asChild>
+                            <Link href="/dashboard/freelancer/jobs">Browse More Jobs</Link>
+                        </Button>
+                        <Button asChild>
+                             <Link href="/dashboard/freelancer/proposals">View My Proposals</Link>
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
