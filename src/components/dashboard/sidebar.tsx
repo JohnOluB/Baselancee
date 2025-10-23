@@ -41,6 +41,7 @@ const clientLinks = [
     { href: '/dashboard/client', label: 'Dashboard', icon: Home },
     { href: '/dashboard/client/freelancers', label: 'Browse Freelancers', icon: Users },
     { href: '/dashboard/client/jobs', label: 'My Jobs', icon: Briefcase },
+    { href: '/dashboard/client/contracts', label: 'Contracts', icon: FileText },
     { href: '/dashboard/client/messages', label: 'Messages', icon: MessageSquare, badge: '1' },
 ]
 
@@ -92,7 +93,7 @@ export default function DashboardSidebar() {
             <SidebarMenuItem key={link.href}>
               <Link href={link.href} passHref>
                 <SidebarMenuButton
-                  isActive={pathname === link.href || (link.href !== '/dashboard/freelancer' && pathname.startsWith(link.href))}
+                  isActive={pathname === link.href || (link.href !== '/dashboard/freelancer' && link.href !== '/dashboard/client' && pathname.startsWith(link.href))}
                   tooltip={link.label}
                 >
                   <link.icon />

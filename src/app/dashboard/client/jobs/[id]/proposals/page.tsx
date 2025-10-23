@@ -165,7 +165,11 @@ const ProposalCard = ({ proposal }: { proposal: (typeof proposals)[0] }) => {
                         <MessageSquare className="mr-2 h-4 w-4" /> Message
                     </Link>
                 </Button>
-                <Button>Hire Freelancer</Button>
+                <Button asChild>
+                  <Link href={`/dashboard/client/jobs/${job.id}/contract?freelancer=${proposal.id}`}>
+                    Hire Freelancer
+                  </Link>
+                </Button>
              </div>
           </div>
         </div>
