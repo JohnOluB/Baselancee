@@ -130,7 +130,6 @@ export default function FreelancerProfilePage() {
                    </div>
                 </div>
                 <div className="flex items-center gap-2 mt-4 md:mt-0">
-                    <Button variant="ghost" size="icon"><Save /></Button>
                 </div>
               </div>
             </CardContent>
