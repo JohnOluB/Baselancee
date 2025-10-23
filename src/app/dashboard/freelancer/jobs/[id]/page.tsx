@@ -1,3 +1,4 @@
+
 'use client';
 import {
   ArrowLeft,
@@ -260,18 +261,18 @@ function ApplicationSidebar() {
     const fee = 0.02; // 2%
     const clientBudget = 'from' in job.budget ? `$${job.budget.from} - $${job.budget.to}` : `$${job.budget.amount}`;
 
-    const calculateEarnings = (bidAmount: number) => {
-        if (!bidAmount || bidAmount <= 0) return { fee: '0.00', earnings: '0.00' };
-        const platformFee = bidAmount * fee;
-        const yourEarnings = bidAmount - platformFee;
-        return {
-            fee: platformFee.toFixed(2),
-            earnings: yourEarnings.toFixed(2)
-        };
+    const handleBidChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setBid(event.target.value);
     };
-    
+
     const bidAmountNumber = typeof bid === 'string' ? parseFloat(bid) : bid;
-    const { fee: platformFee, earnings } = calculateEarnings(bidAmountNumber);
+    let platformFee = 0;
+    let earnings = 0;
+
+    if (!isNaN(bidAmountNumber) && bidAmountNumber > 0) {
+        platformFee = bidAmountNumber * fee;
+        earnings = bidAmountNumber - platformFee;
+    }
 
     return (
         <div className="space-y-6">
@@ -296,7 +297,7 @@ function ApplicationSidebar() {
                             <div className="space-y-2">
                                 <Label htmlFor="bid-amount" className="font-semibold">Your Bid Amount *</Label>
                                 <div className="relative">
-                                    <Input id="bid-amount" type="number" placeholder="1000" className="pl-12" />
+                                    <Input id="bid-amount" type="number" placeholder="1000" className="pl-12" value={bid} onChange={handleBidChange}/>
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">USDC</span>
                                 </div>
                                 <p className="text-xs text-muted-foreground">Client's budget: {clientBudget}</p>
@@ -313,16 +314,16 @@ function ApplicationSidebar() {
                          <div className="p-4 rounded-md border bg-muted/50 text-sm space-y-2">
                             <div className="flex justify-between">
                                 <span>Your Bid:</span>
-                                <span>1000 USDC</span>
+                                <span>{isNaN(bidAmountNumber) ? '0.00' : bidAmountNumber.toFixed(2)} USDC</span>
                             </div>
                              <div className="flex justify-between">
                                 <span>Platform Fee (2%):</span>
-                                <span>-20 USDC</span>
+                                <span>-{platformFee.toFixed(2)} USDC</span>
                             </div>
                              <Separator className="my-2"/>
                             <div className="flex justify-between font-semibold">
                                 <span>You'll Receive:</span>
-                                <span>980 USDC</span>
+                                <span>{earnings.toFixed(2)} USDC</span>
                             </div>
                         </div>
                     </div>
@@ -580,3 +581,5 @@ export default function JobDetailsPage() {
     </div>
   );
 }
+
+    
