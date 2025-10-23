@@ -328,7 +328,9 @@ function ApplicationSidebar() {
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant="ghost">Cancel</Button>
+                        <Button variant="ghost" asChild>
+                            <Link href="/dashboard/freelancer/jobs">Cancel</Link>
+                        </Button>
                          <Button variant="outline">Save Draft</Button>
                         <Button>Submit Proposal</Button>
                     </DialogFooter>
@@ -581,3 +583,4 @@ export default function JobDetailsPage() {
     </div>
   );
 }
+
