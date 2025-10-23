@@ -319,7 +319,7 @@ function ApplicationSidebar() {
                                 <span>Platform Fee (2%):</span>
                                 <span>-20 USDC</span>
                             </div>
-                             <Separator />
+                             <Separator className="my-2"/>
                             <div className="flex justify-between font-semibold">
                                 <span>You'll Receive:</span>
                                 <span>980 USDC</span>
@@ -329,7 +329,7 @@ function ApplicationSidebar() {
                     <DialogFooter>
                         <Button variant="ghost">Cancel</Button>
                          <Button variant="outline">Save Draft</Button>
-                        <Button>Review Proposal</Button>
+                        <Button>Submit Proposal</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
