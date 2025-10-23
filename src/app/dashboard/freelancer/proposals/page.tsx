@@ -124,6 +124,21 @@ const proposals = [
     reason: 'Chose another freelancer with more specific experience.',
     tab: 'declined',
   },
+  {
+    jobTitle: 'Social Media Manager for NFT Project',
+    client: {
+        name: 'ArtChain',
+        avatar: 'https://i.pravatar.cc/150?u=a042581f4e2902670af',
+        isVerified: true,
+        location: 'Remote',
+    },
+    status: 'Draft',
+    saved: '2 days ago',
+    budget: '$1000 - $1500',
+    bid: '1200 USDC',
+    timeline: '1 month',
+    tab: 'draft',
+  },
 ];
 
 const getStatusBadgeVariant = (status: string) => {
@@ -139,6 +154,8 @@ const getStatusBadgeVariant = (status: string) => {
     case 'Declined':
     case 'Withdrawn':
       return 'destructive';
+    case 'Draft':
+        return 'secondary'
     default:
       return 'default';
   }
@@ -176,7 +193,7 @@ function ProposalCard({ proposal }: { proposal: any }) {
                 {proposal.jobTitle}
               </CardTitle>
             </Link>
-            <CardDescription>Submitted {proposal.submitted}</CardDescription>
+            <CardDescription>{proposal.status === 'Draft' ? `Saved ${proposal.saved}` : `Submitted ${proposal.submitted}`}</CardDescription>
           </div>
           <Badge
             variant={getStatusBadgeVariant(proposal.status)}
@@ -224,28 +241,36 @@ function ProposalCard({ proposal }: { proposal: any }) {
           </div>
 
           {/* Your Proposal */}
-          <div className="space-y-3 bg-muted/50 p-3 rounded-lg">
-            <p className="font-semibold">Your Proposal</p>
-            <div>
-              <p className="text-xl font-bold">{proposal.bid}</p>
-              <p className="text-xs text-muted-foreground">
-                You'll receive: ~$
-                {(
-                  parseFloat(proposal.bid.replace(/[^0-9.]/g, '')) * 0.98
-                ).toFixed(2)}{' '}
-                USDC
-              </p>
+          {proposal.tab !== 'draft' ? (
+            <div className="space-y-3 bg-muted/50 p-3 rounded-lg">
+                <p className="font-semibold">Your Proposal</p>
+                <div>
+                <p className="text-xl font-bold">{proposal.bid}</p>
+                <p className="text-xs text-muted-foreground">
+                    You'll receive: ~$
+                    {(
+                    parseFloat(proposal.bid.replace(/[^0-9.]/g, '')) * 0.98
+                    ).toFixed(2)}{' '}
+                    USDC
+                </p>
+                </div>
+                <p>
+                <span className="font-medium">Timeline:</span> {proposal.timeline}
+                </p>
+                <p className="text-muted-foreground italic line-clamp-2">
+                "I am confident I can deliver a high-quality dashboard..."
+                <Button variant="link" size="sm" className="p-0 h-auto ml-1">
+                    Read More
+                </Button>
+                </p>
             </div>
-            <p>
-              <span className="font-medium">Timeline:</span> {proposal.timeline}
-            </p>
-            <p className="text-muted-foreground italic line-clamp-2">
-              "I am confident I can deliver a high-quality dashboard..."
-              <Button variant="link" size="sm" className="p-0 h-auto ml-1">
-                Read More
-              </Button>
-            </p>
-          </div>
+          ) : (
+             <div className="space-y-3 bg-muted/50 p-3 rounded-lg flex flex-col items-center justify-center text-center">
+                <FileText className="h-8 w-8 text-muted-foreground" />
+                <p className="font-semibold">Proposal Draft</p>
+                <p className="text-xs text-muted-foreground">You haven't submitted this proposal yet.</p>
+             </div>
+          )}
 
           {/* Metrics & Actions */}
           <div className="space-y-3">
@@ -279,7 +304,12 @@ function ProposalCard({ proposal }: { proposal: any }) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        {proposal.status === 'Accepted' ? (
+        {proposal.status === 'Draft' ? (
+            <>
+                <Button variant="destructive" className="mr-auto">Delete Draft</Button>
+                <Button>Continue Editing</Button>
+            </>
+        ) : proposal.status === 'Accepted' ? (
           <>
             <Button variant="default">View Contract</Button>
             <Button>Start Work</Button>
@@ -350,6 +380,9 @@ export default function ProposalsPage() {
           <TabsTrigger value="interviewing">
             Interviewing (
             {proposals.filter((p) => p.tab === 'interviewing').length})
+          </TabsTrigger>
+          <TabsTrigger value="draft">
+            Drafts ({proposals.filter((p) => p.tab === 'draft').length})
           </TabsTrigger>
           <TabsTrigger value="accepted">
             Accepted ({proposals.filter((p) => p.tab === 'accepted').length})
