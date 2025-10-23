@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -159,7 +160,11 @@ const ProposalCard = ({ proposal }: { proposal: (typeof proposals)[0] }) => {
             </p>
              <div className="flex justify-end gap-2">
                 <Button variant={proposal.isShortlisted ? "secondary" : "outline"}><Star className="mr-2 h-4 w-4"/>{proposal.isShortlisted ? 'Shortlisted' : 'Shortlist'}</Button>
-                <Button variant="outline"><MessageSquare className="mr-2 h-4 w-4" /> Message</Button>
+                <Button variant="outline" asChild>
+                    <Link href="/dashboard/client/messages">
+                        <MessageSquare className="mr-2 h-4 w-4" /> Message
+                    </Link>
+                </Button>
                 <Button>Hire Freelancer</Button>
              </div>
           </div>
