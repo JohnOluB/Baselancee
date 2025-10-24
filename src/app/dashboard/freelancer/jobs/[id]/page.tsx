@@ -339,7 +339,7 @@ function ApplicationSidebar() {
                                         <Input 
                                             id="bid-amount" 
                                             type="number" 
-                                            className="pl-12 focus:placeholder:text-transparent"
+                                            className="px-12 placeholder:pl-0 focus:placeholder-transparent"
                                             placeholder="Enter your bid..."
                                             {...register('bidAmount', { valueAsNumber: true })}
                                         />
@@ -388,7 +388,6 @@ function ApplicationSidebar() {
                             <DialogClose asChild>
                                <Button variant="ghost">Cancel</Button>
                             </DialogClose>
-                            <Button variant="outline">Save Draft</Button>
                             <Button type="submit" disabled={isSubmitting || !isValid}>
                                 {isSubmitting ? 'Submitting...' : 'Submit Proposal'}
                             </Button>
@@ -676,3 +675,4 @@ export default function JobDetailsPage() {
     
 
     
+
