@@ -1,6 +1,6 @@
 
 'use client';
-import { useState }from 'react';
+import { useState, useEffect } from 'react';
 import {
   Wallet,
   Info,
@@ -41,8 +41,46 @@ import {
     DialogTitle,
     DialogFooter,
 } from '@/components/ui/dialog';
-import { connectWallet } from '@/utils/wallet';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/toast';
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { parseUnits, formatUnits } from 'viem';
+
+// MOCK ABI and Address - in a real app, this would be imported
+const mockContractAddress = '0x7a6962646d6f636b636f6e747261637430313233'; // A valid hex but not a real address
+const mockContractAbi = [
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "balances",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+];
 
 const initialWithdrawals = [
   {
@@ -68,7 +106,6 @@ const initialWithdrawals = [
   },
 ];
 
-
 const getStatusBadge = (status: string) => {
     switch(status) {
         case 'Completed':
@@ -83,63 +120,106 @@ const getStatusBadge = (status: string) => {
 }
 
 export default function WithdrawPage() {
-  const [address, setAddress] = useState('');
+  const { address: connectedAddress } = useAccount();
+  const { toast } = useToast();
+  
+  const { data: balance, refetch: refetchBalance } = useReadContract({
+    address: mockContractAddress,
+    abi: mockContractAbi,
+    functionName: 'balances',
+    args: [connectedAddress],
+    query: {
+      enabled: !!connectedAddress,
+      // Mocking a starting balance for demonstration purposes
+      initialData: parseUnits('1234.56', 6), 
+    }
+  });
+
+  const { data: hash, writeContract, isPending: isWithdrawInitiating, error: withdrawError } = useWriteContract();
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
+
+  const [withdrawToAddress, setWithdrawToAddress] = useState('');
   const [amount, setAmount] = useState('');
   const [isAddressInvalid, setIsAddressInvalid] = useState(false);
   const [recentWithdrawals, setRecentWithdrawals] = useState(initialWithdrawals);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const { toast } = useToast();
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [lastWithdrawal, setLastWithdrawal] = useState({ amount: '0.00', address: '' });
 
-  const availableBalance = 1234.56;
+  const availableBalance = balance ? parseFloat(formatUnits(balance as bigint, 6)) : 0.0;
+  const networkFee = 2.50; // Mock fee
+
+  useEffect(() => {
+    if (connectedAddress) {
+      setWithdrawToAddress(connectedAddress);
+    }
+  }, [connectedAddress]);
+
+  useEffect(() => {
+    if (isConfirmed) {
+      toast({
+        title: "Withdrawal Successful!",
+        description: "Your funds have been sent to your wallet.",
+        variant: 'default',
+      });
+      setShowSuccessDialog(true);
+      refetchBalance(); // Refresh balance after successful withdrawal
+      
+      const newWithdrawal = {
+          date: new Date().toISOString().replace('T', ' ').slice(0, 16),
+          amount: `${parseFloat(amount).toFixed(2)} USDC`,
+          address: `${withdrawToAddress.slice(0, 6)}...${withdrawToAddress.slice(-4)}`,
+          status: 'Completed',
+          txHash: hash ?? ''
+      };
+      setLastWithdrawal({ amount: parseFloat(amount).toFixed(2), address: withdrawToAddress });
+      setRecentWithdrawals([newWithdrawal, ...recentWithdrawals]);
+      setAmount('');
+    }
+  }, [isConfirmed, hash, amount, withdrawToAddress, refetchBalance, toast]);
+
+  useEffect(() => {
+    if (withdrawError) {
+      toast({
+        variant: 'destructive',
+        title: 'Withdrawal Failed',
+        description: withdrawError.shortMessage || 'Could not complete the withdrawal.',
+      });
+    }
+  }, [withdrawError, toast]);
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newAddress = e.target.value;
-    setAddress(newAddress);
+    setWithdrawToAddress(newAddress);
     const isValid = /^0x[a-fA-F0-9]{40}$/.test(newAddress);
     setIsAddressInvalid(newAddress.length > 0 && !isValid);
   };
   
   const amountNumber = parseFloat(amount) || 0;
-  const networkFee = 2.50;
   const finalAmount = amountNumber > networkFee ? amountNumber - networkFee : 0;
-  const isWithdrawDisabled = isLoading || isAddressInvalid || amountNumber < 10 || amountNumber > availableBalance;
+  const isWithdrawDisabled = isWithdrawInitiating || isConfirming || isAddressInvalid || amountNumber < 10 || amountNumber > availableBalance;
 
   const handleWithdraw = async () => {
-    if (isWithdrawDisabled) return;
-
-    setIsLoading(true);
-
+    if (isWithdrawDisabled || !connectedAddress) return;
     try {
-      // Simulate initiating transaction with wallet
-      await connectWallet();
-      
-      // Simulate API call/blockchain transaction confirmation
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const newWithdrawal = {
-          date: new Date().toISOString().replace('T', ' ').slice(0, 16),
-          amount: `${amountNumber.toFixed(2)} USDC`,
-          address: `${address.slice(0, 6)}...${address.slice(-4)}`,
-          status: 'Completed',
-          txHash: `0x${[...Array(6)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}...${[...Array(6)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`
-      };
-
-      setRecentWithdrawals([newWithdrawal, ...recentWithdrawals]);
-      setShowSuccess(true);
-      setAmount('');
-      setAddress('');
-
+        const amountInUnits = parseUnits(amount, 6); // Assuming USDC has 6 decimals
+        writeContract({
+            address: mockContractAddress,
+            abi: mockContractAbi,
+            functionName: 'withdraw',
+            args: [amountInUnits],
+        });
     } catch (err: any) {
+      console.error('Withdrawal initiation error:', err);
       toast({
         variant: 'destructive',
         title: 'Withdrawal Failed',
-        description: err.message || 'Could not complete the withdrawal.',
+        description: err.message || 'Could not initiate the withdrawal process.',
       });
-    } finally {
-      setIsLoading(false);
     }
   }
+
+  const isLoading = isWithdrawInitiating || isConfirming;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -176,7 +256,7 @@ export default function WithdrawPage() {
             <Input 
                 id="wallet-address" 
                 placeholder="0x..." 
-                value={address}
+                value={withdrawToAddress}
                 onChange={handleAddressChange}
                 className={isAddressInvalid ? 'border-destructive focus-visible:ring-destructive' : ''}
              />
@@ -204,7 +284,7 @@ export default function WithdrawPage() {
                     <span>{amountNumber.toFixed(2)} USDC</span>
                 </div>
                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Network Fee</span>
+                    <span className="text-muted-foreground">Network Fee (est.)</span>
                     <span>- {networkFee.toFixed(2)} USDC</span>
                 </div>
                  <div className="flex justify-between font-bold text-base pt-2 border-t">
@@ -218,7 +298,7 @@ export default function WithdrawPage() {
             {isLoading ? (
                 <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin"/>
-                    Processing...
+                    {isConfirming ? 'Confirming Transaction...' : 'Waiting for approval...'}
                 </>
             ) : (
                 <>
@@ -231,7 +311,7 @@ export default function WithdrawPage() {
         </CardFooter>
       </Card>
 
-      <Dialog open={showSuccess} onOpenChange={setShowSuccess}>
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
             <DialogContent>
                 <DialogHeader className="items-center text-center">
                     <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 mb-4">
@@ -243,12 +323,12 @@ export default function WithdrawPage() {
                     </DialogDescription>
                 </DialogHeader>
                 <div className="py-4 text-center">
-                    <p className="text-3xl font-bold">{finalAmount.toFixed(2)} USDC</p>
+                    <p className="text-3xl font-bold">{lastWithdrawal.amount} USDC</p>
                     <p className="text-sm text-muted-foreground mt-1">Has been sent to:</p>
-                    <p className="text-sm font-medium break-all mt-2">{address}</p>
+                    <p className="text-sm font-medium break-all mt-2">{lastWithdrawal.address}</p>
                 </div>
                 <DialogFooter className="sm:justify-center">
-                    <Button onClick={() => setShowSuccess(false)}>Done</Button>
+                    <Button onClick={() => setShowSuccessDialog(false)}>Done</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -277,12 +357,14 @@ export default function WithdrawPage() {
                             </TableCell>
                             <TableCell>{getStatusBadge(tx.status)}</TableCell>
                             <TableCell className="text-right">
-                                <Button variant="outline" size="sm" asChild>
-                                    <a href="#" target="_blank" rel="noopener noreferrer">
-                                        View on Basescan
-                                        <ExternalLink className="ml-2 h-3 w-3" />
-                                    </a>
-                                </Button>
+                                {tx.txHash && (
+                                     <Button variant="outline" size="sm" asChild>
+                                        <a href={`https://sepolia.basescan.org/tx/${tx.txHash}`} target="_blank" rel="noopener noreferrer">
+                                            View on Basescan
+                                            <ExternalLink className="ml-2 h-3 w-3" />
+                                        </a>
+                                    </Button>
+                                )}
                             </TableCell>
                         </TableRow>
                      ))}
