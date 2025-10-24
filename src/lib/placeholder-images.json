@@ -38,9 +38,9 @@
     },
     {
       "id": "profile-creation",
-      "description": "A user's profile page on a social or professional platform.",
-      "imageUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx1c2VyJTIwcHJvZmlsZXxlbnwwfHx8fDE3NjEyNzkwODh8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "user profile"
+      "description": "User creating a digital profile on a laptop, showcasing skills and portfolio with a modern interface.",
+      "imageUrl": "https://images.unsplash.com/photo-1611162616475-46b635cb6868?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwcm9maWxlJTIwc2V0dXAlMjBvbmxpbmV8ZW58MHx8fHwxNzY2Njg2MTc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "create profile"
     },
     {
       "id": "find-work",
