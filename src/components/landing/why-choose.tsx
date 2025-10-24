@@ -37,8 +37,8 @@ export default function WhyChoose() {
                                 src={image.imageUrl}
                                 alt={image.description}
                                 width={600}
-                                height={300}
-                                className="w-full h-[300px] rounded-lg object-cover"
+                                height={200}
+                                className="w-full h-[200px] rounded-lg object-cover"
                                 data-ai-hint={image.imageHint}
                                 />
                             )}
