@@ -12,9 +12,19 @@ import Link from 'next/link';
 export default function LoginPage() {
   const router = useRouter();
 
-  const handleLogin = () => {
-    // For now, just redirect to the client dashboard
-    router.push('/dashboard/client');
+  const handleLogin = async () => {
+    // For this demo, we'll simulate a user with both roles.
+    const user = {
+      name: 'John Doe',
+      roles: ['freelancer', 'client']
+    };
+
+    if (user.roles.length > 1) {
+      sessionStorage.setItem('pendingUser', JSON.stringify(user));
+      router.push('/select-role');
+    } else {
+      router.push('/dashboard/client');
+    }
   };
 
   const handleWalletConnect = async ({ account, signature, nonce }) => {
@@ -33,22 +43,21 @@ export default function LoginPage() {
       const data = await response.json();
       
       if (response.ok && data.success) {
-        // In a real app, the backend would return userType and profile completion status
-        // For this demo, we'll simulate it.
         const user = data.user || {};
         
-        // Let's assume a new user needs to complete onboarding
-        if (!user.profileCompleted) {
-          // If we don't know the user type, we ask them.
-          router.push('/signup'); // This page lets them choose client or freelancer
+        // This is a simplified logic. A real app would get roles from the backend.
+        // For now, we assume a connected wallet user can be both.
+        const roles = user.roles || ['client', 'freelancer'];
+        
+        if (roles.length > 1) {
+          sessionStorage.setItem('pendingUser', JSON.stringify(user));
+          router.push('/select-role');
+        } else if (roles.includes('freelancer')) {
+          router.push('/dashboard/freelancer');
         } else {
-          // If profile is complete, redirect to their dashboard
-          if (user.userType === 'freelancer') {
-            router.push('/dashboard/freelancer');
-          } else {
-            router.push('/dashboard/client');
-          }
+          router.push('/dashboard/client');
         }
+
       } else {
         alert(data.error || 'Authentication failed');
       }
