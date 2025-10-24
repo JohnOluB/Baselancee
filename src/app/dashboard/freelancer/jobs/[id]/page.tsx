@@ -339,7 +339,7 @@ function ApplicationSidebar() {
                                         <Input 
                                             id="bid-amount" 
                                             type="number" 
-                                            className="pl-12 focus:placeholder-transparent"
+                                            className="pl-12 focus:placeholder:text-transparent"
                                             placeholder="Enter your bid..."
                                             {...register('bidAmount', { valueAsNumber: true })}
                                         />
