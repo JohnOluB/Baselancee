@@ -38,8 +38,8 @@
     },
     {
       "id": "profile-creation",
-      "description": "A welcoming, step-by-step illustration for BaseLance profile creation, showing an elegant interface with a progress indicator and options for wallet or email signup. The design emphasizes ease of use and quick setup.",
-      "imageUrl": "https://images.unsplash.com/photo-1611162616475-46b635cb6868?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwcm9maWxlJTIwc2V0dXAlMjBvbmxpbmV8ZW58MHx8fHwxNzY2Njg2MTc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "description": "Welcoming, step-by-step illustration for BaseLance profile creation page. Clean, modern composition that reduces friction and encourages completion.",
+      "imageUrl": "https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMXx8cHJvZmlsZXxlbnwwfHx8fDE3NjEyODMwMjl8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "create profile"
     },
     {
