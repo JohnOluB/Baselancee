@@ -37,7 +37,7 @@ export const connectWallet = async () => {
   
   export const signAuthMessage = async (account, nonce) => {
     try {
-      const message = `Sign this message to authenticate with BaseLance.\n\nNonce: ${nonce}\nWallet: ${account}`;
+      const message = `Sign this message to authenticate: ${nonce}`;
       
       const signature = await window.ethereum.request({
         method: 'personal_sign',
