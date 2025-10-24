@@ -8,8 +8,7 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 
-// TODO: Replace with your actual WalletConnect Project ID
-const WALLETCONNECT_PROJECT_ID = 'YOUR_PROJECT_ID_HERE';
+const WALLETCONNECT_PROJECT_ID = 'd16d3373a6e9603f74e6ca37b868de5b';
 
 const config = getDefaultConfig({
   appName: 'BaseLance',
