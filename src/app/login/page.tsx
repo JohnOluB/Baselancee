@@ -32,20 +32,22 @@ export default function LoginPage() {
       
       const data = await response.json();
       
-      if (response.ok) {
-        // Check if user has completed profile
-        if (data.user.profileCompleted) {
-          // Redirect to appropriate dashboard
-          if (data.user.userType === 'freelancer') {
-            router.push('/dashboard/freelancer');
-          } else if (data.user.userType === 'client') {
-            router.push('/dashboard/client');
-          } else {
-            router.push('/dashboard');
-          }
+      if (response.ok && data.success) {
+        // In a real app, the backend would return userType and profile completion status
+        // For this demo, we'll simulate it.
+        const user = data.user || {};
+        
+        // Let's assume a new user needs to complete onboarding
+        if (!user.profileCompleted) {
+          // If we don't know the user type, we ask them.
+          router.push('/signup'); // This page lets them choose client or freelancer
         } else {
-          // First time user - redirect to profile setup
-          router.push('/onboarding/profile-type'); // Choose freelancer or client
+          // If profile is complete, redirect to their dashboard
+          if (user.userType === 'freelancer') {
+            router.push('/dashboard/freelancer');
+          } else {
+            router.push('/dashboard/client');
+          }
         }
       } else {
         alert(data.error || 'Authentication failed');
