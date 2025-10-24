@@ -18,7 +18,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
-// import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 
 const passwordSchema = z
   .string()
@@ -138,14 +138,6 @@ export default function FreelancerSignUpPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {/* <div className="flex justify-center"> */}
-                 {/* <ConnectButton /> */}
-            {/* </div> */}
-            {/* <div className="relative flex py-2 items-center"> */}
-                {/* <div className="flex-grow border-t border-muted"></div> */}
-                {/* <span className="flex-shrink mx-4 text-xs text-muted-foreground">OR</span> */}
-                {/* <div className="flex-grow border-t border-muted"></div> */}
-            {/* </div> */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="fullName">Full Name</Label>
