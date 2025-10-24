@@ -32,7 +32,7 @@ export default function Hero() {
                 alt={heroImage.description}
                 width={600}
                 height={600}
-                className="rounded-xl shadow-lg w-full max-w-2xl mx-auto"
+                className="rounded-xl shadow-lg w-full max-w-4xl mx-auto"
                 data-ai-hint={heroImage.imageHint}
                 priority
               />
