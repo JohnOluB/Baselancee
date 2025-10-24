@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "hero-illustration",
-      "description": "Professionals collaborating in a modern workspace, conveying innovation and teamwork.",
-      "imageUrl": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwcm9mZXNzaW9uYWxzJTIwY29sbGFib3JhdGluZ3xlbnwwfHx8fDE3NjEyNjQwODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "professionals collaborating"
+      "description": "A professional hero illustration for the BaseLance freelancer marketplace, showcasing the onboarding journey with Web3 wallet and email signup options. The design is modern and trust-inspiring, featuring a diverse freelancer in a professional workspace.",
+      "imageUrl": "https://storage.googleapis.com/aai-sit-native-assistant-bu/images/42501a35-15d9-4d22-901d-55b253b26c04",
+      "imageHint": "freelancer marketplace signup"
     },
     {
       "id": "why-choose-freelancer",
@@ -38,9 +38,9 @@
     },
     {
       "id": "profile-creation",
-      "description": "A close-up of a digital profile page on a screen, showing skills and a portfolio.",
-      "imageUrl": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwcm9mZXNzaW9uYWxzJTIwY29sbGFib3JhdGluZ3xlbnwwfHx8fDE3NjEyNjQwODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "user profile"
+      "description": "User creating a digital profile on a laptop, showcasing skills and portfolio with a modern interface.",
+      "imageUrl": "https://images.unsplash.com/photo-1611162616475-46b635cb6868?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwcm9maWxlJTIwc2V0dXAlMjBvbmxpbmV8ZW58MHx8fHwxNzY2Njg2MTc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "create profile"
     },
     {
       "id": "find-work",
