@@ -58,8 +58,10 @@ const stats = [
   },
 ];
 
-const proposals = [
+const initialProposals = [
   {
+    id: 'prop-1',
+    jobId: '1',
     jobTitle: 'Build a React Dashboard for Analytics Platform',
     client: {
       name: 'TechCorp Inc.',
@@ -79,6 +81,8 @@ const proposals = [
     tab: 'pending',
   },
   {
+    id: 'prop-2',
+    jobId: '1',
     jobTitle: 'Senior Blockchain Engineer (DeFi)',
     client: {
       name: 'Crypto-Innovate',
@@ -94,6 +98,8 @@ const proposals = [
     tab: 'interviewing',
   },
   {
+    id: 'prop-3',
+    jobId: '1',
     jobTitle: 'UI/UX Designer for Mobile App',
     client: {
       name: 'Creative Solutions',
@@ -109,6 +115,8 @@ const proposals = [
     tab: 'accepted',
   },
   {
+    id: 'prop-4',
+    jobId: '1',
     jobTitle: 'Content Writer for Tech Blog',
     client: {
       name: 'Blogify',
@@ -125,6 +133,8 @@ const proposals = [
     tab: 'declined',
   },
   {
+    id: 'prop-5',
+    jobId: '1',
     jobTitle: 'Social Media Manager for NFT Project',
     client: {
         name: 'ArtChain',
@@ -176,13 +186,13 @@ const getStatusIcon = (status: string) => {
   }
 };
 
-function ProposalCard({ proposal }: { proposal: any }) {
+function ProposalCard({ proposal, onWithdraw }: { proposal: any, onWithdraw: (id: string) => void }) {
   return (
     <Card>
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
-            <Link href="/dashboard/freelancer/jobs/1">
+            <Link href={`/dashboard/freelancer/jobs/${proposal.jobId}`}>
               <CardTitle className="text-lg mb-1 hover:underline">
                 {proposal.jobTitle}
               </CardTitle>
@@ -228,7 +238,7 @@ function ProposalCard({ proposal }: { proposal: any }) {
               <span>{proposal.timeline}</span>
             </div>
             <Button variant="link" size="sm" asChild className="p-0 h-auto">
-              <Link href="/dashboard/freelancer/jobs/1">
+              <Link href={`/dashboard/freelancer/jobs/${proposal.jobId}`}>
                 View Original Job Post
               </Link>
             </Button>
@@ -318,11 +328,11 @@ function ProposalCard({ proposal }: { proposal: any }) {
         ) : proposal.status !== 'Declined' &&
           proposal.status !== 'Withdrawn' ? (
           <>
-            <Button variant="destructive" className="mr-auto">
+            <Button variant="destructive" className="mr-auto" onClick={() => onWithdraw(proposal.id)}>
               Withdraw
             </Button>
             <Button variant="outline" asChild>
-              <Link href={`/dashboard/freelancer/jobs/1?edit=true`}>Edit Proposal</Link>
+              <Link href={`/dashboard/freelancer/jobs/${proposal.jobId}?edit=true`}>Edit Proposal</Link>
             </Button>
             <Button asChild>
                 <Link href="/dashboard/freelancer/messages">Message Client</Link>
@@ -337,7 +347,12 @@ function ProposalCard({ proposal }: { proposal: any }) {
 }
 
 export default function ProposalsPage() {
+  const [proposals, setProposals] = useState(initialProposals);
   const [activeTab, setActiveTab] = useState('pending');
+
+  const handleWithdraw = (proposalId: string) => {
+    setProposals(proposals.filter(p => p.id !== proposalId));
+  };
 
   const filteredProposals = proposals.filter(
     (proposal) => proposal.tab === activeTab
@@ -393,8 +408,8 @@ export default function ProposalsPage() {
         </TabsList>
         <div className="mt-6 space-y-6">
           {filteredProposals.length > 0 ? (
-            filteredProposals.map((proposal, index) => (
-              <ProposalCard key={index} proposal={proposal} />
+            filteredProposals.map((proposal) => (
+              <ProposalCard key={proposal.id} proposal={proposal} onWithdraw={handleWithdraw} />
             ))
           ) : (
             <Card className="text-center py-12">
@@ -417,6 +432,3 @@ export default function ProposalsPage() {
     </div>
   );
 }
-
-
-    
