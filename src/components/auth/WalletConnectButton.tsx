@@ -1,19 +1,24 @@
 // src/components/auth/WalletConnectButton.tsx
 
 import { useState, useEffect } from 'react';
-import { connectWallet, checkWalletConnection, formatAddress, getNetworkName } from '../../utils/wallet';
+import { 
+  connectWallet, 
+  checkWalletConnection, 
+  formatAddress, 
+  getNetworkName,
+  signAuthMessage 
+} from '../../utils/wallet';
 
 export default function WalletConnectButton({ onConnect }) {
   const [account, setAccount] = useState(null);
   const [chainId, setChainId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [signingMessage, setSigningMessage] = useState(false);
 
   useEffect(() => {
-    // Check if already connected
     checkConnection();
 
-    // Listen for account changes
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', handleAccountsChanged);
       window.ethereum.on('chainChanged', () => window.location.reload());
@@ -48,18 +53,40 @@ export default function WalletConnectButton({ onConnect }) {
     setError('');
 
     try {
+      // Step 1: Connect wallet
       const { account, chainId } = await connectWallet();
       setAccount(account);
       setChainId(chainId);
       
-      // Call parent callback if provided
+      // Step 2: Get nonce from backend for signature
+      setSigningMessage(true);
+      const nonceResponse = await fetch('/api/auth/get-nonce', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ walletAddress: account })
+      });
+      
+      const { nonce } = await nonceResponse.json();
+      
+      // Step 3: Sign message to prove wallet ownership
+      const signature = await signAuthMessage(account, nonce);
+      
+      // Step 4: Send to backend for authentication
       if (onConnect) {
-        onConnect({ account, chainId });
+        await onConnect({ 
+          account, 
+          chainId, 
+          signature, 
+          nonce 
+        });
       }
     } catch (err) {
       setError(err.message);
+      setAccount(null);
+      setChainId(null);
     } finally {
       setLoading(false);
+      setSigningMessage(false);
     }
   };
 
@@ -69,7 +96,7 @@ export default function WalletConnectButton({ onConnect }) {
     setError('');
   };
 
-  if (account) {
+  if (account && !signingMessage) {
     return (
       <div className="space-y-3">
         <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -101,14 +128,13 @@ export default function WalletConnectButton({ onConnect }) {
     <div className="space-y-3">
       <button
         onClick={handleConnect}
-        disabled={loading}
-        variant="outline"
+        disabled={loading || signingMessage}
         className="w-full flex items-center justify-center gap-3 py-3 px-4 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
         </svg>
-        {loading ? 'Connecting...' : 'Login with Wallet'}
+        {signingMessage ? 'Please sign message...' : loading ? 'Connecting...' : 'Login with Wallet'}
       </button>
 
       {error && (
@@ -119,6 +145,10 @@ export default function WalletConnectButton({ onConnect }) {
           <p className="text-sm text-red-800">{error}</p>
         </div>
       )}
+
+      <div className="text-xs text-gray-500 text-center px-4">
+        You'll be asked to sign a message to verify wallet ownership. This is free and doesn't cost gas.
+      </div>
     </div>
   );
 }

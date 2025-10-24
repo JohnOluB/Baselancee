@@ -17,23 +17,42 @@ export default function LoginPage() {
     router.push('/dashboard/client');
   };
 
-  const handleWalletConnect = async ({ account, chainId }: { account: string; chainId: string }) => {
-    // Send wallet address to your backend
+  const handleWalletConnect = async ({ account, signature, nonce }) => {
     try {
+      // Authenticate with backend
       const response = await fetch('/api/auth/wallet-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ walletAddress: account, chainId })
+        body: JSON.stringify({ 
+          walletAddress: account, 
+          signature,
+          nonce 
+        })
       });
       
+      const data = await response.json();
+      
       if (response.ok) {
-        // Redirect to dashboard or profile setup
-        router.push('/dashboard/client');
+        // Check if user has completed profile
+        if (data.user.profileCompleted) {
+          // Redirect to appropriate dashboard
+          if (data.user.userType === 'freelancer') {
+            router.push('/dashboard/freelancer');
+          } else if (data.user.userType === 'client') {
+            router.push('/dashboard/client');
+          } else {
+            router.push('/dashboard');
+          }
+        } else {
+          // First time user - redirect to profile setup
+          router.push('/onboarding/profile-type'); // Choose freelancer or client
+        }
       } else {
-        console.error('Authentication failed:', await response.json());
+        alert(data.error || 'Authentication failed');
       }
     } catch (error) {
       console.error('Authentication failed:', error);
+      alert('Failed to authenticate. Please try again.');
     }
   };
 
