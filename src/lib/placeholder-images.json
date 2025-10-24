@@ -50,9 +50,9 @@
     },
     {
       "id": "get-paid",
-      "description": "Illustration of a secure online payment or transaction.",
-      "imageUrl": "https://images.unsplash.com/photo-1726064855857-4540ed3834db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzZWN1cmUlMjBwYXltZW50fGVufDB8fHx8MTc2MTE5MjQ1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "secure payment"
+      "description": "Person making an instant digital payment using a smartphone in a modern workspace.",
+      "imageUrl": "https://images.unsplash.com/photo-1605902711622-cfb43c4437b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwcGF5bWVudCUyMHNtYXJ0cGhvbmV8ZW58MHx8fHwxNzY2Njg1MDA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "instant payment"
     }
   ]
 }
