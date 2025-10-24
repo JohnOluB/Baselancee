@@ -79,7 +79,7 @@ export function JobCard({ job }: { job: Job }) {
                 <p className="text-sm text-muted-foreground mt-1">Posted {job.postedAt} by {job.postedBy}</p>
             </div>
             <div className="flex items-start gap-2">
-                <Button variant="outline" size="icon"><Heart className="h-4 w-4" /></Button>
+                
                 <Button asChild><Link href="/dashboard/freelancer/jobs/1">Apply Now</Link></Button>
             </div>
         </div>
