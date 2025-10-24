@@ -63,7 +63,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
       setError(null);
     }
   }, []);
-  
+
   const connect = useCallback(async () => {
     if (typeof window.ethereum === 'undefined') {
       setError('Please install MetaMask or another Web3 wallet.');
@@ -145,7 +145,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [handleAccountsChanged, handleChainChanged]);
 
-  const value = {
+  const value: WalletState = {
     account,
     chainId,
     networkName: getNetworkName(chainId),
