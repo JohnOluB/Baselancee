@@ -1,96 +1,47 @@
 
-// src/components/auth/WalletConnectButton.tsx
-
-import { useState } from 'react';
-import { 
-  connectWallet, 
-  formatAddress, 
-  getNetworkName,
-  signAuthMessage 
-} from '../../utils/wallet';
+'use client';
+import { useState, useEffect } from 'react';
+import { useWallet } from '@/hooks/use-wallet';
 import { Button } from '@/components/ui/button';
-import { Wallet } from 'lucide-react';
+import { Wallet, CheckCircle, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
-import { CheckCircle } from 'lucide-react';
-import { getNonce, loginWithWallet } from '@/lib/api';
+import { formatAddress } from '@/utils/wallet';
 
 export default function WalletConnectButton({ onConnect }) {
-  const [account, setAccount] = useState(null);
-  const [chainId, setChainId] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [signingMessage, setSigningMessage] = useState(false);
+  const { 
+    account, 
+    chainId,
+    networkName,
+    isAuthenticated,
+    loading,
+    error,
+    connect, 
+    disconnect,
+    clearError
+  } = useWallet();
 
   const handleConnect = async () => {
-    setLoading(true);
-    setSigningMessage(false);
-    setError('');
-
-    try {
-      // Step 1: Connect wallet
-      const { account, chainId } = await connectWallet();
-      setAccount(account);
-      setChainId(chainId);
-      
-      // Step 2: Get nonce from backend for signature
-      setSigningMessage(true);
-      const { nonce } = await getNonce(account);
-      
-      // Step 3: Sign message to prove wallet ownership
-      const signature = await signAuthMessage(account, nonce);
-      
-      // Step 4: Send to backend for authentication
-      const data = await loginWithWallet(account, signature);
-      
-      if (onConnect) {
-        await onConnect(data);
-      }
-    }  catch (err) {
-      console.error('Wallet connection error:', err);
-      
-      // Clear account state on error
-      setAccount(null);
-      setChainId(null);
-      
-      // User-friendly error messages
-      if (err.message.includes('User rejected') || err.message.includes('User denied')) {
-        setError('Connection cancelled. Please approve the wallet connection to continue.');
-      } else if (err.message.includes('install MetaMask')) {
-        setError('Please install MetaMask or another Web3 wallet to continue.');
-      } else if (err.message.includes('signature request')) {
-        setError('Signature cancelled. You need to sign the message to verify your wallet.');
-      } else {
-        setError(err.message || 'Failed to connect wallet. Please try again.');
-      }
-    } finally {
-      setLoading(false);
-      setSigningMessage(false);
+    const data = await connect();
+    if (data && onConnect) {
+      onConnect(data);
     }
-  };
+  }
 
-  const handleDisconnect = () => {
-    setAccount(null);
-    setChainId(null);
-    setError('');
-  };
-
-  const dismissError = () => {
-    setError('');
-  };
-
-  if (account && !signingMessage) {
+  if (account) {
     return (
       <div className="space-y-3">
-        <Alert variant="default" className="bg-green-50 border-green-200 text-green-800">
-           <CheckCircle className="h-4 w-4 !text-green-600" />
-           <AlertTitle className="text-green-900 font-semibold">Wallet Connected</AlertTitle>
+        <Alert variant={isAuthenticated ? "default" : "destructive"} className={isAuthenticated ? "bg-green-50 border-green-200 text-green-800" : ""}>
+           <CheckCircle className="h-4 w-4" style={{ color: isAuthenticated ? 'hsl(var(--success-green))' : 'hsl(var(--destructive))' }} />
+           <AlertTitle className={isAuthenticated ? "text-green-900 font-semibold" : "font-semibold"}>
+            {isAuthenticated ? 'Wallet Authenticated' : 'Authentication Required'}
+           </AlertTitle>
            <AlertDescription>
-                {formatAddress(account)} on {getNetworkName(chainId)}
+                {formatAddress(account)} on {networkName}
            </AlertDescription>
         </Alert>
         
         <Button
-          onClick={handleDisconnect}
+          onClick={disconnect}
           variant="outline"
           className="w-full"
         >
@@ -104,13 +55,16 @@ export default function WalletConnectButton({ onConnect }) {
     <div className="space-y-3">
       <Button
         onClick={handleConnect}
-        disabled={loading || signingMessage}
+        disabled={loading}
         className="w-full"
         size="lg"
-        variant="outline"
       >
-        <Wallet className="mr-2 h-5 w-5"/>
-        {signingMessage ? 'Please sign message...' : loading ? 'Connecting...' : 'Login with Wallet'}
+        {loading ? (
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+        ) : (
+            <Wallet className="mr-2 h-5 w-5"/>
+        )}
+        {loading ? 'Connecting...' : 'Connect Wallet'}
       </Button>
 
       {error && (
@@ -122,7 +76,7 @@ export default function WalletConnectButton({ onConnect }) {
             <p className="text-sm text-red-800">{error}</p>
           </div>
           <button 
-            onClick={dismissError}
+            onClick={clearError}
             className="text-red-600 hover:text-red-800"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +91,7 @@ export default function WalletConnectButton({ onConnect }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p className="text-xs text-blue-800">
-            You'll be asked to sign a message to verify your wallet. This is <strong>free</strong> and doesn't cost any gas fees.
+            You'll be asked to connect your wallet and sign a message to authenticate. This is <strong>free</strong> and doesn't cost any gas fees.
           </p>
         </div>
       )}
