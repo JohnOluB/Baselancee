@@ -63,7 +63,7 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
-             <div className="flex justify-center">
+             <div className="flex justify-center [&>button]:w-full">
                  <ConnectButton />
             </div>
             <div className="relative flex py-2 items-center">
