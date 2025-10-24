@@ -11,7 +11,7 @@ export default function Hero() {
     <section className="bg-background pt-36 pb-28">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="text-center md:text-left">
+          <div className="text-center">
             <h1 className="text-5xl md:text-6xl font-bold">
               The future of work is here
             </h1>
