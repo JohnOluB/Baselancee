@@ -27,6 +27,7 @@ import { Progress } from '@/components/ui/progress';
 
 const activeJobs = [
   {
+    id: '1',
     title: 'Senior Blockchain Engineer (DeFi)',
     client: {
       name: 'Crypto-Innovate',
@@ -42,6 +43,7 @@ const activeJobs = [
     actionNeeded: false,
   },
   {
+    id: '2',
     title: 'Build React Dashboard for Analytics Platform',
     client: {
       name: 'TechCorp Inc.',
@@ -56,6 +58,7 @@ const activeJobs = [
     actionNeeded: true,
   },
   {
+    id: '3',
     title: 'API Integration for SaaS',
     client: {
       name: 'SaaSify',
@@ -140,7 +143,11 @@ function JobCard({ job }: { job: any }) {
         </div>
 
         <div className="border-t mt-4 pt-4 flex items-center justify-end gap-2">
-          <Button variant="outline">View Contract</Button>
+          <Button variant="outline" asChild>
+            <Link href={`/dashboard/freelancer/contracts/${job.id}`}>
+              View Contract
+            </Link>
+          </Button>
           <Button asChild>
             <Link href="/dashboard/freelancer/messages">Message Client</Link>
           </Button>
