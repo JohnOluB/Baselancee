@@ -7,7 +7,7 @@ import { Wallet, CheckCircle, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { formatAddress } from '@/utils/wallet';
 
-export default function WalletConnectButton({ onConnect }) {
+export default function WalletConnectButton({ onConnect }: { onConnect: (data: any) => void }) {
   const { 
     account, 
     chainId,
@@ -27,13 +27,13 @@ export default function WalletConnectButton({ onConnect }) {
     }
   }
 
-  if (account) {
+  if (account && isAuthenticated) {
     return (
       <div className="space-y-3">
-        <Alert variant={isAuthenticated ? "default" : "destructive"} className={isAuthenticated ? "bg-green-50 border-green-200 text-green-800" : ""}>
-           <CheckCircle className="h-4 w-4" style={{ color: isAuthenticated ? 'hsl(var(--success-green))' : 'hsl(var(--destructive))' }} />
-           <AlertTitle className={isAuthenticated ? "text-green-900 font-semibold" : "font-semibold"}>
-            {isAuthenticated ? 'Wallet Authenticated' : 'Authentication Required'}
+        <Alert variant="default" className="bg-green-50 border-green-200 text-green-800">
+           <CheckCircle className="h-4 w-4" style={{ color: 'hsl(var(--success-green))' }} />
+           <AlertTitle className="text-green-900 font-semibold">
+            Wallet Authenticated
            </AlertTitle>
            <AlertDescription>
                 {formatAddress(account)} on {networkName}

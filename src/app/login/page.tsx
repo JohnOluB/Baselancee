@@ -27,10 +27,9 @@ export default function LoginPage() {
     }
   };
 
-  const handleWalletConnect = async (data) => {
+  const handleWalletConnect = async (data: any) => {
     try {
       if (data && data.token) {
-        localStorage.setItem('token', data.token);
         const user = data.user || {};
         
         const roles = user.roles || ['client', 'freelancer'];
@@ -45,11 +44,11 @@ export default function LoginPage() {
         }
 
       } else {
-        alert(data.error || 'Authentication failed');
+        // Error is handled by the useWallet hook and displayed in WalletConnectButton
+        console.error(data.error || 'Authentication failed');
       }
     } catch (error) {
       console.error('Authentication failed:', error);
-      alert('Failed to authenticate. Please try again.');
     }
   };
 
