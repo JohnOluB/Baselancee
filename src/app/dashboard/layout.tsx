@@ -4,7 +4,6 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import DashboardHeader from '@/components/dashboard/header';
 import DashboardSidebar from '@/components/dashboard/sidebar';
 import MotionDiv from '@/components/motion-div';
-import { ProposalProvider } from '@/context/ProposalContext';
 
 export default function DashboardLayout({
   children,
@@ -12,7 +11,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ProposalProvider>
         <SidebarProvider>
         <div className="flex min-h-screen">
             <DashboardSidebar />
@@ -26,6 +24,5 @@ export default function DashboardLayout({
             </main>
         </div>
         </SidebarProvider>
-    </ProposalProvider>
   );
 }

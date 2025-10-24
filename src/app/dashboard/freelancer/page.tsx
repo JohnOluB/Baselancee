@@ -22,15 +22,13 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
 import Link from 'next/link';
-import { useProposals } from '@/context/ProposalContext';
 
 const FreelancerDashboard = () => {
-    const { proposals } = useProposals();
 
     const stats = [
         {
             title: 'Proposals Sent',
-            value: proposals.length.toString(),
+            value: '12',
             icon: FileText,
             change: '+2 from last month',
             changeType: 'positive',
