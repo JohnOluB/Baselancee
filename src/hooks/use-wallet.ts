@@ -45,18 +45,16 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const handleAccountsChanged = useCallback((accounts: string[]) => {
-    console.log("Accounts changed:", accounts);
     if (accounts.length === 0) {
       handleDisconnect();
     } else if (accounts[0] !== account) {
       setAccount(accounts[0]);
-      setIsAuthenticated(false); // Force re-auth on account change
+      setIsAuthenticated(false);
       localStorage.removeItem('token');
     }
   }, [account, handleDisconnect]);
 
   const handleChainChanged = useCallback((newChainId: string) => {
-    console.log("Chain changed:", newChainId);
     setChainId(newChainId);
     if (newChainId !== TARGET_CHAIN_ID) {
       setIsAuthenticated(false);
@@ -65,7 +63,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
       setError(null);
     }
   }, []);
-
+  
   const connect = useCallback(async () => {
     if (typeof window.ethereum === 'undefined') {
       setError('Please install MetaMask or another Web3 wallet.');
@@ -108,7 +106,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const disconnect = useCallback(() => {
     handleDisconnect();
   }, [handleDisconnect]);
-  
+
   useEffect(() => {
     const checkInitialConnection = async () => {
       if (typeof window.ethereum !== 'undefined') {
