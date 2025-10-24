@@ -10,6 +10,7 @@ import {
   Clock,
   XCircle,
   ExternalLink,
+  Loader2,
 } from 'lucide-react';
 import {
   Card,
@@ -32,8 +33,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from '@/components/ui/dialog';
 
-const recentWithdrawals = [
+const initialWithdrawals = [
   {
     date: '2024-10-26 14:30',
     amount: '1,200.00 USDC',
@@ -75,6 +84,9 @@ export default function WithdrawPage() {
   const [address, setAddress] = useState('');
   const [amount, setAmount] = useState('');
   const [isAddressInvalid, setIsAddressInvalid] = useState(false);
+  const [recentWithdrawals, setRecentWithdrawals] = useState(initialWithdrawals);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const availableBalance = 1234.56;
 
@@ -88,6 +100,30 @@ export default function WithdrawPage() {
   const amountNumber = parseFloat(amount) || 0;
   const networkFee = 2.50;
   const finalAmount = amountNumber > networkFee ? amountNumber - networkFee : 0;
+  const isWithdrawDisabled = isWithdrawing || isAddressInvalid || amountNumber < 10 || amountNumber > availableBalance;
+
+  const handleWithdraw = async () => {
+    if (isWithdrawDisabled) return;
+
+    setIsWithdrawing(true);
+
+    // Simulate API call/blockchain transaction
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const newWithdrawal = {
+        date: new Date().toISOString().replace('T', ' ').slice(0, 16),
+        amount: `${amountNumber.toFixed(2)} USDC`,
+        address: `${address.slice(0, 6)}...${address.slice(-4)}`,
+        status: 'Completed',
+        txHash: `0x${[...Array(6)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}...${[...Array(6)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`
+    };
+
+    setRecentWithdrawals([newWithdrawal, ...recentWithdrawals]);
+    setIsWithdrawing(false);
+    setShowSuccess(true);
+    setAmount('');
+    setAddress('');
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -162,13 +198,44 @@ export default function WithdrawPage() {
           </div>
         </CardContent>
         <CardFooter className="flex-col items-stretch gap-4">
-          <Button size="lg" className="w-full shadow-[0_0_20px_hsl(var(--primary)/50%)]">
-            <Wallet className="mr-2 h-5 w-5"/>
-            Withdraw Funds
+          <Button size="lg" className="w-full shadow-[0_0_20px_hsl(var(--primary)/50%)]" onClick={handleWithdraw} disabled={isWithdrawDisabled}>
+            {isWithdrawing ? (
+                <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin"/>
+                    Processing...
+                </>
+            ) : (
+                <>
+                    <Wallet className="mr-2 h-5 w-5"/>
+                    Withdraw Funds
+                </>
+            )}
           </Button>
            <p className="text-xs text-muted-foreground text-center">Withdrawals are irreversible. Please double-check the address. Estimated arrival: 2-5 minutes.</p>
         </CardFooter>
       </Card>
+
+      <Dialog open={showSuccess} onOpenChange={setShowSuccess}>
+            <DialogContent>
+                <DialogHeader className="items-center text-center">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 mb-4">
+                        <CheckCircle className="h-10 w-10 text-green-600" />
+                    </div>
+                    <DialogTitle className="text-2xl">Withdrawal Successful!</DialogTitle>
+                    <DialogDescription>
+                        Your funds are on their way.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="py-4 text-center">
+                    <p className="text-3xl font-bold">{finalAmount.toFixed(2)} USDC</p>
+                    <p className="text-sm text-muted-foreground mt-1">Has been sent to:</p>
+                    <p className="text-sm font-medium break-all mt-2">{address}</p>
+                </div>
+                <DialogFooter className="sm:justify-center">
+                    <Button onClick={() => setShowSuccess(false)}>Done</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
       
        <div className="pt-8">
          <h2 className="text-2xl font-semibold mb-4">Recent Withdrawals</h2>
