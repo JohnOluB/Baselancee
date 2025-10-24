@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "hero-illustration",
-      "description": "A successful businessman in a modern office, looking out over a city skyline.",
-      "imageUrl": "https://images.unsplash.com/photo-1626105985453-71fe8ddc52a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c3VjY2Vzc2Z1bCUyMGJ1c2luZXNzbWFufGVufDB8fHx8MTc2MTI2MzQ1M3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "successful businessman"
+      "description": "Professionals collaborating in a modern workspace, conveying innovation and teamwork.",
+      "imageUrl": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwcm9mZXNzaW9uYWxzJTIwY29sbGFib3JhdGluZ3xlbnwwfHx8fDE3NjEyNjQwODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "professionals collaborating"
     },
     {
       "id": "why-choose-freelancer",
