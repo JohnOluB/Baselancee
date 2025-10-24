@@ -38,9 +38,9 @@
     },
     {
       "id": "profile-creation",
-      "description": "A person setting up their professional profile on a laptop.",
-      "imageUrl": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBwcm9maWxlfGVufDB8fHx8MTc2NzQxMDI3N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "online profile"
+      "description": "A close-up of a digital profile page on a screen, showing skills and a portfolio.",
+      "imageUrl": "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkaWdpdGFsJTIwcHJvZmlsZXxlbnwwfHx8fDE3Njc0MTI2MjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "digital profile"
     },
     {
       "id": "find-work",
