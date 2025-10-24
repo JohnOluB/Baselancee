@@ -21,40 +21,9 @@ export default function WalletConnectButton({ onConnect }) {
   const [error, setError] = useState('');
   const [signingMessage, setSigningMessage] = useState(false);
 
-  useEffect(() => {
-    checkConnection();
-
-    if (window.ethereum) {
-      window.ethereum.on('accountsChanged', handleAccountsChanged);
-      window.ethereum.on('chainChanged', () => window.location.reload());
-    }
-    return () => {
-      if (window.ethereum) {
-        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-      }
-    };
-  }, []);
-
-  const checkConnection = async () => {
-    const result = await checkWalletConnection();
-    if (result) {
-      setAccount(result.account);
-      setChainId(result.chainId);
-    }
-  };
-
-  const handleAccountsChanged = (accounts) => {
-    if (accounts.length === 0) {
-      setAccount(null);
-      setChainId(null);
-    } else {
-      setAccount(accounts[0]);
-    }
-  };
-
-
   const handleConnect = async () => {
     setLoading(true);
+    setSigningMessage(false);
     setError('');
 
     try {
@@ -114,7 +83,6 @@ export default function WalletConnectButton({ onConnect }) {
   };
 
   const handleDisconnect = () => {
-    // We can't programmatically disconnect, but we can clear our state
     setAccount(null);
     setChainId(null);
     setError('');
