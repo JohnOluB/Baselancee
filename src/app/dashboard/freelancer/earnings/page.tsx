@@ -41,6 +41,8 @@ import {
     DialogTitle,
     DialogFooter,
 } from '@/components/ui/dialog';
+import { connectWallet } from '@/utils/wallet';
+import { useToast } from '@/hooks/use-toast';
 
 const initialWithdrawals = [
   {
@@ -87,6 +89,7 @@ export default function WithdrawPage() {
   const [recentWithdrawals, setRecentWithdrawals] = useState(initialWithdrawals);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const { toast } = useToast();
 
   const availableBalance = 1234.56;
 
@@ -107,22 +110,35 @@ export default function WithdrawPage() {
 
     setIsWithdrawing(true);
 
-    // Simulate API call/blockchain transaction
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const newWithdrawal = {
-        date: new Date().toISOString().replace('T', ' ').slice(0, 16),
-        amount: `${amountNumber.toFixed(2)} USDC`,
-        address: `${address.slice(0, 6)}...${address.slice(-4)}`,
-        status: 'Completed',
-        txHash: `0x${[...Array(6)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}...${[...Array(6)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`
-    };
+    try {
+      // Simulate initiating transaction with wallet
+      await connectWallet();
+      
+      // Simulate API call/blockchain transaction confirmation
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const newWithdrawal = {
+          date: new Date().toISOString().replace('T', ' ').slice(0, 16),
+          amount: `${amountNumber.toFixed(2)} USDC`,
+          address: `${address.slice(0, 6)}...${address.slice(-4)}`,
+          status: 'Completed',
+          txHash: `0x${[...Array(6)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}...${[...Array(6)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`
+      };
 
-    setRecentWithdrawals([newWithdrawal, ...recentWithdrawals]);
-    setIsWithdrawing(false);
-    setShowSuccess(true);
-    setAmount('');
-    setAddress('');
+      setRecentWithdrawals([newWithdrawal, ...recentWithdrawals]);
+      setShowSuccess(true);
+      setAmount('');
+      setAddress('');
+
+    } catch (err: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Withdrawal Failed',
+        description: err.message || 'Could not complete the withdrawal.',
+      });
+    } finally {
+      setIsWithdrawing(false);
+    }
   }
 
   return (
