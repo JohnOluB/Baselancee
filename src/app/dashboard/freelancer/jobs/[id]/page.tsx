@@ -30,6 +30,7 @@ import {
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSearchParams } from 'next/navigation';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -55,7 +56,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { analyzeJobDescription, AnalyzeJobDescriptionOutput } from '@/ai/flows/job-description-analyzer';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -269,7 +270,7 @@ const proposalSchema = z.object({
 
 type ProposalFormValues = z.infer<typeof proposalSchema>;
 
-function ApplicationSidebar() {
+function ApplicationSidebar({ initialIsEditMode }: { initialIsEditMode: boolean }) {
     const { register, handleSubmit, watch, formState: { errors, isValid } } = useForm<ProposalFormValues>({
         resolver: zodResolver(proposalSchema),
         mode: 'onChange',
@@ -280,8 +281,14 @@ function ApplicationSidebar() {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [isProposalDialogOpen, setIsProposalDialogOpen] = useState(false);
-    const [isEditMode, setIsEditMode] = useState(false);
+    const [isProposalDialogOpen, setIsProposalDialogOpen] = useState(initialIsEditMode);
+    const [isEditMode, setIsEditMode] = useState(initialIsEditMode);
+
+    useEffect(() => {
+        setIsProposalDialogOpen(initialIsEditMode);
+        setIsEditMode(initialIsEditMode);
+    }, [initialIsEditMode]);
+    
 
     const bid = watch('bidAmount');
 
@@ -292,11 +299,6 @@ function ApplicationSidebar() {
         setIsSubmitting(false);
         setIsProposalDialogOpen(false); // Close proposal dialog
         setIsSubmitted(true); // Open success dialog
-    }
-    
-    const handleEditClick = () => {
-        setIsEditMode(true);
-        setIsProposalDialogOpen(true);
     }
 
     const fee = 0.02; // 2%
@@ -432,6 +434,7 @@ function ApplicationSidebar() {
             </Dialog>
 
             <p className="text-xs text-muted-foreground text-center">{job.proposals.count} other freelancers have applied</p>
+            
             <Button asChild variant="link" size="sm" className="w-full text-destructive hover:text-destructive">
                 <Link href="/dashboard/freelancer/jobs">Withdraw Application</Link>
             </Button>
@@ -493,198 +496,199 @@ function ApplicationSidebar() {
     )
 }
 
-export default function JobDetailsPage() {
-  return (
-    <div className="space-y-6">
-       <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" asChild>
-                <Link href="/dashboard/freelancer/jobs"><ArrowLeft /></Link>
-            </Button>
-            <div className="text-sm text-muted-foreground">
-                <Link href="/dashboard/freelancer/jobs" className="hover:text-primary">Browse Jobs</Link>
-                <span className="mx-2">/</span>
-                <span>Job Details</span>
+function JobDetailsContent() {
+    const searchParams = useSearchParams();
+    const isEditMode = searchParams.get('edit') === 'true';
+
+    return (
+        <div className="space-y-6">
+            <div className="flex items-center gap-2">
+                    <Button variant="outline" size="icon" asChild>
+                        <Link href="/dashboard/freelancer/jobs"><ArrowLeft /></Link>
+                    </Button>
+                    <div className="text-sm text-muted-foreground">
+                        <Link href="/dashboard/freelancer/jobs" className="hover:text-primary">Browse Jobs</Link>
+                        <span className="mx-2">/</span>
+                        <span>Job Details</span>
+                    </div>
             </div>
-       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8 items-start">
-        <div className="lg:col-span-2 xl:col-span-3 space-y-8">
-            <Card>
-                <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                        <Avatar className="w-12 h-12 border">
-                            <AvatarImage src={job.client.avatar} alt={job.client.name} />
-                            <AvatarFallback>{job.client.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <h3 className="text-lg font-semibold">{job.client.name}</h3>
-                                {job.client.isPaymentVerified && <Badge variant="outline" className="text-green-600 border-green-600/50"><CheckCircle className="h-3 w-3 mr-1"/> Verified</Badge>}
+            <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8 items-start">
+                <div className="lg:col-span-2 xl:col-span-3 space-y-8">
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-start gap-4">
+                                <Avatar className="w-12 h-12 border">
+                                    <AvatarImage src={job.client.avatar} alt={job.client.name} />
+                                    <AvatarFallback>{job.client.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="text-lg font-semibold">{job.client.name}</h3>
+                                        {job.client.isPaymentVerified && <Badge variant="outline" className="text-green-600 border-green-600/50"><CheckCircle className="h-3 w-3 mr-1"/> Verified</Badge>}
+                                    </div>
+                                    <p className="text-sm text-muted-foreground">Posted {job.postedAt}</p>
+                                </div>
                             </div>
-                            <p className="text-sm text-muted-foreground">Posted {job.postedAt}</p>
-                        </div>
-                    </div>
 
-                    <h1 className="text-3xl font-bold mt-4">{job.title}</h1>
+                            <h1 className="text-3xl font-bold mt-4">{job.title}</h1>
 
-                    <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm border rounded-lg p-4">
-                         <div className="flex items-start gap-2">
-                            <Briefcase className="h-5 w-5 text-muted-foreground mt-0.5" />
-                            <div>
-                                <p className="font-semibold">${job.budget.from} - ${job.budget.to}</p>
-                                <p className="text-muted-foreground">{job.budgetType}</p>
-                            </div>
-                        </div>
-                         <div className="flex items-start gap-2">
-                            <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
-                            <div>
-                                <p className="font-semibold">{job.duration}</p>
-                                <p className="text-muted-foreground">Duration</p>
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-2">
-                            <Zap className="h-5 w-5 text-muted-foreground mt-0.5" />
-                            <div>
-                                <p className="font-semibold">{job.experienceLevel}</p>
-                                <p className="text-muted-foreground">Experience</p>
-                            </div>
-                        </div>
-                         <div className="flex items-start gap-2">
-                            <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
-                            <div>
-                                <p className="font-semibold">{job.location}</p>
-                                <p className="text-muted-foreground">Location</p>
-                            </div>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>About the Job</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground" dangerouslySetInnerHTML={{ __html: job.description }} />
-                </CardContent>
-            </Card>
-
-            <Card>
-                 <CardHeader>
-                    <CardTitle>Scope of Work</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div>
-                        <h4 className="font-semibold mb-2">Deliverables</h4>
-                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                            {job.scope.deliverables.map((item, i) => <li key={i}>{item}</li>)}
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 className="font-semibold mb-2">Milestones</h4>
-                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                            {job.scope.milestones.map((item, i) => <li key={i}>{item}</li>)}
-                        </ul>
-                    </div>
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>Skills & Expertise</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                        {job.skills.map(skill => <Badge key={skill} variant="secondary" className="text-base py-1 px-3">{skill}</Badge>)}
-                    </div>
-                </CardContent>
-            </Card>
-
-             <Card>
-                <CardHeader>
-                    <CardTitle>Attachments</CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {job.attachments.map(file => (
-                        <div key={file.name} className="border rounded-lg p-3 flex items-center gap-3">
-                            <FileText className="h-8 w-8 text-muted-foreground" />
-                            <div className="flex-1">
-                                <p className="font-medium text-sm truncate">{file.name}</p>
-                                <p className="text-xs text-muted-foreground">{file.size} &bull; {file.type}</p>
-                            </div>
-                            <Button variant="ghost" size="icon"><Download className="h-4 w-4"/></Button>
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>About the Client</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex items-start gap-4">
-                         <Avatar className="w-16 h-16 border">
-                            <AvatarImage src={job.client.avatar} alt={job.client.name} />
-                            <AvatarFallback>{job.client.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                             <h3 className="text-lg font-semibold">{job.client.name}</h3>
-                            <p className="text-sm text-muted-foreground">Member since {job.client.memberSince}</p>
-                            {job.client.isPaymentVerified && <div className="mt-2 flex items-center gap-1 text-sm text-green-600"><CheckCircle className="h-4 w-4"/><span>Payment method verified</span></div>}
-                             <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-4 text-sm">
-                                <div className="flex items-center gap-2">
-                                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm border rounded-lg p-4">
+                                <div className="flex items-start gap-2">
+                                    <Briefcase className="h-5 w-5 text-muted-foreground mt-0.5" />
                                     <div>
-                                        <span className="font-bold">{job.client.rating.toFixed(1)} out of 5</span>
-                                        <span className="text-muted-foreground"> ({job.client.reviewCount} reviews)</span>
+                                        <p className="font-semibold">${job.budget.from} - ${job.budget.to}</p>
+                                        <p className="text-muted-foreground">{job.budgetType}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                    <Briefcase className="h-4 w-4" />
-                                    <span>{job.client.jobsPosted} jobs posted</span>
+                                <div className="flex items-start gap-2">
+                                    <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                    <div>
+                                        <p className="font-semibold">{job.duration}</p>
+                                        <p className="text-muted-foreground">Duration</p>
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                    <MapPin className="h-4 w-4" />
-                                    <span>{job.client.location}</span>
+                                <div className="flex items-start gap-2">
+                                    <Zap className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                    <div>
+                                        <p className="font-semibold">{job.experienceLevel}</p>
+                                        <p className="text-muted-foreground">Experience</p>
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                    <MessageSquare className="h-4 w-4" />
-                                    <span>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact' }).format(job.client.spend)} total spent</span>
+                                <div className="flex items-start gap-2">
+                                    <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                    <div>
+                                        <p className="font-semibold">{job.location}</p>
+                                        <p className="text-muted-foreground">Location</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
+                        </CardContent>
+                    </Card>
 
-        <aside className="lg:col-span-1 xl:col-span-1">
-          <div className="sticky top-[76px] space-y-6">
-            <ApplicationSidebar />
-            <AIJobAnalyzer />
-          </div>
-        </aside>
-      </div>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>About the Job</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground" dangerouslySetInnerHTML={{ __html: job.description }} />
+                        </CardContent>
+                    </Card>
 
-        <div className="mt-12">
-            <h2 className="text-2xl font-bold mb-4">Similar Jobs</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {(similarJobs as any[]).map((job, index) => (
-                    <JobCard key={index} job={job} />
-                ))}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Scope of Work</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div>
+                                <h4 className="font-semibold mb-2">Deliverables</h4>
+                                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                                    {job.scope.deliverables.map((item, i) => <li key={i}>{item}</li>)}
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="font-semibold mb-2">Milestones</h4>
+                                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                                    {job.scope.milestones.map((item, i) => <li key={i}>{item}</li>)}
+                                </ul>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Skills & Expertise</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex flex-wrap gap-2">
+                                {job.skills.map(skill => <Badge key={skill} variant="secondary" className="text-base py-1 px-3">{skill}</Badge>)}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Attachments</CardTitle>
+                        </CardHeader>
+                        <CardContent className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                            {job.attachments.map(file => (
+                                <div key={file.name} className="border rounded-lg p-3 flex items-center gap-3">
+                                    <FileText className="h-8 w-8 text-muted-foreground" />
+                                    <div className="flex-1">
+                                        <p className="font-medium text-sm truncate">{file.name}</p>
+                                        <p className="text-xs text-muted-foreground">{file.size} &bull; {file.type}</p>
+                                    </div>
+                                    <Button variant="ghost" size="icon"><Download className="h-4 w-4"/></Button>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>About the Client</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex items-start gap-4">
+                                <Avatar className="w-16 h-16 border">
+                                    <AvatarImage src={job.client.avatar} alt={job.client.name} />
+                                    <AvatarFallback>{job.client.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div className="flex-1">
+                                    <h3 className="text-lg font-semibold">{job.client.name}</h3>
+                                    <p className="text-sm text-muted-foreground">Member since {job.client.memberSince}</p>
+                                    {job.client.isPaymentVerified && <div className="mt-2 flex items-center gap-1 text-sm text-green-600"><CheckCircle className="h-4 w-4"/><span>Payment method verified</span></div>}
+                                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-4 text-sm">
+                                        <div className="flex items-center gap-2">
+                                            <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                                            <div>
+                                                <span className="font-bold">{job.client.rating.toFixed(1)} out of 5</span>
+                                                <span className="text-muted-foreground"> ({job.client.reviewCount} reviews)</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-muted-foreground">
+                                            <Briefcase className="h-4 w-4" />
+                                            <span>{job.client.jobsPosted} jobs posted</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-muted-foreground">
+                                            <MapPin className="h-4 w-4" />
+                                            <span>{job.client.location}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-muted-foreground">
+                                            <MessageSquare className="h-4 w-4" />
+                                            <span>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact' }).format(job.client.spend)} total spent</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                <aside className="lg:col-span-1 xl:col-span-1">
+                <div className="sticky top-[76px] space-y-6">
+                    <ApplicationSidebar initialIsEditMode={isEditMode} />
+                    <AIJobAnalyzer />
+                </div>
+                </aside>
+            </div>
+
+            <div className="mt-12">
+                <h2 className="text-2xl font-bold mb-4">Similar Jobs</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {(similarJobs as any[]).map((job, index) => (
+                        <JobCard key={index} job={job} />
+                    ))}
+                </div>
             </div>
         </div>
-    </div>
-  );
+    );
 }
 
-    
-
-    
-
-    
-
-
-
-    
+export default function JobDetailsPage() {
+    return (
+        <React.Suspense fallback={<div>Loading...</div>}>
+            <JobDetailsContent />
+        </React.Suspense>
+    )
+}
