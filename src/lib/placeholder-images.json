@@ -38,9 +38,9 @@
     },
     {
       "id": "profile-creation",
-      "description": "A close-up of a digital profile being created on a sleek, modern interface, highlighting fields for skills and portfolio uploads.",
-      "imageUrl": "https://storage.googleapis.com/aai-sit-native-assistant-bu/images/42c4314e-5e3e-4c57-bf9c-6b3a0e698188",
-      "imageHint": "digital profile interface"
+      "description": "A welcoming, step-by-step illustration for BaseLance profile creation, showing an elegant interface with a progress indicator and options for wallet or email signup. The design emphasizes ease of use and quick setup.",
+      "imageUrl": "https://images.unsplash.com/photo-1611162616475-46b635cb6868?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwcm9maWxlJTIwc2V0dXAlMjBvbmxpbmV8ZW58MHx8fHwxNzY2Njg2MTc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "create profile"
     },
     {
       "id": "find-work",
