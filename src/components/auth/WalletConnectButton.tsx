@@ -1,3 +1,4 @@
+
 // src/components/auth/WalletConnectButton.tsx
 
 import { useState, useEffect } from 'react';
@@ -8,6 +9,10 @@ import {
   getNetworkName,
   signAuthMessage 
 } from '../../utils/wallet';
+import { Button } from '@/components/ui/button';
+import { Wallet } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function WalletConnectButton({ onConnect }) {
   const [account, setAccount] = useState(null);
@@ -17,8 +22,7 @@ export default function WalletConnectButton({ onConnect }) {
   const [signingMessage, setSigningMessage] = useState(false);
 
   useEffect(() => {
-    checkConnection();
-
+    // Only set up listeners, don't try to connect automatically
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', handleAccountsChanged);
       window.ethereum.on('chainChanged', () => window.location.reload());
@@ -31,16 +35,9 @@ export default function WalletConnectButton({ onConnect }) {
     };
   }, []);
 
-  const checkConnection = async () => {
-    const result = await checkWalletConnection();
-    if (result) {
-      setAccount(result.account);
-      setChainId(result.chainId);
-    }
-  };
-
   const handleAccountsChanged = (accounts) => {
     if (accounts.length === 0) {
+      // Wallet disconnected
       setAccount(null);
       setChainId(null);
     } else {
@@ -65,6 +62,11 @@ export default function WalletConnectButton({ onConnect }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ walletAddress: account })
       });
+      
+      if (!nonceResponse.ok) {
+        const errorData = await nonceResponse.json();
+        throw new Error(errorData.error || 'Failed to get nonce from server.');
+      }
       
       const { nonce } = await nonceResponse.json();
       
@@ -91,6 +93,7 @@ export default function WalletConnectButton({ onConnect }) {
   };
 
   const handleDisconnect = () => {
+    // We can't programmatically disconnect, but we can clear our state
     setAccount(null);
     setChainId(null);
     setError('');
@@ -99,55 +102,50 @@ export default function WalletConnectButton({ onConnect }) {
   if (account && !signingMessage) {
     return (
       <div className="space-y-3">
-        <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-green-900">Wallet Connected</p>
-            <p className="text-sm text-green-700">{formatAddress(account)}</p>
-            {chainId && (
-              <p className="text-xs text-green-600 mt-1">
-                Network: {getNetworkName(chainId)}
-              </p>
-            )}
-          </div>
-        </div>
+        <Alert variant="default" className="bg-green-50 border-green-200 text-green-800">
+           <CheckCircle className="h-4 w-4 !text-green-600" />
+           <AlertTitle className="text-green-900 font-semibold">Wallet Connected</AlertTitle>
+           <AlertDescription>
+                {formatAddress(account)} on {getNetworkName(chainId)}
+           </AlertDescription>
+        </Alert>
         
-        <button
+        <Button
           onClick={handleDisconnect}
-          className="w-full py-2 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+          variant="outline"
+          className="w-full"
         >
-          Disconnect
-        </button>
+          Disconnect Wallet
+        </Button>
       </div>
     );
   }
 
   return (
     <div className="space-y-3">
-      <button
+      <Button
         onClick={handleConnect}
         disabled={loading || signingMessage}
-        className="w-full flex items-center justify-center gap-3 py-3 px-4 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+        className="w-full"
+        size="lg"
+        variant="outline"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-        </svg>
+        <Wallet className="mr-2 h-5 w-5"/>
         {signingMessage ? 'Please sign message...' : loading ? 'Connecting...' : 'Login with Wallet'}
-      </button>
+      </Button>
 
       {error && (
-        <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <svg className="w-5 h-5 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <p className="text-sm text-red-800">{error}</p>
-        </div>
+        <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Connection Failed</AlertTitle>
+            <AlertDescription>
+                {error}
+            </AlertDescription>
+        </Alert>
       )}
 
-      <div className="text-xs text-gray-500 text-center px-4">
-        You'll be asked to sign a message to verify wallet ownership. This is free and doesn't cost gas.
+      <div className="text-xs text-muted-foreground text-center px-4">
+        You'll be asked to sign a message to verify ownership. This is free and does not cost gas.
       </div>
     </div>
   );
