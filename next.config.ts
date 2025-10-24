@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https',
+        protocol: 'https'
         hostname: 'i.pravatar.cc',
         port: '',
         pathname: '/**',
@@ -44,7 +44,15 @@ const nextConfig: NextConfig = {
     ],
   },
   env: {
-  }
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:5000/api/:path*',
+      },
+    ]
+  },
 };
 
 export default nextConfig;

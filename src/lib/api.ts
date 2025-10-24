@@ -1,5 +1,5 @@
 
-const API_BASE_URL = 'http://localhost:5000/api'; // This should be in an env variable
+const API_BASE_URL = '/api'; // Use relative path for proxy
 
 async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
