@@ -1,4 +1,6 @@
 
+'use client';
+
 import { DollarSign, FileText, Briefcase, Star, ArrowUp } from 'lucide-react';
 import {
   Card,
@@ -20,93 +22,96 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
 import Link from 'next/link';
+import { useProposals } from '@/context/ProposalContext';
 
-const stats = [
-  {
-    title: 'Proposals Sent',
-    value: '11',
-    icon: FileText,
-    change: '+2 from last month',
-    changeType: 'positive',
-  },
-  {
-    title: 'Active Jobs',
-    value: '3',
-    icon: Briefcase,
-    cta: 'View All',
-  },
-  {
-    title: 'Total Earned',
-    value: '$4,560',
-    icon: DollarSign,
-    subValue: '3,800 USDC',
-  },
-  {
-    title: 'Success Rate',
-    value: '92%',
-    icon: Star,
-    rating: 4.8,
-  },
-];
+const FreelancerDashboard = () => {
+    const { proposals } = useProposals();
 
-const recommendedJobs = [
-  {
-    id: '1',
-    title: 'Senior Frontend Developer for E-commerce Platform',
-    client: 'Shopify',
-    posted: '2h ago',
-    description: 'We are looking for an experienced frontend developer to join our team and help build the next generation of e-commerce experiences...',
-    budget: '$80 - $120 / hr',
-    type: 'Hourly',
-    skills: ['React', 'TypeScript', 'Next.js'],
-    duration: '3-6 months',
-    location: 'Remote (US)',
-  },
-  {
-    id: '1',
-    title: 'UI/UX Designer for Mobile App',
-    client: 'Airtable',
-    posted: '5h ago',
-    description: 'Seeking a talented UI/UX designer to redesign our mobile application. You will be responsible for creating intuitive and visually appealing user interfaces.',
-    budget: '$3,500',
-    type: 'Fixed Price',
-    skills: ['Figma', 'UI/UX Design', 'Mobile'],
-    duration: '1-2 months',
-    location: 'Remote',
-  },
-  {
-    id: '1',
-    title: 'Blockchain Developer for DeFi Protocol',
-    client: 'Coinbase',
-    posted: '1d ago',
-    description: 'Join our DeFi team to build and maintain smart contracts for our new lending protocol. Experience with Solidity and EVM is required.',
-    budget: '$150 / hr',
-    type: 'Hourly',
-    skills: ['Solidity', 'Hardhat', 'EVM'],
-    duration: 'Long-term',
-    location: 'Remote',
-  },
-];
+    const stats = [
+        {
+            title: 'Proposals Sent',
+            value: proposals.length.toString(),
+            icon: FileText,
+            change: '+2 from last month',
+            changeType: 'positive',
+        },
+        {
+            title: 'Active Jobs',
+            value: '3',
+            icon: Briefcase,
+            cta: 'View All',
+        },
+        {
+            title: 'Total Earned',
+            value: '$4,560',
+            icon: DollarSign,
+            subValue: '3,800 USDC',
+        },
+        {
+            title: 'Success Rate',
+            value: '92%',
+            icon: Star,
+            rating: 4.8,
+        },
+    ];
 
-
-const activeJobs = [
+    const recommendedJobs = [
     {
-        client: { name: 'John Doe', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' },
-        jobTitle: 'Build React Dashboard',
-        budget: '800 USDC',
-        progress: 60,
-        dueDate: 'Oct 20',
+        id: '1',
+        title: 'Senior Frontend Developer for E-commerce Platform',
+        client: 'Shopify',
+        posted: '2h ago',
+        description: 'We are looking for an experienced frontend developer to join our team and help build the next generation of e-commerce experiences...',
+        budget: '$80 - $120 / hr',
+        type: 'Hourly',
+        skills: ['React', 'TypeScript', 'Next.js'],
+        duration: '3-6 months',
+        location: 'Remote (US)',
     },
     {
-        client: { name: 'Sarah Miller', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026705d' },
-        jobTitle: 'API Integration for SaaS',
-        budget: '1200 USDC',
-        progress: 25,
-        dueDate: 'Nov 5',
-    }
-]
+        id: '1',
+        title: 'UI/UX Designer for Mobile App',
+        client: 'Airtable',
+        posted: '5h ago',
+        description: 'Seeking a talented UI/UX designer to redesign our mobile application. You will be responsible for creating intuitive and visually appealing user interfaces.',
+        budget: '$3,500',
+        type: 'Fixed Price',
+        skills: ['Figma', 'UI/UX Design', 'Mobile'],
+        duration: '1-2 months',
+        location: 'Remote',
+    },
+    {
+        id: '1',
+        title: 'Blockchain Developer for DeFi Protocol',
+        client: 'Coinbase',
+        posted: '1d ago',
+        description: 'Join our DeFi team to build and maintain smart contracts for our new lending protocol. Experience with Solidity and EVM is required.',
+        budget: '$150 / hr',
+        type: 'Hourly',
+        skills: ['Solidity', 'Hardhat', 'EVM'],
+        duration: 'Long-term',
+        location: 'Remote',
+    },
+    ];
 
-export default function FreelancerDashboard() {
+
+    const activeJobs = [
+        {
+            client: { name: 'John Doe', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' },
+            jobTitle: 'Build React Dashboard',
+            budget: '800 USDC',
+            progress: 60,
+            dueDate: 'Oct 20',
+        },
+        {
+            client: { name: 'Sarah Miller', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026705d' },
+            jobTitle: 'API Integration for SaaS',
+            budget: '1200 USDC',
+            progress: 25,
+            dueDate: 'Nov 5',
+        }
+    ]
+
   return (
     <div className="space-y-8">
         <h1 className="text-3xl font-bold">Dashboard</h1>
@@ -229,3 +234,11 @@ export default function FreelancerDashboard() {
     </div>
   );
 }
+
+const FreelancerDashboardPage = () => {
+    return (
+        <FreelancerDashboard />
+    )
+}
+
+export default FreelancerDashboardPage;
