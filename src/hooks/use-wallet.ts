@@ -118,7 +118,6 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     checkConnection();
   }, []);
 
-
   useEffect(() => {
     if (typeof window.ethereum !== 'undefined') {
       window.ethereum.on('accountsChanged', handleAccountsChanged);
