@@ -11,14 +11,14 @@ export default function Hero() {
     <section className="bg-background pt-36 pb-28">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="text-center">
+          <div className="text-center md:text-left">
             <h1 className="text-5xl md:text-6xl font-bold">
               The future of work is here
             </h1>
             <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto md:mx-0">
               BaseLance is a professional, modern, and trustworthy platform for freelancers and clients, aiming to replace platforms like Upwork with lower fees and instant crypto payments.
             </p>
-            <div className="mt-8 flex justify-center">
+            <div className="mt-8 flex justify-center md:justify-start">
               <Button size="lg" asChild>
                   <Link href="/signup">Get Started</Link>
               </Button>
