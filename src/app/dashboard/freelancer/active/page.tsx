@@ -217,7 +217,9 @@ export default function ActiveJobsPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               When you start working on a job, it will appear here.
             </p>
-            <Button className="mt-6">Browse Jobs</Button>
+            <Button className="mt-6" asChild>
+              <Link href="/dashboard/freelancer/jobs">Browse Jobs</Link>
+            </Button>
           </CardContent>
         </Card>
       )}
