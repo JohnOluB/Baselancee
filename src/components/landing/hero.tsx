@@ -25,7 +25,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="relative hidden md:block">
+          <div className="relative">
             {heroImage && (
               <Image
                 src={heroImage.imageUrl}
