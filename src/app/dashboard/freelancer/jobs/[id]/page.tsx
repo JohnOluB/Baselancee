@@ -281,6 +281,7 @@ function ApplicationSidebar() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isProposalDialogOpen, setIsProposalDialogOpen] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
 
     const bid = watch('bidAmount');
 
@@ -291,6 +292,11 @@ function ApplicationSidebar() {
         setIsSubmitting(false);
         setIsProposalDialogOpen(false); // Close proposal dialog
         setIsSubmitted(true); // Open success dialog
+    }
+    
+    const handleEditClick = () => {
+        setIsEditMode(true);
+        setIsProposalDialogOpen(true);
     }
 
     const fee = 0.02; // 2%
@@ -314,7 +320,7 @@ function ApplicationSidebar() {
                 <DialogContent className="max-w-3xl">
                     <form onSubmit={handleSubmit(handleProposalSubmit)}>
                         <DialogHeader>
-                            <DialogTitle>Submit Your Proposal</DialogTitle>
+                            <DialogTitle>{isEditMode ? 'Edit Your Proposal' : 'Submit Your Proposal'}</DialogTitle>
                             <DialogDescription>
                                 For: {job.title}
                             </DialogDescription>
@@ -339,9 +345,10 @@ function ApplicationSidebar() {
                                         <Input 
                                             id="bid-amount" 
                                             type="number" 
-                                            className="px-12 placeholder:pl-0 focus:placeholder-transparent"
+                                            className="px-8 placeholder:pl-0 focus:placeholder-transparent"
                                             placeholder="Enter your bid..."
                                             {...register('bidAmount', { valueAsNumber: true })}
+                                            disabled={isEditMode}
                                         />
                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">USDC</span>
                                     </div>
@@ -357,11 +364,13 @@ function ApplicationSidebar() {
                                             placeholder="14" 
                                             className="w-1/2" 
                                             {...register('deliveryNumber', { valueAsNumber: true })}
+                                            disabled={isEditMode}
                                         />
                                         <Input 
                                             defaultValue="Days" 
                                             className="w-1/2" 
                                             {...register('deliveryUnit')}
+                                            disabled={isEditMode}
                                         />
                                     </div>
                                     {(errors.deliveryNumber || errors.deliveryUnit) && <p className="text-sm text-destructive mt-1">Delivery timeline is required.</p>}
@@ -389,7 +398,7 @@ function ApplicationSidebar() {
                                <Button variant="ghost">Cancel</Button>
                             </DialogClose>
                             <Button type="submit" disabled={isSubmitting || !isValid}>
-                                {isSubmitting ? 'Submitting...' : 'Submit Proposal'}
+                                {isSubmitting ? 'Submitting...' : isEditMode ? 'Save Changes' : 'Submit Proposal'}
                             </Button>
                         </DialogFooter>
                     </form>
@@ -676,3 +685,6 @@ export default function JobDetailsPage() {
 
     
 
+
+
+    

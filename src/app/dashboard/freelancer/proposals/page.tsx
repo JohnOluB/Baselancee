@@ -321,7 +321,9 @@ function ProposalCard({ proposal }: { proposal: any }) {
             <Button variant="destructive" className="mr-auto">
               Withdraw
             </Button>
-            <Button variant="outline">Edit Proposal</Button>
+            <Button variant="outline" asChild>
+              <Link href={`/dashboard/freelancer/jobs/1?edit=true`}>Edit Proposal</Link>
+            </Button>
             <Button asChild>
                 <Link href="/dashboard/freelancer/messages">Message Client</Link>
             </Button>
@@ -415,3 +417,6 @@ export default function ProposalsPage() {
     </div>
   );
 }
+
+
+    
