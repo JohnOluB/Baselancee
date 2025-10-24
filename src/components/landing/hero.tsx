@@ -25,7 +25,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="relative">
+          <div>
             {heroImage && (
               <Image
                 src={heroImage.imageUrl}
