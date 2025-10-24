@@ -8,7 +8,7 @@ export default function Hero() {
   const heroImage = PlaceHolderImages.find(p => p.id === 'hero-illustration');
 
   return (
-    <section className="bg-background pt-52 pb-20 md:pb-28">
+    <section className="bg-background pt-28 pb-20 md:pb-28">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="text-center md:text-left">
