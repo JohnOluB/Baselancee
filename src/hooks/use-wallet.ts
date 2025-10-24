@@ -2,7 +2,7 @@
 'use client';
 import { useState, useEffect, useCallback, createContext, useContext } from 'react';
 import {
-  connectWallet,
+  connectWallet as connectWalletUtil,
   checkWalletConnection,
   switchToBaseSepolia,
   getNetworkName,
@@ -41,9 +41,11 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     setIsAuthenticated(false);
     localStorage.removeItem('token');
     setError(null);
+    setLoading(false);
   }, []);
 
   const handleAccountsChanged = useCallback((accounts: string[]) => {
+    console.log("Accounts changed:", accounts);
     if (accounts.length === 0) {
       handleDisconnect();
     } else if (accounts[0] !== account) {
@@ -54,6 +56,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   }, [account, handleDisconnect]);
 
   const handleChainChanged = useCallback((newChainId: string) => {
+    console.log("Chain changed:", newChainId);
     setChainId(newChainId);
     if (newChainId !== TARGET_CHAIN_ID) {
       setIsAuthenticated(false);
@@ -64,11 +67,17 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const connect = useCallback(async () => {
+    if (typeof window.ethereum === 'undefined') {
+      setError('Please install MetaMask or another Web3 wallet.');
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
       await switchToBaseSepolia();
-      const { account, chainId } = await connectWallet();
+      const { account, chainId } = await connectWalletUtil();
       setAccount(account);
       setChainId(chainId);
 
@@ -83,14 +92,14 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
       if (data.token) {
         localStorage.setItem('token', data.token);
         setIsAuthenticated(true);
+        setLoading(false);
+        return data;
       } else {
         throw new Error(data.error || 'Authentication failed.');
       }
-      setLoading(false);
-      return data;
     } catch (err: any) {
-      console.error(err);
-      setError(err.message);
+      console.error('Connection or authentication error:', err);
+      setError(err.message || 'An unknown error occurred.');
       setLoading(false);
       handleDisconnect();
     }
@@ -99,23 +108,29 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const disconnect = useCallback(() => {
     handleDisconnect();
   }, [handleDisconnect]);
-
+  
   useEffect(() => {
-    const checkConnection = async () => {
-      setLoading(true);
+    const checkInitialConnection = async () => {
       if (typeof window.ethereum !== 'undefined') {
-        const { account, chainId } = await checkWalletConnection();
-        if (account) {
-          setAccount(account);
-          setChainId(chainId);
-          if (localStorage.getItem('token')) {
-              setIsAuthenticated(true);
+        try {
+          const { account, chainId } = await checkWalletConnection();
+          if (account) {
+            setAccount(account);
+            setChainId(chainId);
+            if (localStorage.getItem('token')) {
+                setIsAuthenticated(true);
+            }
+             if (chainId !== TARGET_CHAIN_ID) {
+              setError(`Please switch to Base Sepolia network.`);
+            }
           }
+        } catch (err) {
+          console.error("Error checking initial connection:", err);
         }
       }
       setLoading(false);
     };
-    checkConnection();
+    checkInitialConnection();
   }, []);
 
   useEffect(() => {
@@ -124,26 +139,28 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
       window.ethereum.on('chainChanged', handleChainChanged);
 
       return () => {
-        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-        window.ethereum.removeListener('chainChanged', handleChainChanged);
+        if (window.ethereum.removeListener) {
+            window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+            window.ethereum.removeListener('chainChanged', handleChainChanged);
+        }
       };
     }
   }, [handleAccountsChanged, handleChainChanged]);
 
+  const value = {
+    account,
+    chainId,
+    networkName: getNetworkName(chainId),
+    isAuthenticated,
+    loading,
+    error,
+    connect,
+    disconnect,
+    clearError,
+  };
+
   return (
-    <WalletContext.Provider
-      value={{
-        account,
-        chainId,
-        networkName: getNetworkName(chainId),
-        isAuthenticated,
-        loading,
-        error,
-        connect,
-        disconnect,
-        clearError,
-      }}
-    >
+    <WalletContext.Provider value={value}>
       {children}
     </WalletContext.Provider>
   );
