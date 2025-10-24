@@ -75,17 +75,17 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     setError(null);
     try {
       await switchToBaseSepolia();
-      const { account, chainId } = await connectWalletUtil();
-      setAccount(account);
-      setChainId(chainId);
+      const { account: connectedAccount, chainId: connectedChainId } = await connectWalletUtil();
+      setAccount(connectedAccount);
+      setChainId(connectedChainId);
 
-      if (chainId !== TARGET_CHAIN_ID) {
+      if (connectedChainId !== TARGET_CHAIN_ID) {
         throw new Error('Please switch your wallet to the Base Sepolia network.');
       }
       
-      const { nonce } = await getNonce(account);
-      const signature = await signAuthMessage(account, nonce);
-      const data = await loginWithWallet(account, signature);
+      const { nonce } = await getNonce(connectedAccount);
+      const signature = await signAuthMessage(connectedAccount, nonce);
+      const data = await loginWithWallet(connectedAccount, signature);
 
       if (data.token) {
         localStorage.setItem('token', data.token);
@@ -111,14 +111,14 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     const checkInitialConnection = async () => {
       if (typeof window.ethereum !== 'undefined') {
         try {
-          const { account, chainId } = await checkWalletConnection();
-          if (account) {
-            setAccount(account);
-            setChainId(chainId);
+          const { account: initialAccount, chainId: initialChainId } = await checkWalletConnection();
+          if (initialAccount) {
+            setAccount(initialAccount);
+            setChainId(initialChainId);
             if (localStorage.getItem('token')) {
                 setIsAuthenticated(true);
             }
-             if (chainId !== TARGET_CHAIN_ID) {
+             if (initialChainId !== TARGET_CHAIN_ID) {
               setError(`Please switch to Base Sepolia network.`);
             }
           }
