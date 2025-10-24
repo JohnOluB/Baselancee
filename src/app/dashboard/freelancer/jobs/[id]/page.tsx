@@ -414,14 +414,14 @@ function ApplicationSidebar({ initialIsEditMode }: { initialIsEditMode: boolean 
                          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100 mb-4">
                             <CheckCircle className="h-6 w-6 text-green-600" />
                         </div>
-                        <DialogTitle className="text-2xl">Proposal Submitted Successfully!</DialogTitle>
+                        <DialogTitle className="text-2xl">{isEditMode ? 'Proposal Updated!' : 'Proposal Submitted!'}</DialogTitle>
                         <DialogDescription>
-                           Your proposal for "{job.title}" has been sent to {job.client.name}.
+                           {isEditMode ? 'Your changes have been saved.' : `Your proposal for "${job.title}" has been sent to ${job.client.name}.`}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="py-4 text-center text-sm text-muted-foreground">
-                        <p>You will be notified when the client views your proposal or sends a message.</p>
-                        <p className="font-semibold mt-2">Estimated response time: 24-48 hours</p>
+                        <p>{isEditMode ? 'The client will be notified of your changes.' : 'You will be notified when the client views your proposal or sends a message.'}</p>
+                         {!isEditMode && <p className="font-semibold mt-2">Estimated response time: 24-48 hours</p>}
                     </div>
                     <DialogFooter className="sm:justify-center flex-col-reverse sm:flex-row gap-2">
                         <Button variant="outline" asChild>
@@ -436,7 +436,7 @@ function ApplicationSidebar({ initialIsEditMode }: { initialIsEditMode: boolean 
 
             <p className="text-xs text-muted-foreground text-center">{job.proposals.count} other freelancers have applied</p>
             
-            <Button asChild variant="link" size="sm" className="w-full text-destructive hover:text-destructive">
+             <Button asChild variant="link" size="sm" className="w-full text-muted-foreground hover:text-destructive">
                 <Link href="/dashboard/freelancer/jobs">Withdraw Application</Link>
             </Button>
 
@@ -693,3 +693,5 @@ export default function JobDetailsPage() {
         </React.Suspense>
     )
 }
+
+    
