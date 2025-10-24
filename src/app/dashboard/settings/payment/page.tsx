@@ -13,6 +13,15 @@ import { Separator } from '@/components/ui/separator';
 export default function PaymentSettingsPage() {
     const [connectedWallet, setConnectedWallet] = useState('0x1234...5678');
 
+    const handleDisconnect = () => {
+        setConnectedWallet('');
+    };
+
+    const handleConnect = () => {
+        // In a real app, this would trigger the wallet connection flow
+        setConnectedWallet('0x1234...5678');
+    };
+
     return (
         <div className="space-y-8">
             <div>
@@ -26,22 +35,32 @@ export default function PaymentSettingsPage() {
                     <CardDescription>This is your primary wallet for receiving payments and interacting with the platform.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg bg-muted/50">
-                        <div className="flex items-center gap-4">
-                            <Wallet className="h-8 w-8 text-primary" />
-                            <div>
-                                <p className="font-mono font-semibold text-lg">{connectedWallet}</p>
-                                <div className="flex items-center gap-2">
-                                     <span className="relative flex h-2 w-2">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                                    </span>
-                                    <p className="text-sm text-muted-foreground">Connected on Base Network</p>
+                    {connectedWallet ? (
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg bg-muted/50">
+                            <div className="flex items-center gap-4">
+                                <Wallet className="h-8 w-8 text-primary" />
+                                <div>
+                                    <p className="font-mono font-semibold text-lg">{connectedWallet}</p>
+                                    <div className="flex items-center gap-2">
+                                        <span className="relative flex h-2 w-2">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                        </span>
+                                        <p className="text-sm text-muted-foreground">Connected on Base Network</p>
+                                    </div>
                                 </div>
                             </div>
+                            <Button variant="destructive" className="mt-4 sm:mt-0" onClick={handleDisconnect}>Disconnect</Button>
                         </div>
-                        <Button variant="destructive" className="mt-4 sm:mt-0">Disconnect</Button>
-                    </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg">
+                            <p className="text-muted-foreground mb-4">No wallet connected.</p>
+                            <Button onClick={handleConnect}>
+                                <Wallet className="mr-2 h-4 w-4" />
+                                Connect Wallet
+                            </Button>
+                        </div>
+                    )}
                 </CardContent>
                 <CardFooter>
                      <p className="text-xs text-muted-foreground">To change your primary wallet, please disconnect the current one and connect a new one.</p>
