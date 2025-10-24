@@ -1,10 +1,9 @@
 
 // src/components/auth/WalletConnectButton.tsx
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   connectWallet, 
-  checkWalletConnection, 
   formatAddress, 
   getNetworkName,
   signAuthMessage 
@@ -12,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Wallet } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
-import { CheckCircle, AlertCircle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 
 export default function WalletConnectButton({ onConnect }) {
   const [account, setAccount] = useState(null);
