@@ -1,13 +1,16 @@
 
+
 const API_BASE_URL = '/api'; // Use relative path for proxy
 
 async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-    const headers = {
+    const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        ...options.headers,
     };
+    if (options.headers) {
+        Object.assign(headers, options.headers);
+    }
 
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
@@ -19,8 +22,14 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     });
 
     if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || `API request failed: ${response.statusText}`);
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `API request failed: ${response.statusText}`);
+        } else {
+            const errorText = await response.text();
+            throw new Error(errorText || `API request failed: ${response.statusText}`);
+        }
     }
 
     if (response.status === 204) { // No Content
