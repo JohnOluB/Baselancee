@@ -44,6 +44,37 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(false);
   }, []);
 
+  const checkInitialConnection = useCallback(async (isChainChange = false) => {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        const { account: initialAccount, chainId: initialChainId } = await checkWalletConnection();
+        if (initialAccount) {
+          setAccount(initialAccount);
+          setChainId(initialChainId);
+          
+          if (initialChainId !== TARGET_CHAIN_ID) {
+            setError(`Please switch to Base Sepolia network.`);
+            setIsAuthenticated(false);
+            localStorage.removeItem('token');
+          } else {
+            const token = localStorage.getItem('token');
+            if (token) {
+                // TODO: We could add token validation here
+                setIsAuthenticated(true);
+            } else if (isChainChange) {
+                // If user just switched to the correct chain, don't auto-connect
+                // let them click the button again.
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error checking initial connection:", err);
+        setError("Failed to check wallet connection.");
+      }
+    }
+    setLoading(false);
+  }, []);
+
   const handleAccountsChanged = useCallback((accounts: string[]) => {
     if (accounts.length === 0) {
       handleDisconnect();
@@ -61,41 +92,9 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
         setError(`Please switch to Base Sepolia network.`);
     } else {
         setError(null);
-        // Re-check connection and auth if chain is corrected
         checkInitialConnection(true);
     }
-  }, [handleDisconnect]);
-
-  const checkInitialConnection = async (isChainChange = false) => {
-      if (typeof window.ethereum !== 'undefined') {
-        try {
-          const { account: initialAccount, chainId: initialChainId } = await checkWalletConnection();
-          if (initialAccount) {
-            setAccount(initialAccount);
-            setChainId(initialChainId);
-            
-            if (initialChainId !== TARGET_CHAIN_ID) {
-              setError(`Please switch to Base Sepolia network.`);
-              setIsAuthenticated(false);
-              localStorage.removeItem('token');
-            } else {
-              const token = localStorage.getItem('token');
-              if (token) {
-                  // TODO: We could add token validation here
-                  setIsAuthenticated(true);
-              } else if (isChainChange) {
-                  // If user just switched to the correct chain, prompt for connection/login
-                  connect();
-              }
-            }
-          }
-        } catch (err) {
-          console.error("Error checking initial connection:", err);
-          setError("Failed to check wallet connection.");
-        }
-      }
-      setLoading(false);
-    };
+  }, [handleDisconnect, checkInitialConnection]);
 
   const connect = useCallback(async () => {
     if (typeof window.ethereum === 'undefined') {
@@ -124,7 +123,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem('token', data.token);
         setIsAuthenticated(true);
         setLoading(false);
-        return data;
+        return data; // Return the full data object
       } else {
         throw new Error(data.error || 'Authentication failed.');
       }
@@ -133,6 +132,8 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
       setError(err.message || 'An unknown error occurred.');
       setLoading(false);
       handleDisconnect();
+      // Explicitly return null or an object with an error on failure
+      return { error: err.message || 'An unknown error occurred.' };
     }
   }, [handleDisconnect]);
 
@@ -142,7 +143,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     checkInitialConnection();
-  }, []);
+  }, [checkInitialConnection]);
 
   useEffect(() => {
     if (typeof window.ethereum !== 'undefined') {

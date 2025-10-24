@@ -22,7 +22,7 @@ export default function WalletConnectButton({ onConnect }: { onConnect: (data: a
 
   const handleConnect = async () => {
     const data = await connect();
-    if (data && onConnect) {
+    if (data && data.token && onConnect) {
       onConnect(data);
     }
   }

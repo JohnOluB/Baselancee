@@ -27,28 +27,21 @@ export default function LoginPage() {
     }
   };
 
-  const handleWalletConnect = async (data: any) => {
-    try {
-      if (data && data.token) {
-        const user = data.user || {};
-        
-        const roles = user.roles || ['client', 'freelancer'];
+  const handleWalletConnect = (data: any) => {
+    if (data && data.token && data.user) {
+        const roles = data.user.roles || ['client', 'freelancer'];
         
         if (roles.length > 1) {
-          sessionStorage.setItem('pendingUser', JSON.stringify(user));
+          sessionStorage.setItem('pendingUser', JSON.stringify(data.user));
           router.push('/select-role');
         } else if (roles.includes('freelancer')) {
           router.push('/dashboard/freelancer');
         } else {
           router.push('/dashboard/client');
         }
-
-      } else {
-        // Error is handled by the useWallet hook and displayed in WalletConnectButton
-        console.error(data.error || 'Authentication failed');
-      }
-    } catch (error) {
-      console.error('Authentication failed:', error);
+    } else {
+       // The error is handled by the useWallet hook and displayed in the button component.
+       console.error('Authentication failed or data is missing.');
     }
   };
 
