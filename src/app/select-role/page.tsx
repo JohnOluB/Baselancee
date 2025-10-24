@@ -4,16 +4,24 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+type User = {
+  name: string;
+  roles: string[];
+};
+
 export default function SelectRolePage() {
   const router = useRouter();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const pendingUser = sessionStorage.getItem('pendingUser');
     if (pendingUser) {
       setUser(JSON.parse(pendingUser));
     } else {
-      router.push('/login');
+      // If no user data, maybe redirect to login.
+      // For now, let's just log it.
+      console.log("No pending user found in session storage.");
+      // router.push('/login');
     }
   }, [router]);
 
@@ -29,7 +37,14 @@ export default function SelectRolePage() {
     }
   };
 
-  if (!user) return null;
+  if (!user) {
+    // You can show a loading spinner here
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-background p-4">
+            <p>Loading...</p>
+        </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">

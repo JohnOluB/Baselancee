@@ -1,3 +1,4 @@
+
 'use client';
 import {useRouter} from 'next/navigation';
 import Logo from '@/components/logo';
@@ -16,6 +17,13 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isConnected) {
+      // This is for the demo login
+      // In a real app, you would authenticate and get roles from backend
+      const user = {
+        name: 'John Doe',
+        roles: ['freelancer', 'client']
+      };
+      sessionStorage.setItem('pendingUser', JSON.stringify(user));
       router.push('/select-role');
     }
   }, [isConnected, router]);
