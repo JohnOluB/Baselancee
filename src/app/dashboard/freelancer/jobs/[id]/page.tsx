@@ -423,7 +423,6 @@ function ApplicationSidebar() {
                 </DialogContent>
             </Dialog>
 
-            <Button variant="outline" className="w-full"><Heart className="mr-2 h-4 w-4"/> Save Job</Button>
             <p className="text-xs text-muted-foreground text-center">{job.proposals.count} other freelancers have applied</p>
             <Button asChild variant="link" size="sm" className="w-full text-destructive hover:text-destructive">
                 <Link href="/dashboard/freelancer/jobs">Withdraw Application</Link>
@@ -671,5 +670,7 @@ export default function JobDetailsPage() {
     </div>
   );
 }
+
+    
 
     
