@@ -39,8 +39,8 @@
     {
       "id": "profile-creation",
       "description": "A close-up of a digital profile page on a screen, showing skills and a portfolio.",
-      "imageUrl": "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkaWdpdGFsJTIwcHJvZmlsZXxlbnwwfHx8fDE3Njc0MTI2MjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "digital profile"
+      "imageUrl": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwcm9mZXNzaW9uYWxzJTIwY29sbGFib3JhdGluZ3xlbnwwfHx8fDE3NjEyNjQwODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "user profile"
     },
     {
       "id": "find-work",
