@@ -24,9 +24,9 @@ import Link from 'next/link';
 const stats = [
   {
     title: 'Proposals Sent',
-    value: '12',
+    value: '11',
     icon: FileText,
-    change: '+3 from last month',
+    change: '+2 from last month',
     changeType: 'positive',
   },
   {
