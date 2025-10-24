@@ -272,7 +272,7 @@ const proposalSchema = z.object({
 type ProposalFormValues = z.infer<typeof proposalSchema>;
 
 function ApplicationSidebar({ initialIsEditMode }: { initialIsEditMode: boolean }) {
-    const { register, handleSubmit, watch, formState: { errors, isValid } } = useForm<ProposalFormValues>({
+    const { register, handleSubmit, watch, formState: { errors }, setValue } = useForm<ProposalFormValues>({
         resolver: zodResolver(proposalSchema),
         mode: 'onChange',
         defaultValues: {
@@ -284,14 +284,30 @@ function ApplicationSidebar({ initialIsEditMode }: { initialIsEditMode: boolean 
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isProposalDialogOpen, setIsProposalDialogOpen] = useState(initialIsEditMode);
     const [isEditMode, setIsEditMode] = useState(initialIsEditMode);
+    const [originalCoverLetter, setOriginalCoverLetter] = useState('');
+
+    const coverLetterValue = watch('coverLetter');
+    const bid = watch('bidAmount');
 
     useEffect(() => {
         setIsProposalDialogOpen(initialIsEditMode);
         setIsEditMode(initialIsEditMode);
-    }, [initialIsEditMode]);
+        if (initialIsEditMode) {
+            // Mock fetching existing proposal data
+            const existingProposal = {
+                coverLetter: "This is my existing cover letter. I am a great fit for this job because of my extensive experience in React and data visualization. I'm excited to learn more about the project.",
+                bidAmount: 1100,
+                deliveryNumber: 18,
+                deliveryUnit: 'Days',
+            };
+            setValue('coverLetter', existingProposal.coverLetter);
+            setValue('bidAmount', existingProposal.bidAmount);
+            setValue('deliveryNumber', existingProposal.deliveryNumber);
+            setValue('deliveryUnit', existingProposal.deliveryUnit);
+            setOriginalCoverLetter(existingProposal.coverLetter);
+        }
+    }, [initialIsEditMode, setValue]);
     
-
-    const bid = watch('bidAmount');
 
     const handleProposalSubmit: SubmitHandler<ProposalFormValues> = async (data) => {
         setIsSubmitting(true);
@@ -302,7 +318,6 @@ function ApplicationSidebar({ initialIsEditMode }: { initialIsEditMode: boolean 
         setIsSubmitted(true); // Open success dialog
     }
 
-    const fee = 0.02; // 2%
     const clientBudget = 'from' in job.budget ? `$${job.budget.from} - $${job.budget.to}` : `$${job.budget.amount}`;
 
     const bidAmountNumber = bid || 0;
@@ -310,9 +325,12 @@ function ApplicationSidebar({ initialIsEditMode }: { initialIsEditMode: boolean 
     let earnings = 0;
 
     if (!isNaN(bidAmountNumber) && bidAmountNumber > 0) {
-        platformFee = bidAmountNumber * fee;
+        platformFee = bidAmountNumber * 0.02; // 2% fee
         earnings = bidAmountNumber - platformFee;
     }
+    
+    const isCoverLetterChanged = coverLetterValue !== originalCoverLetter;
+    const canSaveChanges = isEditMode && isCoverLetterChanged && !errors.coverLetter;
 
     return (
         <div className="space-y-6">
@@ -400,8 +418,8 @@ function ApplicationSidebar({ initialIsEditMode }: { initialIsEditMode: boolean 
                             <DialogClose asChild>
                                <Button variant="ghost">Cancel</Button>
                             </DialogClose>
-                            <Button type="submit" disabled={isSubmitting || !isValid}>
-                                {isSubmitting ? 'Submitting...' : isEditMode ? 'Save Changes' : 'Submit Proposal'}
+                            <Button type="submit" disabled={isSubmitting || (isEditMode ? !canSaveChanges : !Object.keys(errors).length === 0)}>
+                                {isSubmitting ? (isEditMode ? 'Saving...' : 'Submitting...') : (isEditMode ? 'Save Changes' : 'Submit Proposal')}
                             </Button>
                         </DialogFooter>
                     </form>
@@ -693,5 +711,3 @@ export default function JobDetailsPage() {
         </React.Suspense>
     )
 }
-
-    
