@@ -95,11 +95,11 @@ export const checkWalletConnection = async (): Promise<{ account: string | null;
         return { account: null, chainId: null };
     }
     const provider = getProvider();
-    const accounts = await provider.listAccounts();
+    const accounts = await provider.send('eth_accounts', []);
     if (accounts.length > 0) {
         const network = await provider.getNetwork();
         const chainId = `0x${network.chainId.toString(16)}`;
-        return { account: accounts[0].address, chainId };
+        return { account: accounts[0], chainId };
     }
     return { account: null, chainId: null };
 };

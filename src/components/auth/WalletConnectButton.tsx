@@ -3,14 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useWallet } from '@/hooks/use-wallet';
 import { Button } from '@/components/ui/button';
-import { Wallet, CheckCircle, Loader2 } from 'lucide-react';
+import { Wallet, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { formatAddress } from '@/utils/wallet';
 
 export default function WalletConnectButton({ onConnect }: { onConnect: (data: any) => void }) {
   const { 
     account, 
-    chainId,
     networkName,
     isAuthenticated,
     loading,
@@ -22,6 +21,7 @@ export default function WalletConnectButton({ onConnect }: { onConnect: (data: a
 
   const handleConnect = async () => {
     const data = await connect();
+    // onConnect will only be called if the connection and authentication are successful
     if (data && data.token && onConnect) {
       onConnect(data);
     }
@@ -64,30 +64,22 @@ export default function WalletConnectButton({ onConnect }: { onConnect: (data: a
         ) : (
             <Wallet className="mr-2 h-5 w-5"/>
         )}
-        {loading ? 'Connecting...' : 'Connect Wallet'}
+        {loading ? 'Connecting...' : 'Connect Wallet & Sign In'}
       </Button>
 
       {error && (
-        <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <div className="flex-1">
-            <p className="text-sm text-red-800">{error}</p>
-          </div>
-          <button 
-            onClick={clearError}
-            className="text-red-600 hover:text-red-800"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+         <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Connection Error</AlertTitle>
+          <AlertDescription>
+            {error}
+            <button onClick={clearError} className="text-sm font-semibold underline ml-2">Dismiss</button>
+          </AlertDescription>
+        </Alert>
       )}
-      {!error && (
+      {!error && !loading && (
         <div className="flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <svg className="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p className="text-xs text-blue-800">

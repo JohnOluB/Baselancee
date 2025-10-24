@@ -13,7 +13,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleLogin = async () => {
-    // For this demo, we'll simulate a user with both roles.
+    // This is for the email/password demo login
     const user = {
       name: 'John Doe',
       roles: ['freelancer', 'client']
@@ -23,13 +23,15 @@ export default function LoginPage() {
       sessionStorage.setItem('pendingUser', JSON.stringify(user));
       router.push('/select-role');
     } else {
+      // Default to client for demo purposes
       router.push('/dashboard/client');
     }
   };
 
   const handleWalletConnect = (data: any) => {
-    if (data && data.token && data.user) {
-        const roles = data.user.roles || ['client', 'freelancer'];
+    // This function is called by WalletConnectButton on successful authentication
+    if (data && data.user) {
+        const roles = data.user.roles || []; // Default to empty array if no roles
         
         if (roles.length > 1) {
           sessionStorage.setItem('pendingUser', JSON.stringify(data.user));
@@ -37,11 +39,12 @@ export default function LoginPage() {
         } else if (roles.includes('freelancer')) {
           router.push('/dashboard/freelancer');
         } else {
+          // Default to client dashboard if role is 'client' or if no roles are specified
           router.push('/dashboard/client');
         }
     } else {
-       // The error is handled by the useWallet hook and displayed in the button component.
-       console.error('Authentication failed or data is missing.');
+       // Error is handled within the useWallet hook and displayed by WalletConnectButton
+       console.error('Authentication failed or user data is missing from onConnect callback.');
     }
   };
 
@@ -56,7 +59,7 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Connect your wallet or enter your email to login.
+            Connect your wallet to sign in securely.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -86,7 +89,7 @@ export default function LoginPage() {
               <Input id="password" type="password" required />
             </div>
             <Button onClick={handleLogin} className="w-full">
-              Login
+              Login with Email
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">

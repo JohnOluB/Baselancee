@@ -44,35 +44,38 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(false);
   }, []);
 
-  const checkInitialConnection = useCallback(async (isChainChange = false) => {
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const { account: initialAccount, chainId: initialChainId } = await checkWalletConnection();
-        if (initialAccount) {
-          setAccount(initialAccount);
-          setChainId(initialChainId);
-          
-          if (initialChainId !== TARGET_CHAIN_ID) {
-            setError(`Please switch to Base Sepolia network.`);
-            setIsAuthenticated(false);
-            localStorage.removeItem('token');
-          } else {
-            const token = localStorage.getItem('token');
-            if (token) {
-                // TODO: We could add token validation here
-                setIsAuthenticated(true);
-            } else if (isChainChange) {
-                // If user just switched to the correct chain, don't auto-connect
-                // let them click the button again.
-            }
-          }
-        }
-      } catch (err) {
-        console.error("Error checking initial connection:", err);
-        setError("Failed to check wallet connection.");
-      }
+  const checkInitialConnection = useCallback(async () => {
+    if (typeof window.ethereum === 'undefined') {
+      setLoading(false);
+      return;
     }
-    setLoading(false);
+    setLoading(true);
+    try {
+      const { account: initialAccount, chainId: initialChainId } = await checkWalletConnection();
+      setChainId(initialChainId);
+
+      if (initialAccount) {
+        setAccount(initialAccount);
+        if (initialChainId === TARGET_CHAIN_ID) {
+          const token = localStorage.getItem('token');
+          if (token) {
+            // TODO: Add token validation with backend
+            setIsAuthenticated(true);
+          } else {
+            setIsAuthenticated(false);
+          }
+        } else {
+          setError('Please switch to Base Sepolia network.');
+          setIsAuthenticated(false);
+          localStorage.removeItem('token');
+        }
+      }
+    } catch (err) {
+      console.error("Error checking initial connection:", err);
+      setError("Failed to check wallet connection.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const handleAccountsChanged = useCallback((accounts: string[]) => {
@@ -82,39 +85,33 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
       setAccount(accounts[0]);
       setIsAuthenticated(false);
       localStorage.removeItem('token');
+      // No need to set error, just requires re-authentication
     }
   }, [account, handleDisconnect]);
 
-  const handleChainChanged = useCallback((newChainId: string) => {
-    setChainId(newChainId);
-    if (newChainId !== TARGET_CHAIN_ID) {
-        handleDisconnect();
-        setError(`Please switch to Base Sepolia network.`);
-    } else {
-        setError(null);
-        checkInitialConnection(true);
-    }
-  }, [handleDisconnect, checkInitialConnection]);
+  const handleChainChanged = useCallback(() => {
+    // Reloading the page is the simplest way to reset state and re-check connection
+    window.location.reload();
+  }, []);
 
   const connect = useCallback(async () => {
     if (typeof window.ethereum === 'undefined') {
       setError('Please install MetaMask or another Web3 wallet.');
-      setLoading(false);
       return;
     }
 
     setLoading(true);
     setError(null);
     try {
+      // Switch to the correct network first
       await switchToBaseSepolia();
+      
+      // Request accounts
       const { account: connectedAccount, chainId: connectedChainId } = await connectWalletUtil();
       setAccount(connectedAccount);
       setChainId(connectedChainId);
 
-      if (connectedChainId !== TARGET_CHAIN_ID) {
-        throw new Error('Please switch your wallet to the Base Sepolia network.');
-      }
-      
+      // Authenticate with the backend
       const { nonce } = await getNonce(connectedAccount);
       const signature = await signAuthMessage(connectedAccount, nonce);
       const data = await loginWithWallet(connectedAccount, signature);
@@ -123,17 +120,17 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem('token', data.token);
         setIsAuthenticated(true);
         setLoading(false);
-        return data; // Return the full data object
+        return data; // Return the full data object { token, user }
       } else {
         throw new Error(data.error || 'Authentication failed.');
       }
     } catch (err: any) {
       console.error('Connection or authentication error:', err);
-      setError(err.message || 'An unknown error occurred.');
-      setLoading(false);
-      handleDisconnect();
-      // Explicitly return null or an object with an error on failure
+      setError(err.message || 'An unknown error occurred during connection.');
+      handleDisconnect(); // Reset state on error
       return { error: err.message || 'An unknown error occurred.' };
+    } finally {
+      setLoading(false);
     }
   }, [handleDisconnect]);
 
@@ -147,14 +144,13 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (typeof window.ethereum !== 'undefined') {
-      window.ethereum.on('accountsChanged', handleAccountsChanged);
-      window.ethereum.on('chainChanged', handleChainChanged);
+      const eth = window.ethereum;
+      eth.on('accountsChanged', handleAccountsChanged);
+      eth.on('chainChanged', handleChainChanged);
 
       return () => {
-        if (window.ethereum.removeListener) {
-            window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-            window.ethereum.removeListener('chainChanged', handleChainChanged);
-        }
+        eth.removeListener('accountsChanged', handleAccountsChanged);
+        eth.removeListener('chainChanged', handleChainChanged);
       };
     }
   }, [handleAccountsChanged, handleChainChanged]);
