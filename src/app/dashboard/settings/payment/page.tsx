@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import WalletConnectButton from '@/components/auth/WalletConnectButton';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export default function PaymentSettingsPage() {
     return (
@@ -20,10 +20,12 @@ export default function PaymentSettingsPage() {
                     <CardDescription>This is your primary wallet for receiving payments and interacting with the platform.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <WalletConnectButton onConnect={() => {}} />
+                     <div className="flex justify-start">
+                        <ConnectButton />
+                    </div>
                 </CardContent>
                 <CardFooter>
-                     <p className="text-xs text-muted-foreground">To change your primary wallet, please disconnect the current one and connect a new one.</p>
+                     <p className="text-xs text-muted-foreground">To change your primary wallet, please disconnect the current one and connect a new one using the button above.</p>
                 </CardFooter>
             </Card>
 

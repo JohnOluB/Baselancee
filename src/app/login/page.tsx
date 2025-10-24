@@ -1,4 +1,3 @@
-
 'use client';
 import {useRouter} from 'next/navigation';
 import Logo from '@/components/logo';
@@ -6,14 +5,28 @@ import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import WalletConnectButton from '@/components/auth/WalletConnectButton';
 import Link from 'next/link';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
+import { useEffect } from 'react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { isConnected } = useAccount();
 
-  const handleLogin = async () => {
+  useEffect(() => {
+    if (isConnected) {
+        // This is a simplified flow. In a real app, you would verify the user
+        // on your backend and get their roles, then decide where to redirect.
+        // For now, we'll assume a user can be both and send them to the role selector.
+        router.push('/select-role');
+    }
+  }, [isConnected, router]);
+
+
+  const handleEmailLogin = async () => {
     // This is for the email/password demo login
+    // In a real app, you would authenticate and get roles from backend
     const user = {
       name: 'John Doe',
       roles: ['freelancer', 'client']
@@ -28,25 +41,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleWalletConnect = (data: any) => {
-    // This function is called by WalletConnectButton on successful authentication
-    if (data && data.user) {
-        const roles = data.user.roles || []; // Default to empty array if no roles
-        
-        if (roles.length > 1) {
-          sessionStorage.setItem('pendingUser', JSON.stringify(data.user));
-          router.push('/select-role');
-        } else if (roles.includes('freelancer')) {
-          router.push('/dashboard/freelancer');
-        } else {
-          // Default to client dashboard if role is 'client' or if no roles are specified
-          router.push('/dashboard/client');
-        }
-    } else {
-       // Error is handled within the useWallet hook and displayed by WalletConnectButton
-       console.error('Authentication failed or user data is missing from onConnect callback.');
-    }
-  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
@@ -64,7 +58,9 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
-            <WalletConnectButton onConnect={handleWalletConnect} />
+             <div className="flex justify-center">
+                 <ConnectButton />
+            </div>
             <div className="relative flex py-2 items-center">
                 <div className="flex-grow border-t border-muted"></div>
                 <span className="flex-shrink mx-4 text-xs text-muted-foreground">OR</span>
@@ -88,7 +84,7 @@ export default function LoginPage() {
               </div>
               <Input id="password" type="password" required />
             </div>
-            <Button onClick={handleLogin} className="w-full">
+            <Button onClick={handleEmailLogin} className="w-full">
               Login with Email
             </Button>
           </div>

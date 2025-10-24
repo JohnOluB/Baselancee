@@ -1,7 +1,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
-import { WalletProvider } from '@/providers/wallet-provider';
+import { Web3Provider } from '@/providers/Web3Provider';
 
 export const metadata: Metadata = {
   title: 'BaseLance',
@@ -21,10 +21,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <WalletProvider>
+        <Web3Provider>
           {children}
           <Toaster />
-        </WalletProvider>
+        </Web3Provider>
       </body>
     </html>
   );
