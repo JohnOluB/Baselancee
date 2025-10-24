@@ -3,6 +3,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Logo from '@/components/logo';
+import Link from 'next/link';
 
 type User = {
   name: string;
@@ -48,6 +50,11 @@ export default function SelectRolePage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
+       <div className="absolute top-4 left-4 md:top-6 md:left-6">
+        <Link href="/">
+          <Logo />
+        </Link>
+      </div>
       <div className="max-w-4xl w-full">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
