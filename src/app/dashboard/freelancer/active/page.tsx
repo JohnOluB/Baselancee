@@ -144,7 +144,6 @@ function JobCard({ job }: { job: any }) {
           <Button asChild>
             <Link href="/dashboard/freelancer/messages">Message Client</Link>
           </Button>
-          <Button variant="default">Submit Work</Button>
         </div>
       </CardContent>
     </Card>
