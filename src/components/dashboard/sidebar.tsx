@@ -103,6 +103,20 @@ export default function DashboardSidebar() {
               </Link>
             </SidebarMenuItem>
           ))}
+           <Separator className="my-2" />
+            {bottomLinks.map((link) => (
+                 <SidebarMenuItem key={link.href}>
+                    <Link href={link.href} passHref>
+                        <SidebarMenuButton
+                        isActive={pathname.startsWith(link.href)}
+                        tooltip={link.label}
+                        >
+                        <link.icon />
+                        <span>{link.label}</span>
+                        </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
+            ))}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="p-4 space-y-4">
