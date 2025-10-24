@@ -89,6 +89,8 @@ export default function WithdrawPage() {
   const networkFee = 2.50;
   const finalAmount = amountNumber > networkFee ? amountNumber - networkFee : 0;
 
+  const handleSudmitTx = await 
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
        <div>

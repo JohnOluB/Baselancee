@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Wallet } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { CheckCircle } from 'lucide-react';
+import { getNonce, loginWithWallet } from '@/lib/api';
 
 export default function WalletConnectButton({ onConnect }) {
   const [account, setAccount] = useState(null);
@@ -33,30 +34,16 @@ export default function WalletConnectButton({ onConnect }) {
       
       // Step 2: Get nonce from backend for signature
       setSigningMessage(true);
-      const nonceResponse = await fetch('/api/auth/get-nonce', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ walletAddress: account })
-      });
-      
-      if (!nonceResponse.ok) {
-        const errorData = await nonceResponse.json();
-        throw new Error(errorData.error || 'Failed to get nonce from server.');
-      }
-      
-      const { nonce } = await nonceResponse.json();
+      const { nonce } = await getNonce(account);
       
       // Step 3: Sign message to prove wallet ownership
       const signature = await signAuthMessage(account, nonce);
       
       // Step 4: Send to backend for authentication
+      const data = await loginWithWallet(account, signature);
+      
       if (onConnect) {
-        await onConnect({ 
-          account, 
-          chainId, 
-          signature, 
-          nonce 
-        });
+        await onConnect(data);
       }
     }  catch (err) {
       console.error('Wallet connection error:', err);

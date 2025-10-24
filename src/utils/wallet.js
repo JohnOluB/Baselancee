@@ -79,7 +79,7 @@ export const connectWallet = async () => {
       case '0x1': return 'Ethereum Mainnet';
       case '0x2105': return 'Base Mainnet';
       case '0x14a34': return 'Base Sepolia';
-      case '0aa36a7': return 'Sepolia Testnet';
+      case '0xaa36a7': return 'Sepolia Testnet';
       default: return `Unknown Network (${chainId})`;
     }
   };

@@ -27,26 +27,12 @@ export default function LoginPage() {
     }
   };
 
-  const handleWalletConnect = async ({ account, signature, nonce }) => {
+  const handleWalletConnect = async (data) => {
     try {
-      // Authenticate with backend
-      const response = await fetch('/api/auth/wallet-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          walletAddress: account, 
-          signature,
-          nonce 
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok && data.success) {
+      if (data && data.token) {
+        localStorage.setItem('token', data.token);
         const user = data.user || {};
         
-        // This is a simplified logic. A real app would get roles from the backend.
-        // For now, we assume a connected wallet user can be both.
         const roles = user.roles || ['client', 'freelancer'];
         
         if (roles.length > 1) {
