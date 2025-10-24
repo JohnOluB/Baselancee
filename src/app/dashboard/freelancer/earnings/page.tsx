@@ -87,7 +87,7 @@ export default function WithdrawPage() {
   const [amount, setAmount] = useState('');
   const [isAddressInvalid, setIsAddressInvalid] = useState(false);
   const [recentWithdrawals, setRecentWithdrawals] = useState(initialWithdrawals);
-  const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const { toast } = useToast();
 
@@ -103,12 +103,12 @@ export default function WithdrawPage() {
   const amountNumber = parseFloat(amount) || 0;
   const networkFee = 2.50;
   const finalAmount = amountNumber > networkFee ? amountNumber - networkFee : 0;
-  const isWithdrawDisabled = isWithdrawing || isAddressInvalid || amountNumber < 10 || amountNumber > availableBalance;
+  const isWithdrawDisabled = isLoading || isAddressInvalid || amountNumber < 10 || amountNumber > availableBalance;
 
   const handleWithdraw = async () => {
     if (isWithdrawDisabled) return;
 
-    setIsWithdrawing(true);
+    setIsLoading(true);
 
     try {
       // Simulate initiating transaction with wallet
@@ -137,7 +137,7 @@ export default function WithdrawPage() {
         description: err.message || 'Could not complete the withdrawal.',
       });
     } finally {
-      setIsWithdrawing(false);
+      setIsLoading(false);
     }
   }
 
@@ -215,7 +215,7 @@ export default function WithdrawPage() {
         </CardContent>
         <CardFooter className="flex-col items-stretch gap-4">
           <Button size="lg" className="w-full shadow-[0_0_20px_hsl(var(--primary)/50%)]" onClick={handleWithdraw} disabled={isWithdrawDisabled}>
-            {isWithdrawing ? (
+            {isLoading ? (
                 <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin"/>
                     Processing...
