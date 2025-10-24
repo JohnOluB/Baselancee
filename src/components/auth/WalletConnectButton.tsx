@@ -21,6 +21,38 @@ export default function WalletConnectButton({ onConnect }) {
   const [error, setError] = useState('');
   const [signingMessage, setSigningMessage] = useState(false);
 
+  useEffect(() => {
+    checkConnection();
+
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      window.ethereum.on('chainChanged', () => window.location.reload());
+    }
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+      }
+    };
+  }, []);
+
+  const checkConnection = async () => {
+    const result = await checkWalletConnection();
+    if (result) {
+      setAccount(result.account);
+      setChainId(result.chainId);
+    }
+  };
+
+  const handleAccountsChanged = (accounts) => {
+    if (accounts.length === 0) {
+      setAccount(null);
+      setChainId(null);
+    } else {
+      setAccount(accounts[0]);
+    }
+  };
+
+
   const handleConnect = async () => {
     setLoading(true);
     setError('');
@@ -58,10 +90,23 @@ export default function WalletConnectButton({ onConnect }) {
           nonce 
         });
       }
-    } catch (err) {
-      setError(err.message);
+    }  catch (err) {
+      console.error('Wallet connection error:', err);
+      
+      // Clear account state on error
       setAccount(null);
       setChainId(null);
+      
+      // User-friendly error messages
+      if (err.message.includes('User rejected') || err.message.includes('User denied')) {
+        setError('Connection cancelled. Please approve the wallet connection to continue.');
+      } else if (err.message.includes('install MetaMask')) {
+        setError('Please install MetaMask or another Web3 wallet to continue.');
+      } else if (err.message.includes('signature request')) {
+        setError('Signature cancelled. You need to sign the message to verify your wallet.');
+      } else {
+        setError(err.message || 'Failed to connect wallet. Please try again.');
+      }
     } finally {
       setLoading(false);
       setSigningMessage(false);
@@ -72,6 +117,10 @@ export default function WalletConnectButton({ onConnect }) {
     // We can't programmatically disconnect, but we can clear our state
     setAccount(null);
     setChainId(null);
+    setError('');
+  };
+
+  const dismissError = () => {
     setError('');
   };
 
@@ -111,18 +160,33 @@ export default function WalletConnectButton({ onConnect }) {
       </Button>
 
       {error && (
-        <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Connection Failed</AlertTitle>
-            <AlertDescription>
-                {error}
-            </AlertDescription>
-        </Alert>
+        <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div className="flex-1">
+            <p className="text-sm text-red-800">{error}</p>
+          </div>
+          <button 
+            onClick={dismissError}
+            className="text-red-600 hover:text-red-800"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       )}
-
-      <div className="text-xs text-muted-foreground text-center px-4">
-        You'll be asked to sign a message to verify ownership. This is free and does not cost gas.
-      </div>
+      {!error && (
+        <div className="flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <svg className="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p className="text-xs text-blue-800">
+            You'll be asked to sign a message to verify your wallet. This is <strong>free</strong> and doesn't cost any gas fees.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
