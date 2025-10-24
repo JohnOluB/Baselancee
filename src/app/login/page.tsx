@@ -16,10 +16,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isConnected) {
-        // This is a simplified flow. In a real app, you would verify the user
-        // on your backend and get their roles, then decide where to redirect.
-        // For now, we'll assume a user can be both and send them to the role selector.
-        router.push('/select-role');
+      router.push('/select-role');
     }
   }, [isConnected, router]);
 
