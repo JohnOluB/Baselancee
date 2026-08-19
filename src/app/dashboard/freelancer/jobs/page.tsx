@@ -1,4 +1,3 @@
-
 import { JobFilters } from '@/components/dashboard/jobs/job-filters';
 import { JobCard, type Job } from '@/components/dashboard/jobs/job-card';
 import {
@@ -18,6 +17,7 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
+import { supabase } from '@/lib/supabase'
 
 const jobs: Job[] = [
   {
