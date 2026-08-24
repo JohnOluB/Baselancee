@@ -1,7 +1,6 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
-import { Web3Provider } from '@/providers/Web3Provider';
 
 export const metadata: Metadata = {
   title: 'BaseLance',
@@ -22,10 +21,8 @@ export default function RootLayout({
         <script src="https://backend.nordanai.com/public/widget.js" defer nordankey="Qnv9FQUkyK0tI"></script>
       </head>
       <body className="font-body antialiased">
-        <Web3Provider>
           {children}
           <Toaster />
-        </Web3Provider>
       </body>
     </html>
   );
